@@ -6,7 +6,11 @@ const DISCOVER_COLUMN_RANGES = [
   { title: "Company", start: 9, end: 12 },
 ];
 
-export default function MenuBox({ menuList, menuName }: MenuBoxProps) {
+export default function MenuBox({
+  hasAnnouncement = false,
+  menuList,
+  menuName,
+}: MenuBoxProps) {
   const menu = menuList.find(
     ({ name }) => name.toLowerCase() === menuName.toLowerCase(),
   );
@@ -19,27 +23,33 @@ export default function MenuBox({ menuList, menuName }: MenuBoxProps) {
   const isShopMenu = menu.name === "Shop";
 
   return (
-    <div className="fixed z-10 flex h-fit w-full items-center justify-center bg-white pt-16 duration-500">
+    <div
+      className={`fixed inset-x-0 z-40 hidden max-h-[calc(100svh-4rem)] items-start justify-center overflow-y-auto border-t border-black/5 bg-white shadow-xl lg:flex ${
+        hasAnnouncement ? "top-28" : "top-16"
+      }`}
+    >
       {!isDiscoverMenu && (
         <div
-          className={`grid p-5 ${isShopMenu ? "grid-cols-4" : "grid-cols-3"}`}
+          className={`grid gap-2 p-6 ${isShopMenu ? "grid-cols-4" : "grid-cols-3"}`}
         >
           {menu.items.products.map((product) => (
             <div
-              className="my-2 flex w-fit flex-col items-center justify-center p-1"
+              className="flex min-w-[210px] flex-col items-center justify-center rounded-lg p-2 transition hover:bg-[#f4f4f4]"
               key={product.productName}
             >
               <img
                 alt={product.productName}
-                className="h-[120px] w-[220px] cursor-pointer"
+                className="h-[110px] w-[210px] object-contain"
                 src={product.productImage}
               />
               <div className="flex flex-col items-center justify-center">
-                <p>{product.productName}</p>
+                <p className="font-semibold text-[#171a20]">
+                  {product.productName}
+                </p>
                 <div className="flex w-fit items-center justify-center">
                   {product.productDescription.map((description) => (
                     <p
-                      className="cursor-pointer px-1 text-sm text-gray-400 underline"
+                      className="cursor-pointer px-1 text-xs text-[#5c5e62] underline underline-offset-2"
                       key={description}
                     >
                       {description}
@@ -53,11 +63,13 @@ export default function MenuBox({ menuList, menuName }: MenuBoxProps) {
       )}
 
       {isDiscoverMenu ? (
-        <div className="flex items-start justify-center p-5">
+        <div className="flex items-start justify-center p-8">
           {DISCOVER_COLUMN_RANGES.map(({ title, start, end }) => (
             <div className="mx-3 p-3" key={title}>
-              <p className="my-2 whitespace-nowrap text-gray-400">{title}</p>
-              <ul>
+              <p className="my-2 whitespace-nowrap text-sm text-[#5c5e62]">
+                {title}
+              </p>
+              <ul className="space-y-2 font-medium text-[#171a20]">
                 {menu.items.links.slice(start, end).map((link) => (
                   <li key={link.listName}>{link.listName}</li>
                 ))}
@@ -67,10 +79,13 @@ export default function MenuBox({ menuList, menuName }: MenuBoxProps) {
         </div>
       ) : (
         !isShopMenu && (
-          <div className="p-5">
-            <ul>
+          <div className="border-l border-black/10 p-8">
+            <ul className="min-w-[220px]">
               {menu.items.links.map((link) => (
-                <li className="my-2 cursor-pointer p-1" key={link.listName}>
+                <li
+                  className="my-1 cursor-pointer rounded px-2 py-1.5 text-sm font-medium text-[#171a20] hover:bg-[#f4f4f4]"
+                  key={link.listName}
+                >
                   {link.listName}
                 </li>
               ))}
