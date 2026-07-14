@@ -1,6 +1,23 @@
 import type { CybertruckData } from "../utils/types/cybertruck";
 import type { AutopilotVideo, Vehicle } from "../utils/types/vehicle";
 
+type ModelYPaint =
+  "deep-blue" | "pearl-white" | "solid-black" | "stealth-grey" | "ultra-red";
+type ModelYWheel = "crossflow" | "helix";
+
+const modelYConfiguratorPath = "/assets/tesla-official/model-y-configurator";
+
+const getModelYExteriorImages = (paint: ModelYPaint, wheel: ModelYWheel) =>
+  ["front", "side", "rear", "wheel"].map(
+    (view) =>
+      `${modelYConfiguratorPath}/model-y-${paint}-${wheel}-${view}.avif`,
+  );
+
+const getModelYInteriorImage = (
+  paint: ModelYPaint,
+  interior: "black" | "white",
+) => `${modelYConfiguratorPath}/model-y-${paint}-interior-${interior}.avif`;
+
 export const mainPageList: Vehicle[] = [
   //Model 3
   {
@@ -273,125 +290,65 @@ export const mainPageList: Vehicle[] = [
       ],
       colors: [
         {
-          colorName: "Slealth Grey",
+          colorName: "Stealth Grey",
           colorPrice: "Included",
           colorIcon: "/assets/mainpage-images/color-icons/stealth_grey.avif",
-          primaryWheelImages: [
-            "/assets/mainpage-images/modely-images/slealth_grey/gemini_wheels/detail1.jpeg",
-            "/assets/mainpage-images/modely-images/slealth_grey/gemini_wheels/detail2.jpeg",
-            "/assets/mainpage-images/modely-images/slealth_grey/gemini_wheels/detail3.jpeg",
-            "/assets/mainpage-images/modely-images/slealth_grey/gemini_wheels/detail4.jpeg",
-            "/assets/mainpage-images/modely-images/slealth_grey/gemini_wheels/detail5-black.jpeg",
-            "/assets/mainpage-images/modely-images/slealth_grey/gemini_wheels/detail5-white.jpeg",
-          ],
-          secondaryWheelImages: [
-            "/assets/mainpage-images/modely-images/slealth_grey/induction_wheels/detail1.jpeg",
-            "/assets/mainpage-images/modely-images/slealth_grey/induction_wheels/detail2.jpeg",
-            "/assets/mainpage-images/modely-images/slealth_grey/induction_wheels/detail3.jpeg",
-            "/assets/mainpage-images/modely-images/slealth_grey/induction_wheels/detail4.jpeg",
-            "/assets/mainpage-images/modely-images/slealth_grey/induction_wheels/detail5-black.jpeg",
-            "/assets/mainpage-images/modely-images/slealth_grey/induction_wheels/detail5-white.jpeg",
-          ],
+          primaryWheelImages: getModelYExteriorImages(
+            "stealth-grey",
+            "crossflow",
+          ),
+          secondaryWheelImages: getModelYExteriorImages(
+            "stealth-grey",
+            "helix",
+          ),
         },
         {
           colorName: "Pearl White",
           colorPrice: "$1000",
           colorIcon: "/assets/mainpage-images/color-icons/pear_white.avif",
-          primaryWheelImages: [
-            "/assets/mainpage-images/modely-images/pear_white/gemini_wheels/detail1.jpeg",
-            "/assets/mainpage-images/modely-images/pear_white/gemini_wheels/detail2.jpeg",
-            "/assets/mainpage-images/modely-images/pear_white/gemini_wheels/detail3.jpeg",
-            "/assets/mainpage-images/modely-images/pear_white/gemini_wheels/detail4.jpeg",
-            "/assets/mainpage-images/modely-images/pear_white/gemini_wheels/detail5-black.jpeg",
-            "/assets/mainpage-images/modely-images/pear_white/gemini_wheels/detail5-white.jpeg",
-          ],
-          secondaryWheelImages: [
-            "/assets/mainpage-images/modely-images/pear_white/induction_wheels/detail1.jpeg",
-            "/assets/mainpage-images/modely-images/pear_white/induction_wheels/detail2.jpeg",
-            "/assets/mainpage-images/modely-images/pear_white/induction_wheels/detail3.jpeg",
-            "/assets/mainpage-images/modely-images/pear_white/induction_wheels/detail4.jpeg",
-            "/assets/mainpage-images/modely-images/pear_white/induction_wheels/detail5-black.jpeg",
-            "/assets/mainpage-images/modely-images/pear_white/induction_wheels/detail5-white.jpeg",
-          ],
+          primaryWheelImages: getModelYExteriorImages(
+            "pearl-white",
+            "crossflow",
+          ),
+          secondaryWheelImages: getModelYExteriorImages("pearl-white", "helix"),
         },
         {
           colorName: "Deep Blue Metallic",
           colorPrice: "$1000",
           colorIcon: "/assets/mainpage-images/color-icons/deep_blue.avif",
-          primaryWheelImages: [
-            "/assets/mainpage-images/modely-images/deep_blue/gemini_wheels/detail1.jpeg",
-            "/assets/mainpage-images/modely-images/deep_blue/gemini_wheels/detail2.jpeg",
-            "/assets/mainpage-images/modely-images/deep_blue/gemini_wheels/detail3.jpeg",
-            "/assets/mainpage-images/modely-images/deep_blue/gemini_wheels/detail4.jpeg",
-            "/assets/mainpage-images/modely-images/deep_blue/gemini_wheels/detail5-black.jpeg",
-            "/assets/mainpage-images/modely-images/deep_blue/gemini_wheels/detail5-white.jpeg",
-          ],
-          secondaryWheelImages: [
-            "/assets/mainpage-images/modely-images/deep_blue/induction_wheels/detail1.jpeg",
-            "/assets/mainpage-images/modely-images/deep_blue/induction_wheels/detail2.jpeg",
-            "/assets/mainpage-images/modely-images/deep_blue/induction_wheels/detail3.jpeg",
-            "/assets/mainpage-images/modely-images/deep_blue/induction_wheels/detail4.jpeg",
-            "/assets/mainpage-images/modely-images/deep_blue/induction_wheels/detail5-black.jpeg",
-            "/assets/mainpage-images/modely-images/deep_blue/induction_wheels/detail5-white.jpeg",
-          ],
+          primaryWheelImages: getModelYExteriorImages("deep-blue", "crossflow"),
+          secondaryWheelImages: getModelYExteriorImages("deep-blue", "helix"),
         },
         {
           colorName: "Solid Black",
           colorPrice: "$1000",
           colorIcon: "/assets/mainpage-images/color-icons/solid_black.avif",
-          primaryWheelImages: [
-            "/assets/mainpage-images/modely-images/solid_black/gemini_wheels/detail1.jpeg",
-            "/assets/mainpage-images/modely-images/solid_black/gemini_wheels/detail2.jpeg",
-            "/assets/mainpage-images/modely-images/solid_black/gemini_wheels/detail3.jpeg",
-            "/assets/mainpage-images/modely-images/solid_black/gemini_wheels/detail4.jpeg",
-            "/assets/mainpage-images/modely-images/solid_black/gemini_wheels/detail5-black.jpeg",
-            "/assets/mainpage-images/modely-images/solid_black/gemini_wheels/detail5-white.jpeg",
-          ],
-          secondaryWheelImages: [
-            "/assets/mainpage-images/modely-images/solid_black/induction_wheels/detail1.jpeg",
-            "/assets/mainpage-images/modely-images/solid_black/induction_wheels/detail2.jpeg",
-            "/assets/mainpage-images/modely-images/solid_black/induction_wheels/detail3.jpeg",
-            "/assets/mainpage-images/modely-images/solid_black/induction_wheels/detail4.jpeg",
-            "/assets/mainpage-images/modely-images/solid_black/induction_wheels/detail5-black.jpeg",
-            "/assets/mainpage-images/modely-images/solid_black/induction_wheels/detail5-white.jpeg",
-          ],
+          primaryWheelImages: getModelYExteriorImages(
+            "solid-black",
+            "crossflow",
+          ),
+          secondaryWheelImages: getModelYExteriorImages("solid-black", "helix"),
         },
         {
           colorName: "Ultra Red",
           colorPrice: "$1000",
           colorIcon: "/assets/mainpage-images/color-icons/ultra_red.avif",
-          primaryWheelImages: [
-            "/assets/mainpage-images/modely-images/ultra_red/gemini_wheels/detail1.jpeg",
-            "/assets/mainpage-images/modely-images/ultra_red/gemini_wheels/detail2.jpeg",
-            "/assets/mainpage-images/modely-images/ultra_red/gemini_wheels/detail3.jpeg",
-            "/assets/mainpage-images/modely-images/ultra_red/gemini_wheels/detail4.jpeg",
-            "/assets/mainpage-images/modely-images/ultra_red/gemini_wheels/detail5-black.jpeg",
-            "/assets/mainpage-images/modely-images/ultra_red/gemini_wheels/detail5-white.jpeg",
-          ],
-          secondaryWheelImages: [
-            "/assets/mainpage-images/modely-images/ultra_red/induction_wheels/detail1.jpeg",
-            "/assets/mainpage-images/modely-images/ultra_red/induction_wheels/detail2.jpeg",
-            "/assets/mainpage-images/modely-images/ultra_red/induction_wheels/detail3.jpeg",
-            "/assets/mainpage-images/modely-images/ultra_red/induction_wheels/detail4.jpeg",
-            "/assets/mainpage-images/modely-images/ultra_red/induction_wheels/detail5-black.jpeg",
-            "/assets/mainpage-images/modely-images/ultra_red/induction_wheels/detail5-white.jpeg",
-          ],
+          primaryWheelImages: getModelYExteriorImages("ultra-red", "crossflow"),
+          secondaryWheelImages: getModelYExteriorImages("ultra-red", "helix"),
         },
       ],
       wheels: [
         {
-          wheelName: '19" Gemini Dark Wheels',
+          wheelName: '19" Crossflow Wheels',
           wheelPrice: "Included",
-          wheelDescription: [" All Season Tires", "Range (est.) : 320mi"],
-          wheelIcon:
-            "/assets/mainpage-images/modely-images/gemini_wheel_icon.avif",
+          wheelDescription: ["All-Season Tires", "Range (EPA est.): 327 mi"],
+          wheelIcon: `${modelYConfiguratorPath}/model-y-stealth-grey-crossflow-wheel.avif`,
         },
         {
-          wheelName: '20" Induction Wheels',
+          wheelName: '20" Helix 2.0 Wheels',
           wheelPrice: "$2,000",
-          wheelDescription: ["All Season Tires", "Range (est.) : 295mi"],
-          wheelIcon:
-            "/assets/mainpage-images/modely-images/induction_wheel_icon.avif",
+          wheelDescription: ["All-Season Tires", "Range (EPA est.): 303 mi"],
+          wheelIcon: `${modelYConfiguratorPath}/model-y-stealth-grey-helix-wheel.avif`,
         },
       ],
       interiors: [
@@ -401,16 +358,11 @@ export const mainPageList: Vehicle[] = [
           interiorIcon:
             "/assets/mainpage-images/interior-icons/interior-black.avif",
           interiorImages: {
-            "Slealth Grey":
-              "/assets/mainpage-images/modely-images/slealth_grey/induction_wheels/detail5-black.jpeg",
-            "Pearl White":
-              "/assets/mainpage-images/modely-images/pear_white/induction_wheels/detail5-black.jpeg",
-            "Deep Blue Metallic":
-              "/assets/mainpage-images/modely-images/deep_blue/induction_wheels/detail5-black.jpeg",
-            "Solid Black":
-              "/assets/mainpage-images/modely-images/solid_black/induction_wheels/detail5-black.jpeg",
-            "Ultra Red":
-              "/assets/mainpage-images/modely-images/ultra_red/induction_wheels/detail5-black.jpeg",
+            "Stealth Grey": getModelYInteriorImage("stealth-grey", "black"),
+            "Pearl White": getModelYInteriorImage("pearl-white", "black"),
+            "Deep Blue Metallic": getModelYInteriorImage("deep-blue", "black"),
+            "Solid Black": getModelYInteriorImage("solid-black", "black"),
+            "Ultra Red": getModelYInteriorImage("ultra-red", "black"),
             "Lunar Silver": "",
           },
         },
@@ -420,16 +372,11 @@ export const mainPageList: Vehicle[] = [
           interiorIcon:
             "/assets/mainpage-images/interior-icons/interior_white.avif",
           interiorImages: {
-            "Slealth Grey":
-              "/assets/mainpage-images/modely-images/slealth_grey/induction_wheels/detail5-white.jpeg",
-            "Pearl White":
-              "/assets/mainpage-images/modely-images/pear_white/induction_wheels/detail5-white.jpeg",
-            "Deep Blue Metallic":
-              "/assets/mainpage-images/modely-images/deep_blue/induction_wheels/detail5-white.jpeg",
-            "Solid Black":
-              "/assets/mainpage-images/modely-images/solid_black/induction_wheels/detail5-white.jpeg",
-            "Ultra Red":
-              "/assets/mainpage-images/modely-images/ultra_red/induction_wheels/detail5-white.jpeg",
+            "Stealth Grey": getModelYInteriorImage("stealth-grey", "white"),
+            "Pearl White": getModelYInteriorImage("pearl-white", "white"),
+            "Deep Blue Metallic": getModelYInteriorImage("deep-blue", "white"),
+            "Solid Black": getModelYInteriorImage("solid-black", "white"),
+            "Ultra Red": getModelYInteriorImage("ultra-red", "white"),
             "Lunar Silver": "",
           },
         },

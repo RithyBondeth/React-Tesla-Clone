@@ -40,7 +40,9 @@ export default function ModelCarOrderPage({
       : selectedColor.secondaryWheelImages;
   const exteriorImageCount = Math.max(
     1,
-    exteriorImages.length - slideClickIndex.back,
+    vehicle.title === "Model Y"
+      ? exteriorImages.length
+      : exteriorImages.length - slideClickIndex.back,
   );
 
   const showExterior = interiorPreviewIndex === null && !showsAutopilot;
@@ -83,7 +85,11 @@ export default function ModelCarOrderPage({
       <main className="flex min-h-screen w-full flex-col items-center justify-center lg:h-screen lg:flex-row">
         {showExterior && (
           <div
-            className="relative h-[54svh] w-full bg-cover bg-center bg-no-repeat lg:h-screen lg:w-2/3"
+            className={`relative h-[54svh] w-full bg-center bg-no-repeat lg:h-screen lg:w-2/3 ${
+              vehicle.title === "Model Y"
+                ? "bg-[#f4f4f4] bg-contain"
+                : "bg-cover"
+            }`}
             onMouseEnter={() => setShowsSlideButtons(true)}
             onMouseLeave={() => setShowsSlideButtons(false)}
             style={{ backgroundImage: `url(${exteriorImages[imageIndex]})` }}
