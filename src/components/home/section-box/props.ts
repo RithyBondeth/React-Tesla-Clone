@@ -10,5 +10,7 @@ export interface SectionBoxProps {
   promotion: string;
   supportingText: string;
   highlights: VehicleHighlight[];
+  imageHeight?: number;
+  isPriority?: boolean;
   showScrollCue?: boolean;
 }

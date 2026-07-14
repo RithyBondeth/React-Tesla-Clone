@@ -63,19 +63,19 @@ export const menuList: NavigationMenu[] = [
         {
           productName: "Solar Panels",
           productImage: "/assets/navbar-images/energy-images/solar-panel.avif",
-          productLink: "/solar_panel",
+          productLink: "/energy",
           productDescription: ["Learn", "Order"],
         },
         {
           productName: "Solar Roof",
           productImage: "/assets/navbar-images/energy-images/solar-roof.avif",
-          productLink: "/solar_roof",
+          productLink: "/energy",
           productDescription: ["Learn", "Order"],
         },
         {
           productName: "Powerwall",
           productImage: "/assets/navbar-images/energy-images/powerwall.avif",
-          productLink: "powerwall",
+          productLink: "/powerwall",
           productDescription: ["Learn", "Order"],
         },
         {

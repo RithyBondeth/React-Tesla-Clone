@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 import type { MenuBoxProps } from "./props";
 
 const DISCOVER_COLUMN_RANGES = [
@@ -33,14 +35,19 @@ export default function MenuBox({
           className={`grid gap-2 p-6 ${isShopMenu ? "grid-cols-4" : "grid-cols-3"}`}
         >
           {menu.items.products.map((product) => (
-            <div
+            <Link
               className="flex min-w-[210px] flex-col items-center justify-center rounded-lg p-2 transition hover:bg-[#f4f4f4]"
               key={product.productName}
+              to={product.productLink}
             >
               <img
                 alt={product.productName}
                 className="h-[110px] w-[210px] object-contain"
+                decoding="async"
+                height="110"
+                loading="lazy"
                 src={product.productImage}
+                width="210"
               />
               <div className="flex flex-col items-center justify-center">
                 <p className="font-semibold text-[#171a20]">
@@ -57,7 +64,7 @@ export default function MenuBox({
                   ))}
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       )}

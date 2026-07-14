@@ -80,10 +80,10 @@ export default function ModelCarOrderPage({
     <>
       <Navbar isDetail />
 
-      <main className="flex h-full w-screen items-center justify-center">
+      <main className="flex min-h-screen w-full flex-col items-center justify-center lg:h-screen lg:flex-row">
         {showExterior && (
           <div
-            className="relative h-screen w-2/3 bg-cover bg-center bg-no-repeat"
+            className="relative h-[54svh] w-full bg-cover bg-center bg-no-repeat lg:h-screen lg:w-2/3"
             onMouseEnter={() => setShowsSlideButtons(true)}
             onMouseLeave={() => setShowsSlideButtons(false)}
             style={{ backgroundImage: `url(${exteriorImages[imageIndex]})` }}
@@ -92,19 +92,19 @@ export default function ModelCarOrderPage({
               <>
                 <button
                   aria-label="Previous vehicle image"
-                  className="material-symbols-outlined absolute left-10 top-1/2 -translate-y-1/2 cursor-pointer rounded-md bg-gray-200 p-2 text-base"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 cursor-pointer rounded-md bg-gray-200 px-3 py-2 text-xl sm:left-10"
                   onClick={() => changeExteriorImage(-1)}
                   type="button"
                 >
-                  arrow_back_ios
+                  ‹
                 </button>
                 <button
                   aria-label="Next vehicle image"
-                  className="material-symbols-outlined absolute right-10 top-1/2 -translate-y-1/2 cursor-pointer rounded-md bg-gray-200 p-2 text-base"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer rounded-md bg-gray-200 px-3 py-2 text-xl sm:right-10"
                   onClick={() => changeExteriorImage(1)}
                   type="button"
                 >
-                  arrow_forward_ios
+                  ›
                 </button>
               </>
             )}
@@ -113,14 +113,14 @@ export default function ModelCarOrderPage({
 
         {interiorPreviewImage && (
           <div
-            className="relative h-screen w-2/3 bg-cover bg-center bg-no-repeat"
+            className="relative h-[54svh] w-full bg-cover bg-center bg-no-repeat lg:h-screen lg:w-2/3"
             style={{ backgroundImage: `url(${interiorPreviewImage})` }}
           />
         )}
 
         {showsAutopilot && (
           <div
-            className="relative h-screen w-2/3 overflow-hidden"
+            className="relative h-[54svh] w-full overflow-hidden lg:h-screen lg:w-2/3"
             onMouseEnter={() => setShowsSlideButtons(true)}
             onMouseLeave={() => setShowsSlideButtons(false)}
           >
@@ -138,26 +138,26 @@ export default function ModelCarOrderPage({
               <>
                 <button
                   aria-label="Previous autopilot video"
-                  className="material-symbols-outlined absolute left-10 top-1/2 -translate-y-1/2 cursor-pointer rounded-md bg-gray-200 p-2 text-base"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 cursor-pointer rounded-md bg-gray-200 px-3 py-2 text-xl sm:left-10"
                   onClick={() => changeAutopilotVideo(-1)}
                   type="button"
                 >
-                  arrow_back_ios
+                  ‹
                 </button>
                 <button
                   aria-label="Next autopilot video"
-                  className="material-symbols-outlined absolute right-10 top-1/2 -translate-y-1/2 cursor-pointer rounded-md bg-gray-200 p-2 text-base"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer rounded-md bg-gray-200 px-3 py-2 text-xl sm:right-10"
                   onClick={() => changeAutopilotVideo(1)}
                   type="button"
                 >
-                  arrow_forward_ios
+                  ›
                 </button>
               </>
             )}
           </div>
         )}
 
-        <div className="h-screen w-1/3 overflow-scroll">
+        <div className="h-auto w-full overflow-y-auto lg:h-screen lg:w-1/3">
           <header className="flex flex-col items-center justify-center pb-3 pt-20">
             <h1 className="text-3xl font-bold">{vehicle.title}</h1>
           </header>
@@ -358,8 +358,11 @@ export default function ModelCarOrderPage({
           <section className="flex flex-col items-center justify-center py-5">
             <h2 className="text-3xl font-bold">Charging</h2>
             <div className="my-5 flex items-center justify-center">
-              <span className="material-symbols-outlined text-blue-500">
-                info
+              <span
+                aria-hidden="true"
+                className="flex h-5 w-5 items-center justify-center rounded-full border border-blue-500 text-xs font-semibold text-blue-500"
+              >
+                i
               </span>
               <p className="ml-2 text-sm">
                 Home charging equipment is not included
@@ -437,8 +440,11 @@ export default function ModelCarOrderPage({
             </p>
             <div className="flex items-start justify-center px-5">
               {orderData.lastOrders[2] && (
-                <span className="material-symbols-outlined text-green-500">
-                  check
+                <span
+                  aria-hidden="true"
+                  className="font-semibold text-green-500"
+                >
+                  ✓
                 </span>
               )}
               <p className="ml-2 text-sm">{orderData.lastOrders[2]}</p>

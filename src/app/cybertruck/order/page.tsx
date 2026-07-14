@@ -38,13 +38,13 @@ export default function CybertruckOrderPage({
     <div>
       <Navbar isBlurred isDetail isWhiteText />
 
-      <main className="flex items-center justify-center overflow-hidden">
+      <main className="flex min-h-screen flex-col items-center justify-center overflow-hidden lg:h-screen lg:flex-row">
         <div
-          className="h-screen w-2/3 bg-cover bg-center bg-no-repeat"
+          className="h-[54svh] w-full bg-cover bg-center bg-no-repeat lg:h-screen lg:w-2/3"
           style={{ backgroundImage: `url(${orderData.poster})` }}
         />
 
-        <section className="flex h-screen w-1/3 flex-col items-center justify-start overflow-scroll bg-cybertruckBlackBg px-5">
+        <section className="flex h-auto min-h-[46svh] w-full flex-col items-center justify-start overflow-y-auto bg-cybertruckBlackBg px-5 lg:h-screen lg:w-1/3">
           <h1 className="w-full pt-20 text-2xl uppercase text-cybertruckGrayText">
             Reserve Now
           </h1>

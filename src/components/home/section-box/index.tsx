@@ -7,24 +7,39 @@ export default function SectionBox({
   promotion,
   supportingText,
   highlights,
+  imageHeight = 1080,
+  isPriority = false,
   showScrollCue = false,
 }: SectionBoxProps) {
   const textColor = vehicle.hasDarkText ? "text-[#171a20]" : "text-white";
 
   return (
     <section
-      className="relative min-h-[100svh] w-full overflow-hidden bg-cover bg-center bg-no-repeat"
+      aria-labelledby={`heading-${vehicle.title.toLowerCase().replace(" ", "-")}`}
+      className="relative min-h-[100svh] w-full overflow-hidden bg-[#d8dde3]"
       id={`vehicle-${vehicle.title.toLowerCase().replace(" ", "-")}`}
-      style={{ backgroundImage: `url(${vehicle.poster})` }}
     >
-      <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-black/50" />
+      <img
+        alt={`${vehicle.title} driving`}
+        className="hero-media absolute inset-0 h-full w-full object-cover object-center"
+        decoding="async"
+        fetchPriority={isPriority ? "high" : "auto"}
+        height={imageHeight}
+        loading={isPriority ? "eager" : "lazy"}
+        src={vehicle.poster}
+        width="1920"
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-white/20 via-transparent to-black/55" />
 
       <div className="relative z-10 flex min-h-[100svh] flex-col items-center justify-between px-5 pb-8 pt-32 text-center sm:px-8 sm:pb-10 sm:pt-36">
-        <header className={`max-w-2xl ${textColor}`}>
+        <header className={`hero-copy max-w-2xl ${textColor}`}>
           <p className="mb-3 inline-flex rounded-full bg-white/70 px-4 py-1.5 text-xs font-semibold tracking-wide text-[#171a20] shadow-sm backdrop-blur-md sm:text-sm">
             {promotion}
           </p>
-          <h1 className="text-5xl font-semibold tracking-[-0.04em] sm:text-6xl lg:text-7xl">
+          <h1
+            className="text-5xl font-semibold tracking-[-0.04em] sm:text-6xl lg:text-7xl"
+            id={`heading-${vehicle.title.toLowerCase().replace(" ", "-")}`}
+          >
             {vehicle.title}
           </h1>
           <p className="mt-3 text-lg font-medium sm:text-xl">
@@ -71,8 +86,8 @@ export default function SectionBox({
             className="absolute bottom-2 animate-bounce text-white"
             href="#vehicle-model-3"
           >
-            <span className="material-symbols-outlined">
-              keyboard_arrow_down
+            <span aria-hidden="true" className="text-2xl">
+              ↓
             </span>
           </a>
         )}

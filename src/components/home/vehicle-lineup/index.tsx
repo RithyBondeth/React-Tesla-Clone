@@ -4,7 +4,10 @@ import type { VehicleLineupProps } from "./props";
 
 export default function VehicleLineup({ vehicles }: VehicleLineupProps) {
   return (
-    <section className="bg-[#f4f4f4] px-4 py-20 sm:px-6 lg:px-10" id="compare">
+    <section
+      className="content-auto bg-[#f4f4f4] px-4 py-20 sm:px-6 lg:px-10"
+      id="compare"
+    >
       <div className="mx-auto max-w-7xl">
         <header className="mb-10 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -27,10 +30,18 @@ export default function VehicleLineup({ vehicles }: VehicleLineupProps) {
 
             return (
               <article
-                className="group relative min-h-[560px] overflow-hidden rounded-xl bg-cover bg-center shadow-sm"
+                className="group relative min-h-[560px] overflow-hidden rounded-xl bg-[#d9dde1] shadow-sm"
                 key={vehicle.title}
-                style={{ backgroundImage: `url(${vehicle.poster})` }}
               >
+                <img
+                  alt={`${vehicle.title} exterior`}
+                  className="card-media absolute inset-0 h-full w-full object-cover object-center"
+                  decoding="async"
+                  height="900"
+                  loading="lazy"
+                  src={vehicle.poster}
+                  width="1200"
+                />
                 <div className="absolute inset-0 bg-gradient-to-b from-white/15 via-transparent to-black/75" />
                 <div className="relative flex min-h-[560px] flex-col justify-between p-6 sm:p-8">
                   <div className="text-center text-[#171a20]">

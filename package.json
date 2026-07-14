@@ -15,12 +15,13 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "npm run verify:media && react-scripts build",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext .ts,.tsx",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "react-scripts test",
+    "verify:media": "node scripts/verify-local-media.mjs",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

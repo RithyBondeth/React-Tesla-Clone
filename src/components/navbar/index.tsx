@@ -5,12 +5,12 @@ import { menuList } from "../../data/navbar-data";
 import MenuBox from "./menu-box";
 import type { NavbarProps } from "./props";
 
-const HOME_ANCHORS: Record<string, string> = {
-  Charging: "charging",
-  Discover: "compare",
-  Energy: "energy",
-  Shop: "energy",
-  Vehicles: "vehicles",
+const MOBILE_MENU_PATHS: Record<string, string> = {
+  Charging: "/#charging",
+  Discover: "/#discover",
+  Energy: "/energy",
+  Shop: "/#energy",
+  Vehicles: "/#vehicles",
 };
 
 export default function Navbar({
@@ -21,7 +21,27 @@ export default function Navbar({
 }: NavbarProps) {
   const [activeMenuName, setActiveMenuName] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const [usesWhiteText, setUsesWhiteText] = useState(isWhiteText);
+
+  useEffect(() => {
+    let animationFrame = 0;
+
+    const updateNavigation = () => {
+      cancelAnimationFrame(animationFrame);
+      animationFrame = requestAnimationFrame(() => {
+        setIsScrolled(window.scrollY > 32);
+      });
+    };
+
+    updateNavigation();
+    window.addEventListener("scroll", updateNavigation, { passive: true });
+
+    return () => {
+      cancelAnimationFrame(animationFrame);
+      window.removeEventListener("scroll", updateNavigation);
+    };
+  }, []);
 
   useEffect(() => {
     setUsesWhiteText(isWhiteText);
@@ -29,12 +49,31 @@ export default function Navbar({
 
   useEffect(() => {
     const shouldLockScroll = Boolean(activeMenuName || isMobileMenuOpen);
-    document.body.style.overflow = shouldLockScroll ? "hidden" : "auto";
+    const previousOverflow = document.body.style.overflow;
+
+    if (shouldLockScroll) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.removeProperty("overflow");
+    }
 
     return () => {
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = previousOverflow;
     };
   }, [activeMenuName, isMobileMenuOpen]);
+
+  useEffect(() => {
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setActiveMenuName(null);
+        setIsMobileMenuOpen(false);
+        setUsesWhiteText(isWhiteText);
+      }
+    };
+
+    document.addEventListener("keydown", closeOnEscape);
+    return () => document.removeEventListener("keydown", closeOnEscape);
+  }, [isWhiteText]);
 
   const closeMenus = () => {
     setActiveMenuName(null);
@@ -50,7 +89,7 @@ export default function Navbar({
         className={`fixed inset-x-0 z-50 flex h-16 items-center justify-between px-3 transition sm:px-5 ${
           hasAnnouncement ? "top-12" : "top-0"
         } ${
-          activeMenuName || isMobileMenuOpen
+          activeMenuName || isMobileMenuOpen || isScrolled
             ? "bg-white/90 shadow-sm backdrop-blur-xl"
             : isBlurred
               ? usesWhiteText
@@ -62,8 +101,11 @@ export default function Navbar({
         <Link aria-label="Tesla clone home" onClick={closeMenus} to="/">
           <img
             alt="Tesla"
-            className={`h-12 w-[112px] object-contain ${usesWhiteText && !activeMenuName ? "invert" : ""}`}
+            className={`h-12 w-[112px] object-contain ${usesWhiteText && !activeMenuName && !isMobileMenuOpen && !isScrolled ? "invert" : ""}`}
+            decoding="async"
+            height="48"
             src="/assets/tesla-logo.png"
+            width="112"
           />
         </Link>
 
@@ -72,7 +114,7 @@ export default function Navbar({
             {menuList.map((menu) => (
               <button
                 className={`rounded px-3 py-1.5 text-sm font-semibold transition hover:bg-black/5 ${
-                  activeMenuName ? "text-[#171a20]" : navTextColor
+                  activeMenuName || isScrolled ? "text-[#171a20]" : navTextColor
                 }`}
                 key={menu.name}
                 onFocus={() => {
@@ -92,7 +134,7 @@ export default function Navbar({
         )}
 
         <div
-          className={`flex items-center ${activeMenuName || isMobileMenuOpen ? "text-[#171a20]" : navTextColor}`}
+          className={`flex items-center ${activeMenuName || isMobileMenuOpen || isScrolled ? "text-[#171a20]" : navTextColor}`}
         >
           {!isDetail && (
             <>
@@ -103,22 +145,26 @@ export default function Navbar({
                 rel="noreferrer"
                 target="_blank"
               >
-                <span className="material-symbols-outlined">help</span>
+                <span aria-hidden="true" className="text-lg font-semibold">
+                  ?
+                </span>
               </a>
               <button
                 aria-label="Choose region"
                 className="hidden rounded p-1.5 transition hover:bg-black/5 lg:inline-flex"
                 type="button"
               >
-                <span className="material-symbols-outlined">language</span>
+                <span aria-hidden="true" className="text-xl">
+                  ◎
+                </span>
               </button>
               <button
                 aria-label="Tesla account"
                 className="hidden rounded p-1.5 transition hover:bg-black/5 lg:inline-flex"
                 type="button"
               >
-                <span className="material-symbols-outlined">
-                  account_circle
+                <span aria-hidden="true" className="text-xl">
+                  ◯
                 </span>
               </button>
             </>
@@ -129,7 +175,9 @@ export default function Navbar({
               className="flex items-center gap-1 rounded px-2 py-1.5 text-sm font-semibold transition hover:bg-black/5"
               type="button"
             >
-              <span className="material-symbols-outlined">language</span>
+              <span aria-hidden="true" className="text-xl">
+                ◎
+              </span>
               <span>US</span>
             </button>
           ) : (
@@ -173,11 +221,11 @@ export default function Navbar({
                 <Link
                   className="flex items-center justify-between rounded-lg px-4 py-4 text-xl font-semibold text-[#171a20] transition hover:bg-[#f4f4f4]"
                   onClick={closeMenus}
-                  to={`/#${HOME_ANCHORS[menu.name]}`}
+                  to={MOBILE_MENU_PATHS[menu.name]}
                 >
                   {menu.name}
-                  <span className="material-symbols-outlined">
-                    chevron_right
+                  <span aria-hidden="true" className="text-2xl">
+                    ›
                   </span>
                 </Link>
               </li>
@@ -196,7 +244,9 @@ export default function Navbar({
               className="flex items-center gap-3 rounded-lg px-4 py-3 text-left hover:bg-[#f4f4f4]"
               type="button"
             >
-              <span className="material-symbols-outlined">language</span>
+              <span aria-hidden="true" className="text-xl">
+                ◎
+              </span>
               United States · English
             </button>
           </div>

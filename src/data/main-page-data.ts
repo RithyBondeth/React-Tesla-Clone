@@ -8,7 +8,7 @@ export const mainPageList: Vehicle[] = [
     subtitle: "Long Range AWD From $34,990",
     description: "After Est. Savings",
     hasDarkText: true,
-    poster: "/assets/mainpage-images/model3-images/tesla-model3.avif",
+    poster: "/assets/tesla-official/model-3-hero.avif",
     buttons: [
       {
         label: "Order Now",
@@ -235,7 +235,7 @@ export const mainPageList: Vehicle[] = [
     subtitle: "From $31,490",
     description: "After Est. Savings",
     hasDarkText: true,
-    poster: "/assets/mainpage-images/modely-images/tesla-modely.avif",
+    poster: "/assets/tesla-official/model-y-hero.avif",
     buttons: [
       {
         label: "Order Now",
