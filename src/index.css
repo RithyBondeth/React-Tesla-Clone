@@ -108,11 +108,6 @@ div[id] {
 * {
   scrollbar-width: none;
 }
-video::-webkit-media-controls-panel {
-  display: none !important;
-  opacity: 1 !important;
-}
-
 input[type="checkbox"] {
   appearance: none;
 }

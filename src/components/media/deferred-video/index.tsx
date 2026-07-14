@@ -4,6 +4,8 @@ import type { DeferredVideoProps } from "./props";
 
 export default function DeferredVideo({
   className,
+  controls = false,
+  label,
   poster,
   src,
 }: DeferredVideoProps) {
@@ -54,14 +56,16 @@ export default function DeferredVideo({
 
   return (
     <video
-      aria-hidden="true"
+      aria-hidden={controls ? undefined : true}
+      aria-label={controls ? label : undefined}
       autoPlay={isVisible && shouldLoad}
       className={className}
+      controls={controls}
       loop
       muted
       playsInline
       poster={poster}
-      preload={shouldLoad ? "metadata" : "none"}
+      preload={shouldLoad ? "auto" : "none"}
       ref={videoRef}
       src={shouldLoad ? src : undefined}
     />

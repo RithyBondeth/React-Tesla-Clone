@@ -1,94 +1,148 @@
+import { useRef } from "react";
 import { Link } from "react-router-dom";
 
 import type { VehicleLineupProps } from "./props";
 
-export default function VehicleLineup({ vehicles }: VehicleLineupProps) {
+const CURRENT_CARD_IMAGES: Record<string, { desktop: string; mobile: string }> =
+  {
+    "Model 3": {
+      desktop: "/assets/tesla-official/homepage-card-model-3-desktop.avif",
+      mobile: "/assets/tesla-official/homepage-card-model-3-mobile.avif",
+    },
+    "Model Y": {
+      desktop: "/assets/tesla-official/homepage-card-model-y-desktop.avif",
+      mobile: "/assets/tesla-official/homepage-card-model-y-mobile.avif",
+    },
+  };
+
+export default function VehicleLineup({
+  cybertruck,
+  vehicles,
+}: VehicleLineupProps) {
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const cards = vehicles.map((vehicle) => {
+    const primaryOption = vehicle.orderData.options[0];
+
+    return {
+      image: CURRENT_CARD_IMAGES[vehicle.title]?.desktop ?? vehicle.poster,
+      mobileImage: CURRENT_CARD_IMAGES[vehicle.title]?.mobile ?? vehicle.poster,
+      primaryLink: vehicle.buttons[0].link,
+      secondaryLabel: "Learn More",
+      secondaryLink: vehicle.buttons[1].link,
+      subtitle: primaryOption.optionName,
+      title: vehicle.title,
+    };
+  });
+
+  if (cybertruck) {
+    cards.push({
+      image: cybertruck.poster,
+      mobileImage: cybertruck.poster,
+      primaryLink: cybertruck.buttons[0].link,
+      secondaryLabel: cybertruck.buttons[1].label,
+      secondaryLink: cybertruck.buttons[1].link,
+      subtitle: "Durable utility for any road",
+      title: cybertruck.title.text,
+    });
+  }
+
+  const scrollCarousel = (direction: number) => {
+    carouselRef.current?.scrollBy({
+      behavior: "smooth",
+      left: direction * carouselRef.current.clientWidth * 0.82,
+    });
+  };
+
   return (
     <section
-      className="content-auto bg-[#f4f4f4] px-4 py-20 sm:px-6 lg:px-10"
+      className="content-auto bg-[#f4f4f4] px-4 py-14 sm:px-6 sm:py-20 lg:px-10"
       id="compare"
     >
+      <span className="sr-only" id="discover">
+        Explore Tesla products
+      </span>
       <div className="mx-auto max-w-7xl">
-        <header className="mb-10 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <header className="mb-7 flex items-end justify-between gap-5">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#5c5e62]">
-              Explore the lineup
+            <p className="text-sm font-semibold text-[#5c5e62]">
+              Tesla vehicles
             </p>
-            <h2 className="mt-2 text-4xl font-semibold tracking-[-0.035em] text-[#171a20] sm:text-5xl">
-              Find your Tesla
+            <h2 className="mt-1 text-4xl font-semibold tracking-[-0.04em] text-[#171a20] sm:text-5xl">
+              Explore the lineup
             </h2>
           </div>
-          <p className="max-w-md text-sm leading-6 text-[#5c5e62] sm:text-right">
-            Compare range, acceleration and top speed, then configure the model
-            that fits your drive.
-          </p>
+          <div className="hidden gap-2 sm:flex">
+            <button
+              aria-label="Previous vehicle"
+              className="grid h-11 w-11 place-items-center rounded-full bg-white text-2xl text-[#171a20] shadow-sm transition hover:bg-[#e8e8e8]"
+              onClick={() => scrollCarousel(-1)}
+              type="button"
+            >
+              ‹
+            </button>
+            <button
+              aria-label="Next vehicle"
+              className="grid h-11 w-11 place-items-center rounded-full bg-white text-2xl text-[#171a20] shadow-sm transition hover:bg-[#e8e8e8]"
+              onClick={() => scrollCarousel(1)}
+              type="button"
+            >
+              ›
+            </button>
+          </div>
         </header>
 
-        <div className="grid gap-5 lg:grid-cols-2">
-          {vehicles.map((vehicle) => {
-            const primaryOption = vehicle.orderData.options[0];
-
-            return (
-              <article
-                className="group relative min-h-[560px] overflow-hidden rounded-xl bg-[#d9dde1] shadow-sm"
-                key={vehicle.title}
-              >
+        <div
+          aria-label="Tesla vehicle lineup"
+          className="grid snap-x snap-mandatory grid-flow-col auto-cols-[90%] gap-4 overflow-x-auto overscroll-x-contain pb-3 sm:auto-cols-[72%] lg:auto-cols-[calc(50%-0.5rem)]"
+          ref={carouselRef}
+          role="region"
+          tabIndex={0}
+        >
+          {cards.map((card) => (
+            <article
+              className="group relative min-h-[540px] snap-start overflow-hidden rounded-2xl bg-[#d9dde1] sm:min-h-[580px]"
+              key={card.title}
+            >
+              <picture>
+                <source media="(max-width: 767px)" srcSet={card.mobileImage} />
                 <img
-                  alt={`${vehicle.title} exterior`}
+                  alt={`${card.title} exterior`}
                   className="card-media absolute inset-0 h-full w-full object-cover object-center"
                   decoding="async"
-                  height="900"
+                  height="1088"
                   loading="lazy"
-                  src={vehicle.poster}
-                  width="1200"
+                  src={card.image}
+                  width="1920"
                 />
-                <div className="absolute inset-0 bg-gradient-to-b from-white/15 via-transparent to-black/75" />
-                <div className="relative flex min-h-[560px] flex-col justify-between p-6 sm:p-8">
-                  <div className="text-center text-[#171a20]">
-                    <h3 className="text-4xl font-semibold tracking-[-0.035em]">
-                      {vehicle.title}
-                    </h3>
-                    <p className="mt-2 text-sm font-medium">
-                      {primaryOption.optionName}
-                    </p>
-                  </div>
+              </picture>
+              <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/60" />
+              <div className="relative flex min-h-[540px] flex-col justify-between p-6 text-white sm:min-h-[580px] sm:p-8">
+                <header>
+                  <h3 className="text-4xl font-semibold tracking-[-0.04em] sm:text-5xl">
+                    {card.title}
+                  </h3>
+                  <p className="mt-2 text-sm font-medium text-white/85">
+                    {card.subtitle}
+                  </p>
+                </header>
 
-                  <div>
-                    <dl className="grid grid-cols-3 rounded-lg bg-black/35 px-3 py-4 text-center text-white backdrop-blur-md">
-                      {primaryOption.optionMachine.map((value, index) => (
-                        <div key={value}>
-                          <dt className="text-lg font-semibold sm:text-xl">
-                            {value}
-                          </dt>
-                          <dd className="mt-1 text-[10px] uppercase tracking-[0.12em] text-white/70">
-                            {index === 0
-                              ? "Range"
-                              : index === 1
-                                ? "Top Speed"
-                                : "0–60 mph"}
-                          </dd>
-                        </div>
-                      ))}
-                    </dl>
-                    <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                      <Link
-                        className="rounded bg-white px-6 py-3 text-center text-sm font-semibold text-[#171a20] transition group-hover:bg-white/95"
-                        to={vehicle.buttons[0].link}
-                      >
-                        Order Now
-                      </Link>
-                      <Link
-                        className="rounded bg-[#171a20]/90 px-6 py-3 text-center text-sm font-semibold text-white backdrop-blur-md transition hover:bg-black"
-                        to="/demo_drive"
-                      >
-                        Demo Drive
-                      </Link>
-                    </div>
-                  </div>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <Link
+                    className="rounded bg-[#171a20] px-6 py-3 text-center text-sm font-semibold text-white transition hover:bg-black"
+                    to={card.primaryLink}
+                  >
+                    Order Now
+                  </Link>
+                  <Link
+                    className="rounded bg-white/90 px-6 py-3 text-center text-sm font-semibold text-[#171a20] backdrop-blur-md transition hover:bg-white"
+                    to={card.secondaryLink}
+                  >
+                    {card.secondaryLabel}
+                  </Link>
                 </div>
-              </article>
-            );
-          })}
+              </div>
+            </article>
+          ))}
         </div>
       </div>
     </section>

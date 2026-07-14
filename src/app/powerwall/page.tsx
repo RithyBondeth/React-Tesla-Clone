@@ -1,7 +1,7 @@
 import EnergyPageHero from "../../components/energy/page-hero";
+import PowerwallTimeline from "../../components/energy/powerwall-timeline";
 import EnergyStatBand from "../../components/energy/stat-band";
 import SiteFooter from "../../components/home/site-footer";
-import DeferredVideo from "../../components/media/deferred-video";
 import Navbar from "../../components/navbar";
 
 const POWERWALL_BENEFITS = [
@@ -58,6 +58,8 @@ export default function PowerwallPage() {
           title="Powerwall"
         />
 
+        <PowerwallTimeline />
+
         <EnergyStatBand
           stats={[
             { detail: "Battery Power", value: "6.7 GW" },
@@ -81,6 +83,18 @@ export default function PowerwallPage() {
                 makes it available based on the needs of your home.
               </p>
             </header>
+
+            <div className="relative mt-12 min-h-[520px] overflow-hidden rounded-2xl bg-[#d9dde1] lg:min-h-[680px]">
+              <img
+                alt="A home powered by solar panels and Powerwall"
+                className="absolute inset-0 h-full w-full object-cover object-center"
+                decoding="async"
+                height="1200"
+                loading="lazy"
+                src="/assets/tesla-official/powerwall-home.avif"
+                width="1920"
+              />
+            </div>
 
             <div className="mt-12 grid gap-4 lg:grid-cols-3">
               {POWERWALL_BENEFITS.map((benefit, index) => (
@@ -106,23 +120,27 @@ export default function PowerwallPage() {
         <section className="content-auto bg-[#0b0c0e] px-5 py-20 text-white sm:px-8 lg:px-10">
           <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.35fr_0.65fr] lg:items-center">
             <div className="overflow-hidden rounded-2xl bg-[#17191c]">
-              <DeferredVideo
-                className="aspect-video h-full w-full object-cover"
-                poster="/assets/tesla-official/energy-app-overview-poster.avif"
-                src="/assets/tesla-official/energy-app-overview.mp4"
+              <img
+                alt="Tesla app screens for monitoring and controlling Powerwall"
+                className="aspect-[1920/823] h-full w-full object-cover"
+                decoding="async"
+                height="823"
+                loading="lazy"
+                src="/assets/tesla-official/powerwall-app.avif"
+                width="1920"
               />
             </div>
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.16em] text-white/50">
-                Tesla app
+                Maximum efficiency, lower cost
               </p>
               <h2 className="mt-3 text-4xl font-semibold tracking-[-0.04em] sm:text-5xl">
-                Your energy at a glance
+                One system, one app
               </h2>
               <p className="mt-5 max-w-lg leading-7 text-white/65">
-                Monitor solar production, home consumption and Powerwall charge
-                level in real time. Change power modes and control how stored
-                energy is used directly from your phone.
+                An integrated solar inverter means fewer parts and faster
+                installation. Monitor production, consumption and Powerwall
+                charge level, then adjust power modes from the Tesla app.
               </p>
             </div>
           </div>
@@ -131,26 +149,26 @@ export default function PowerwallPage() {
         <section className="content-auto grid bg-[#111214] text-white lg:grid-cols-2">
           <div className="relative min-h-[520px] overflow-hidden lg:min-h-[720px]">
             <img
-              alt="Two Powerwall units installed against a concrete wall"
+              alt="A snow-covered home with Powerwall installed outside"
               className="absolute inset-0 h-full w-full object-cover"
               decoding="async"
               height="885"
               loading="lazy"
-              src="/assets/tesla-official/powerwall-hero.avif"
+              src="/assets/tesla-official/powerwall-weather.avif"
               width="1920"
             />
           </div>
           <div className="flex flex-col justify-center px-7 py-14 sm:px-12 lg:px-16">
             <p className="text-sm font-semibold uppercase tracking-[0.16em] text-white/55">
-              Maximum efficiency
+              Built for any weather
             </p>
             <h2 className="mt-3 text-4xl font-semibold tracking-[-0.04em] sm:text-5xl">
-              Compact, integrated and scalable
+              Energy that&apos;s there when you need it
             </h2>
             <p className="mt-5 max-w-lg leading-7 text-white/65">
-              Powerwall 3 combines battery storage, a solar inverter and system
-              controls in one weather-resistant unit that can expand with your
-              energy needs.
+              Powerwall is designed for extreme temperatures, high humidity and
+              flooding. Heat Mode intelligently maintains performance in
+              temperatures as low as -4°F.
             </p>
           </div>
         </section>
@@ -217,6 +235,48 @@ export default function PowerwallPage() {
                 target="_blank"
               >
                 Order Powerwall 3
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <section className="content-auto grid bg-black px-5 py-16 text-white sm:px-8 lg:grid-cols-2 lg:px-10">
+          <div className="flex min-h-[480px] items-center justify-center">
+            <img
+              alt="Powerwall 3"
+              className="h-auto max-h-[620px] w-full object-contain"
+              decoding="async"
+              height="1080"
+              loading="lazy"
+              src="/assets/tesla-official/powerwall-final.avif"
+              width="1920"
+            />
+          </div>
+          <div className="flex flex-col justify-center px-2 py-10 sm:px-8 lg:px-16">
+            <p className="text-sm font-semibold text-white/50">Powerwall 3</p>
+            <h2 className="mt-2 text-4xl font-semibold tracking-[-0.04em] sm:text-6xl">
+              Power everything
+            </h2>
+            <p className="mt-5 max-w-lg leading-7 text-white/65">
+              Order online or schedule a call with a Tesla Advisor to design a
+              home energy system around your needs.
+            </p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <a
+                className="rounded bg-white px-7 py-3 text-center text-sm font-semibold text-[#171a20]"
+                href="https://www.tesla.com/powerwall/design"
+                rel="noreferrer"
+                target="_blank"
+              >
+                Order Powerwall 3
+              </a>
+              <a
+                className="rounded border border-white/25 bg-white/10 px-7 py-3 text-center text-sm font-semibold"
+                href="https://www.tesla.com/solar-virtual-consultations"
+                rel="noreferrer"
+                target="_blank"
+              >
+                Schedule a Call
               </a>
             </div>
           </div>
