@@ -1,70 +1,48 @@
-# Getting Started with Create React App
+# React Tesla Clone
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A Tesla-inspired product site built with React, TypeScript, React Router, and
+Tailwind CSS.
 
-## Available Scripts
+## Development
 
-In the project directory, you can run:
+```bash
+npm install
+npm start
+```
 
-### `npm start`
+The development server uses port `3000` when it is available.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Quality checks
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```bash
+npm run typecheck
+npm run lint
+npm run format:check
+npm run build
+```
 
-### `npm test`
+Use `npm run format` to apply Prettier formatting.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Project structure
 
-### `npm run build`
+The source layout follows the feature-oriented conventions used by
+`apsaratalent-web` while remaining compatible with Create React App:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```text
+src/
+├── app/                 # Route-level pages and router composition
+│   ├── cybertruck/
+│   ├── home/
+│   └── vehicles/
+├── components/          # Reusable components grouped by feature
+│   ├── home/
+│   └── navbar/
+├── data/                # Typed static product and navigation data
+├── utils/
+│   └── types/           # Shared TypeScript domain models
+├── index.css
+└── index.tsx            # Browser entry point
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Component folders use kebab-case names and expose an `index.tsx`; reusable
+component contracts live in adjacent `props.ts` files.

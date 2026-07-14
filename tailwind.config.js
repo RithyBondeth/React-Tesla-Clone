@@ -1,22 +1,16 @@
-/** @type {import('tailwindcss').Config} */
-/** @type {import('tailwindcss').Config} */
-
+/** @type {import("tailwindcss").Config} */
 module.exports = {
-  content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-  ],
+  content: ["./src/**/*.{ts,tsx}"],
   theme: {
-    screens: {},
     extend: {
       colors: {
-        'cybertruckGrayText': '#C7C7C7',
-        'cybertruckGrayBorder': '#C7C7C7',
-        'cybertruckGrayBg': '#1A1A1A',
-        'cybertruckBlackBg': '#111111',
-        'cybertruckSlideBg': '#151516',
-      }
-    }
+        cybertruckBlackBg: "#111111",
+        cybertruckGrayBg: "#1A1A1A",
+        cybertruckGrayBorder: "#C7C7C7",
+        cybertruckGrayText: "#C7C7C7",
+        cybertruckSlideBg: "#151516",
+      },
+    },
   },
   plugins: [],
-}
-
+};
