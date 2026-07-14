@@ -74,13 +74,21 @@ const HERO_SLIDES: HeroSlide[] = [
   },
 ];
 
-export default function HeroCarousel() {
+interface HeroCarouselProps {
+  onThemeChange?: (usesLightText: boolean) => void;
+}
+
+export default function HeroCarousel({ onThemeChange }: HeroCarouselProps) {
   const [activeIndex, setActiveIndex] = useState(1);
   const [isReducedMotion, setIsReducedMotion] = useState(false);
   const [isRotationPaused, setIsRotationPaused] = useState(false);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const activeSlide = HERO_SLIDES[activeIndex];
+
+  useEffect(() => {
+    onThemeChange?.(activeSlide.textColor === "light");
+  }, [activeSlide.textColor, onThemeChange]);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");

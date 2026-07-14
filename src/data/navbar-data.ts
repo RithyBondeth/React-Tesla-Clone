@@ -6,53 +6,57 @@ export const menuList: NavigationMenu[] = [
     items: {
       products: [
         {
-          productName: "Model S",
-          productImage: "/assets/navbar-images/vehicles-images/model-s.avif",
-          productLink: "/model-s",
-          productDescription: ["Learn", "Order"],
-        },
-        {
-          productName: "Model 3",
+          productActions: [
+            { label: "Learn", link: "/#compare" },
+            { label: "Order", link: "/order_now_model3" },
+          ],
           productImage: "/assets/navbar-images/vehicles-images/model-3.avif",
-          productLink: "/model-3",
-          productDescription: ["Learn", "Order"],
+          productLink: "/#compare",
+          productName: "Model 3",
         },
         {
-          productName: "Model X",
-          productImage: "/assets/navbar-images/vehicles-images/model-x.avif",
-          productLink: "/model-x",
-          productDescription: ["Learn", "Order"],
-        },
-        {
-          productName: "Model Y",
+          productActions: [
+            { label: "Learn", link: "/#compare" },
+            { label: "Order", link: "/order_now_modely" },
+          ],
           productImage: "/assets/navbar-images/vehicles-images/model-y.avif",
-          productLink: "/model-y",
-          productDescription: ["Learn", "Order"],
+          productLink: "/#compare",
+          productName: "Model Y",
         },
         {
-          productName: "Cybertruck",
+          productActions: [
+            { label: "Learn", link: "/learn_more_cybertruck" },
+            { label: "Order", link: "/order_now_cybertruck" },
+          ],
           productImage: "/assets/navbar-images/vehicles-images/cybertruck.avif",
-          productLink: "/cybertruck",
-          productDescription: ["Learn", "Order"],
-        },
-        {
-          productName: "Help Me Choose",
-          productImage:
-            "/assets/navbar-images/vehicles-images/help-me-choose.avif",
-          productLink: "/help_me_choose",
-          productDescription: ["Get Started"],
+          productLink: "/learn_more_cybertruck",
+          productName: "Cybertruck",
         },
       ],
       links: [
-        { listName: "Inventory", listLink: "/inventory" },
-        { listName: "Used Cars", listLink: "/used_cars" },
-        { listName: "Demo Drive", listLink: "/demo_drive" },
-        { listName: "Tade-in", listLink: "/trade_in" },
-        { listName: "Compare", listLink: "/compare" },
-        { listName: "Help Me Charge", listLink: "/help_me_charge" },
-        { listName: "Fleet", listLink: "/fleet" },
-        { listName: "Semi", listLink: "/semi" },
-        { listName: "Roadster", listLink: "/roadster" },
+        { listLink: "/fsd", listName: "Full Self-Driving" },
+        {
+          external: true,
+          listLink: "https://www.tesla.com/inventory/new/m3",
+          listName: "Inventory",
+        },
+        { listLink: "/demo_drive", listName: "Test Drive" },
+        {
+          external: true,
+          listLink: "https://www.tesla.com/tradein",
+          listName: "Trade-in",
+        },
+        { listLink: "/fsd#safety", listName: "Vehicle Safety Report" },
+        {
+          external: true,
+          listLink: "https://www.tesla.com/roadster",
+          listName: "Roadster",
+        },
+        {
+          external: true,
+          listLink: "https://www.tesla.com/we-robot",
+          listName: "We, Robot",
+        },
       ],
     },
   },
@@ -61,41 +65,43 @@ export const menuList: NavigationMenu[] = [
     items: {
       products: [
         {
-          productName: "Solar Panels",
-          productImage: "/assets/navbar-images/energy-images/solar-panel.avif",
-          productLink: "/energy",
-          productDescription: ["Learn", "Order"],
-        },
-        {
-          productName: "Solar Roof",
-          productImage: "/assets/navbar-images/energy-images/solar-roof.avif",
-          productLink: "/energy",
-          productDescription: ["Learn", "Order"],
-        },
-        {
-          productName: "Powerwall",
+          productActions: [
+            { label: "Learn", link: "/powerwall" },
+            {
+              external: true,
+              label: "Order",
+              link: "https://www.tesla.com/powerwall/design",
+            },
+          ],
           productImage: "/assets/navbar-images/energy-images/powerwall.avif",
           productLink: "/powerwall",
-          productDescription: ["Learn", "Order"],
+          productName: "Powerwall",
         },
         {
-          productName: "Megapack",
+          productActions: [
+            { label: "Learn", link: "/megapack" },
+            {
+              external: true,
+              label: "Order",
+              link: "https://www.tesla.com/megapack/design",
+            },
+          ],
           productImage: "/assets/navbar-images/energy-images/megapack.avif",
           productLink: "/megapack",
-          productDescription: ["Learn", "Order"],
+          productName: "Megapack",
         },
       ],
       links: [
         {
-          listName: "Schedule a Consultation",
-          listLink: "/schedule_a_consultation",
+          external: true,
+          listLink: "https://www.tesla.com/utilities",
+          listName: "Utilities",
         },
-        { listName: "Why Solar", listLink: "/why_solar" },
-        { listName: "Incentives", listLink: "/incentives" },
-        { listName: "Support", listLink: "/support" },
-        { listName: "Partner with Tesla", listLink: "/partner_with_tesla" },
-        { listName: "Commercial", listLink: "/commercial" },
-        { listName: "Utilities", listLink: "/utilities" },
+        {
+          external: true,
+          listLink: "https://www.tesla.com/commercial",
+          listName: "Commercial",
+        },
       ],
     },
   },
@@ -104,34 +110,46 @@ export const menuList: NavigationMenu[] = [
     items: {
       products: [
         {
-          productName: "Charging",
+          productActions: [{ label: "Learn", link: "/#charging" }],
           productImage: "/assets/navbar-images/charging-images/charging.avif",
-          productLink: "/charging",
-          productDescription: ["Learn"],
+          productLink: "/#charging",
+          productName: "Charging",
         },
         {
-          productName: "Home Charging",
+          productActions: [
+            { label: "Learn", link: "/#charging" },
+            {
+              external: true,
+              label: "Shop",
+              link: "https://shop.tesla.com/category/charging",
+            },
+          ],
           productImage:
             "/assets/navbar-images/charging-images/home-charging.avif",
-          productLink: "/home_charging",
-          productDescription: ["Learn", "Shop"],
+          productLink: "/#charging",
+          productName: "Home Charging",
         },
         {
-          productName: "Supercharging",
+          productActions: [
+            { label: "Learn", link: "/#charging" },
+            {
+              external: true,
+              label: "Find",
+              link: "https://www.tesla.com/findus",
+            },
+          ],
           productImage:
             "/assets/navbar-images/charging-images/supercharging.avif",
-          productLink: "/supercharging",
-          productDescription: ["Learn", "Find"],
+          productLink: "/#charging",
+          productName: "Supercharging",
         },
       ],
       links: [
-        { listName: "Help Me Charge", listLink: "/help_me_charge" },
-        { listName: "Charging Calculator", listLink: "/charging_calculator" },
-        { listName: "Trip Planner", listLink: "/trip_planner" },
-        { listName: "Supercharger Voting", listLink: "/supercharging_voting" },
-        { listName: "Host a Supercharger", listLink: "/host_a_supercharger" },
-        { listName: "Commercial Charging", listLink: "/commercial_charging" },
-        { listName: "Host Wall Connectors", listLink: "/host_wall_connectors" },
+        {
+          external: true,
+          listLink: "https://www.tesla.com/supercharger-voting/overview",
+          listName: "Supercharger Voting",
+        },
       ],
     },
   },
@@ -140,24 +158,32 @@ export const menuList: NavigationMenu[] = [
     items: {
       products: [],
       links: [
-        { listName: "Demo Drive", listLink: "/demo_drive" },
-        { listName: "Insurance", listLink: "/insurance" },
-        { listName: "Video Guides", listLink: "/video_guides" },
-        { listName: "Customer Stories", listLink: "/customer_stories" },
-        { listName: "Events", listLink: "/events" },
-        { listName: "Find Us", listLink: "/find_us" },
-        { listName: "Trip Planner", listLink: "/trip_planner" },
+        { listLink: "/demo_drive", listName: "Test Drive" },
         {
-          listName: "Find a Collision Center",
-          listLink: "/find_a_collision_center",
+          external: true,
+          listLink: "https://www.tesla.com/events",
+          listName: "Events",
         },
         {
-          listName: "Find a Certified Installer",
-          listLink: "/find_a_certified_installer",
+          external: true,
+          listLink: "https://www.tesla.com/findus",
+          listName: "Find Us",
         },
-        { listName: "About", listLink: "/about" },
-        { listName: "Careers", listLink: "/careers" },
-        { listName: "Investor Relations", listLink: "/investor_relations" },
+        {
+          external: true,
+          listLink: "https://www.tesla.com/about",
+          listName: "About",
+        },
+        {
+          external: true,
+          listLink: "https://www.tesla.com/careers",
+          listName: "Careers",
+        },
+        {
+          external: true,
+          listLink: "https://ir.tesla.com/",
+          listName: "Investor Relations",
+        },
       ],
     },
   },
@@ -166,29 +192,23 @@ export const menuList: NavigationMenu[] = [
     items: {
       products: [
         {
-          productName: "Charging",
-          productImage: "/assets/navbar-images/shop-images/charging.avif",
-          productLink: "/charging",
-          productDescription: [],
-        },
-        {
-          productName: "Vehicle Accessories",
+          productActions: [],
           productImage:
             "/assets/navbar-images/shop-images/vehicle-accessories.avif",
-          productLink: "/vehicle_accessories",
-          productDescription: [],
+          productLink: "https://shop.tesla.com/category/vehicle-accessories",
+          productName: "Vehicle Accessories",
         },
         {
-          productName: "Apparel",
+          productActions: [],
           productImage: "/assets/navbar-images/shop-images/apparel.avif",
-          productLink: "/apparel",
-          productDescription: [],
+          productLink: "https://shop.tesla.com/category/apparel",
+          productName: "Apparel",
         },
         {
-          productName: "Lifestyle",
+          productActions: [],
           productImage: "/assets/navbar-images/shop-images/lifestyle.avif",
-          productLink: "/lifestyle",
-          productDescription: [],
+          productLink: "https://shop.tesla.com/category/lifestyle",
+          productName: "Lifestyle",
         },
       ],
       links: [],

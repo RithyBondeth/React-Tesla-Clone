@@ -1,12 +1,16 @@
-import AnnouncementBar from "../../components/home/announcement-bar";
+import { useState } from "react";
+
 import EnergyEcosystem from "../../components/home/energy-ecosystem";
 import HeroCarousel from "../../components/home/hero-carousel";
+import SelfDrivingSpotlight from "../../components/home/self-driving-spotlight";
 import SiteFooter from "../../components/home/site-footer";
 import VehicleLineup from "../../components/home/vehicle-lineup";
 import Navbar from "../../components/navbar";
 import { mainPageList } from "../../data/main-page-data";
 
 export default function HomePage() {
+  const [usesLightNavigation, setUsesLightNavigation] = useState(true);
+
   return (
     <div id="top">
       <a
@@ -15,12 +19,12 @@ export default function HomePage() {
       >
         Skip to content
       </a>
-      <AnnouncementBar />
-      <Navbar hasAnnouncement />
+      <Navbar isWhiteText={usesLightNavigation} />
 
       <main id="main-content">
-        <HeroCarousel />
+        <HeroCarousel onThemeChange={setUsesLightNavigation} />
         <VehicleLineup vehicles={mainPageList.slice(0, 2)} />
+        <SelfDrivingSpotlight />
         <EnergyEcosystem />
       </main>
 

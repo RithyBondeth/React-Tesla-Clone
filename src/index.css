@@ -30,6 +30,14 @@ img {
   max-width: 100%;
 }
 
+.tesla-nav-panel {
+  animation: tesla-nav-panel-enter 180ms cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+.tesla-mobile-menu {
+  animation: tesla-mobile-menu-enter 220ms cubic-bezier(0.2, 0, 0, 1) both;
+}
+
 .hero-media {
   animation: hero-media-settle 1.25s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -74,6 +82,30 @@ img {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes tesla-nav-panel-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes tesla-mobile-menu-enter {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 

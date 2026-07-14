@@ -8,6 +8,7 @@ import NotFoundPage from "./not-found/page";
 const CybertruckLearnPage = lazy(() => import("./cybertruck/learn/page"));
 const CybertruckOrderPage = lazy(() => import("./cybertruck/order/page"));
 const EnergyPage = lazy(() => import("./energy/page"));
+const FsdPage = lazy(() => import("./fsd/page"));
 const MegapackPage = lazy(() => import("./megapack/page"));
 const PowerwallPage = lazy(() => import("./powerwall/page"));
 const ModelCarDemoDrivePage = lazy(() => import("./vehicles/demo-drive/page"));
@@ -79,6 +80,8 @@ export default function TeslaApp() {
             path="/learn_more_cybertruck"
           />
           <Route element={<EnergyPage />} path="/energy" />
+          <Route element={<FsdPage />} path="/fsd" />
+          <Route element={<FsdPage />} path="/self-driving" />
           <Route element={<PowerwallPage />} path="/powerwall" />
           <Route element={<MegapackPage />} path="/megapack" />
           <Route element={<NotFoundPage />} path="*" />

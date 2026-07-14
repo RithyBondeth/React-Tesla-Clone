@@ -1,11 +1,18 @@
+export interface NavigationAction {
+  external?: boolean;
+  label: string;
+  link: string;
+}
+
 export interface NavigationProduct {
+  productActions: NavigationAction[];
   productName: string;
   productImage: string;
   productLink: string;
-  productDescription: string[];
 }
 
 export interface NavigationLink {
+  external?: boolean;
   listName: string;
   listLink: string;
 }

@@ -60,6 +60,28 @@ hotlinked at runtime. Retrieved from Tesla-owned infrastructure on 2026-07-14.
 | `public/assets/tesla-official/megapack-delivers-mobile.avif`          | `https://digitalassets.tesla.com/tesla-contents/image/upload/Megapack-Megapack-Delivers-V1-Mobile.png`                      |
 | `public/assets/tesla-official/megapack-end-desktop.avif`              | `https://digitalassets.tesla.com/tesla-contents/image/upload/Megapack-End-V1-Desktop.png`                                   |
 | `public/assets/tesla-official/megapack-end-mobile.avif`               | `https://digitalassets.tesla.com/tesla-contents/image/upload/Megapack-End-V1-Mobile.png`                                    |
+| `public/assets/tesla-official/fsd-hero-desktop.avif`                  | `https://digitalassets.tesla.com/tesla-contents/image/upload/FSD-Hero-Still-Desktop.jpg`                                    |
+| `public/assets/tesla-official/fsd-hero-mobile.avif`                   | `https://digitalassets.tesla.com/tesla-contents/image/upload/FSD-Hero-Still-Mobile.jpg`                                     |
+| `public/assets/tesla-official/fsd-scenarios-desktop.mp4`              | `https://digitalassets.tesla.com/tesla-contents/video/upload/FSD-Scenarios-Desktop.mp4`                                     |
+| `public/assets/tesla-official/fsd-scenarios-mobile.mp4`               | `https://digitalassets.tesla.com/tesla-contents/video/upload/FSD-Scenarios-Mobile.mp4`                                      |
+| `public/assets/tesla-official/fsd-attentive-desktop.mp4`              | `https://digitalassets.tesla.com/tesla-contents/video/upload/FSD-Attentive-Desktop.mp4`                                     |
+| `public/assets/tesla-official/fsd-attentive-mobile.mp4`               | `https://digitalassets.tesla.com/tesla-contents/video/upload/FSD-Attentive-Mobile.mp4`                                      |
+| `public/assets/tesla-official/fsd-scenarios-desktop-poster.jpg`       | First frame of Tesla's official `FSD-Scenarios-Desktop.mp4`                                                                 |
+| `public/assets/tesla-official/fsd-scenarios-mobile-poster.jpg`        | First frame of Tesla's official `FSD-Scenarios-Mobile.mp4`                                                                  |
+| `public/assets/tesla-official/fsd-attentive-desktop-poster.jpg`       | First frame of Tesla's official `FSD-Attentive-Desktop.mp4`                                                                 |
+| `public/assets/tesla-official/fsd-attentive-mobile-poster.jpg`        | First frame of Tesla's official `FSD-Attentive-Mobile.mp4`                                                                  |
+| `public/assets/navbar-images/vehicles-images/model-3.avif`            | `https://digitalassets.tesla.com/tesla-contents/image/upload/Mega-Menu-Vehicles-Model-3-Performance-RHD.png`                |
+| `public/assets/navbar-images/vehicles-images/model-y.avif`            | `https://digitalassets.tesla.com/tesla-contents/image/upload/Mega-Menu-Vehicles-Model-Y-2-RHD.png`                          |
+| `public/assets/navbar-images/vehicles-images/cybertruck.avif`         | `https://digitalassets.tesla.com/tesla-contents/image/upload/Mega-Menu-Vehicles-Cybertruck-1x.png`                          |
+| `public/assets/navbar-images/energy-images/powerwall.avif`            | `https://digitalassets.tesla.com/tesla-contents/image/upload/Mega-Menu-Energy-Powerwall-Global.png`                         |
+| `public/assets/navbar-images/energy-images/megapack.avif`             | `https://digitalassets.tesla.com/tesla-contents/image/upload/Mega-Menu-Energy-Megapack.png`                                 |
+| `public/assets/navbar-images/charging-images/charging.avif`           | `https://digitalassets.tesla.com/tesla-contents/image/upload/Mega-Menu-Charging-Charging-Global.png`                        |
+| `public/assets/navbar-images/charging-images/home-charging.avif`      | `https://digitalassets.tesla.com/tesla-contents/image/upload/Mega-Menu-Charging-Home-Charging.png`                          |
+| `public/assets/navbar-images/charging-images/supercharging.avif`      | `https://digitalassets.tesla.com/tesla-contents/image/upload/Mega-Menu-Charging-Supercharging-APAC.png`                     |
+| `public/assets/navbar-images/shop-images/vehicle-accessories.avif`    | `https://digitalassets.tesla.com/tesla-contents/image/upload/Mega-Menu-Shop-Vehicle-Accessories.png`                        |
+| `public/assets/navbar-images/shop-images/apparel.avif`                | `https://digitalassets.tesla.com/tesla-contents/image/upload/Mega-Menu-Shop-Apparel.png`                                    |
+| `public/assets/navbar-images/shop-images/lifestyle.avif`              | `https://digitalassets.tesla.com/tesla-contents/image/upload/Mega-Menu-Shop-Lifestyle.png`                                  |
+| `public/assets/tesla-wordmark.png`                                    | Cropped transparent derivative of the repository's Tesla wordmark asset for accurate header sizing                          |
 
 Tesla owns this media and related trademarks. This repository remains an
 independent educational frontend project and is not affiliated with Tesla.
