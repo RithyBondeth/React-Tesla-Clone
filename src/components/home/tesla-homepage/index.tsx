@@ -126,6 +126,13 @@ const ENERGY_PRODUCTS: ProductCard[] = [
   },
 ];
 
+const CHAT_PROMPTS = [
+  '"Compare Model 3 and Model Y"',
+  '"What\u2019s Pet Mode?"',
+  '"What does the Tesla app do?"',
+  '"Where can I drive the Model 3?"',
+];
+
 function ChevronIcon({ direction }: { direction: "left" | "right" }) {
   return (
     <svg aria-hidden="true" viewBox="0 0 24 24">
@@ -178,7 +185,23 @@ function ChargeIcon({ type }: { type: "bolt" | "plug" }) {
       aria-hidden="true"
       className={`tesla-home-charge-icon tesla-home-charge-icon--${type}`}
     >
-      {type === "bolt" ? "ϟ" : "♜"}
+      <svg viewBox="0 0 24 24">
+        {type === "bolt" ? (
+          <path
+            d="m13.6 1-8 13h5.2l-1.1 9 8.7-14h-5.3l.5-8Z"
+            fill="currentColor"
+          />
+        ) : (
+          <path
+            d="M8 2v5m8-5v5M6 7h12v2a6 6 0 0 1-5 5.9V22h-2v-7.1A6 6 0 0 1 6 9V7Z"
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+          />
+        )}
+      </svg>
     </span>
   );
 }
@@ -241,7 +264,6 @@ function HeroCarousel() {
               alt=""
               className="tesla-home-hero-media"
               decoding={index === 0 ? "sync" : "async"}
-              fetchPriority={index === 0 ? "high" : "auto"}
               src={slide.desktopImage}
             />
           </picture>
@@ -325,7 +347,7 @@ function FullSelfDrivingCard() {
   }, []);
 
   return (
-    <section className="tesla-home-fsd-section">
+    <section className="tesla-home-fsd-section" id="full-self-driving">
       <div className="tesla-home-fsd-card">
         <div className="tesla-home-fsd-copy">
           <header>
@@ -418,7 +440,11 @@ function ProductCarousel({
   };
 
   return (
-    <section aria-label={sectionLabel} className="tesla-home-product-section">
+    <section
+      aria-label={sectionLabel}
+      className="tesla-home-product-section"
+      id={sectionLabel === "Vehicles" ? "vehicles" : "energy"}
+    >
       <div
         className="tesla-home-product-rail"
         onScroll={handleScroll}
@@ -492,6 +518,7 @@ function OffersGrid() {
     <section
       aria-label="Offers and inventory"
       className="tesla-home-offers-section"
+      id="offers"
     >
       <article className="tesla-home-offer-card">
         <img
@@ -541,7 +568,7 @@ function OffersGrid() {
 
 function ChargingMap() {
   return (
-    <section className="tesla-home-charging-section">
+    <section className="tesla-home-charging-section" id="charging">
       <div className="tesla-home-charging-inner">
         <img
           alt="Map of Tesla Superchargers and Destination Chargers across North America"
@@ -648,20 +675,14 @@ function HomeFooter() {
 }
 
 function StickyActions() {
-  const prompts = [
-    '"Compare Model 3 and Model Y"',
-    '"What\u2019s Pet Mode?"',
-    '"What does the Tesla app do?"',
-    '"Where can I drive the Model 3?"',
-  ];
   const [promptIndex, setPromptIndex] = useState(0);
 
   useEffect(() => {
     const timer = window.setInterval(() => {
-      setPromptIndex((index) => (index + 1) % prompts.length);
+      setPromptIndex((index) => (index + 1) % CHAT_PROMPTS.length);
     }, 5000);
     return () => window.clearInterval(timer);
-  }, [prompts.length]);
+  }, []);
 
   return (
     <aside aria-label="Quick actions" className="tesla-home-sticky-actions">
@@ -672,7 +693,9 @@ function StickyActions() {
       >
         <ChatIcon />
         <span className="tesla-home-chat-label">Ask a Question</span>
-        <span className="tesla-home-chat-prompt">{prompts[promptIndex]}</span>
+        <span className="tesla-home-chat-prompt">
+          {CHAT_PROMPTS[promptIndex]}
+        </span>
         <span aria-hidden="true" className="tesla-home-chat-submit">
           ↑
         </span>
