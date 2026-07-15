@@ -62,7 +62,7 @@ export const mainPageList: Vehicle[] = [
       ],
       colors: [
         {
-          colorName: "Slealth Grey",
+          colorName: "Stealth Grey",
           colorPrice: "Included",
           colorIcon: "/assets/mainpage-images/color-icons/stealth_grey.avif",
           primaryWheelImages: [
@@ -190,7 +190,7 @@ export const mainPageList: Vehicle[] = [
           interiorIcon:
             "/assets/mainpage-images/interior-icons/interior-black.avif",
           interiorImages: {
-            "Slealth Grey":
+            "Stealth Grey":
               "/assets/mainpage-images/model3-images/stealth_grey/photon_wheels/detail5-black.jpeg",
             "Pearl White":
               "/assets/mainpage-images/model3-images/pear_white/photon_wheels/detail5-black.jpeg",
@@ -209,7 +209,7 @@ export const mainPageList: Vehicle[] = [
           interiorIcon:
             "/assets/mainpage-images/interior-icons/interior_white.avif",
           interiorImages: {
-            "Slealth Grey":
+            "Stealth Grey":
               "/assets/mainpage-images/model3-images/stealth_grey/photon_wheels/detail5-white.jpeg",
             "Pearl White":
               "/assets/mainpage-images/model3-images/pear_white/photon_wheels/detail5-white.jpeg",
@@ -407,7 +407,7 @@ export const mainPageList: Vehicle[] = [
   //Model X
   {
     title: "Model X",
-    subtitle: "From $$63,990",
+    subtitle: "From $63,990",
     description: "After Est. Savings",
     hasDarkText: true,
     poster: "/assets/mainpage-images/modelx-images/tesla-modelx.avif",
@@ -445,7 +445,7 @@ export const mainPageList: Vehicle[] = [
       ],
       colors: [
         {
-          colorName: "Slealth Grey",
+          colorName: "Stealth Grey",
           colorPrice: "Included",
           colorIcon: "/assets/mainpage-images/color-icons/stealth_grey.avif",
           primaryWheelImages: [
@@ -606,11 +606,11 @@ export const mainPageList: Vehicle[] = [
           interiorIcon:
             "/assets/mainpage-images/interior-icons/interior-black.avif",
           interiorImages: {
-            "Slealth Grey":
+            "Stealth Grey":
               "/assets/mainpage-images/modelx-images/slealth_grey/cyberstream_wheels/detail5-black.jpeg",
             "Pearl White":
               "/assets/mainpage-images/modelx-images/pear_white/cyberstream_wheels/detail5-black.jpeg",
-            "Deep Blue":
+            "Deep Blue Metallic":
               "/assets/mainpage-images/modelx-images/deep_blue/cyberstream_wheels/detail5-black.jpeg",
             "Solid Black":
               "/assets/mainpage-images/modelx-images/solid_black/cyberstream_wheels/detail5-black.jpeg",
@@ -626,11 +626,11 @@ export const mainPageList: Vehicle[] = [
           interiorIcon:
             "/assets/mainpage-images/interior-icons/interior_white.avif",
           interiorImages: {
-            "Slealth Grey":
+            "Stealth Grey":
               "/assets/mainpage-images/modelx-images/slealth_grey/cyberstream_wheels/detail5-white.jpeg",
             "Pearl White":
               "/assets/mainpage-images/modelx-images/pear_white/cyberstream_wheels/detail5-white.jpeg",
-            "Deep Blue":
+            "Deep Blue Metallic":
               "/assets/mainpage-images/modelx-images/deep_blue/cyberstream_wheels/detail5-white.jpeg",
             "Solid Black":
               "/assets/mainpage-images/modelx-images/solid_black/cyberstream_wheels/detail5-white.jpeg",
@@ -646,11 +646,11 @@ export const mainPageList: Vehicle[] = [
           interiorIcon:
             "/assets/mainpage-images/interior-icons/interior_cream.avif",
           interiorImages: {
-            "Slealth Grey":
+            "Stealth Grey":
               "/assets/mainpage-images/modelx-images/slealth_grey/cyberstream_wheels/detail5-cream.jpeg",
             "Pearl White":
               "/assets/mainpage-images/modelx-images/pear_white/cyberstream_wheels/detail5-cream.jpeg",
-            "Deep Blue":
+            "Deep Blue Metallic":
               "/assets/mainpage-images/modelx-images/deep_blue/cyberstream_wheels/detail5-cream.jpeg",
             "Solid Black":
               "/assets/mainpage-images/modelx-images/solid_black/cyberstream_wheels/detail5-cream.jpeg",
@@ -735,7 +735,7 @@ export const mainPageList: Vehicle[] = [
       ],
       colors: [
         {
-          colorName: "Slealth Grey",
+          colorName: "Stealth Grey",
           colorPrice: "Included",
           colorIcon: "/assets/mainpage-images/color-icons/stealth_grey.avif",
           primaryWheelImages: [
@@ -897,11 +897,11 @@ export const mainPageList: Vehicle[] = [
           interiorIcon:
             "/assets/mainpage-images/interior-icons/interior-black.avif",
           interiorImages: {
-            "Slealth Grey":
+            "Stealth Grey":
               "/assets/mainpage-images/models-images/slealth_grey/tempest_wheels/detail5-black.jpeg",
-            "Pear White":
+            "Pearl White":
               "/assets/mainpage-images/models-images/pear_white/tempest_wheels/detail5-black.jpeg",
-            "Deep Blue":
+            "Deep Blue Metallic":
               "/assets/mainpage-images/models-images/deep_blue/tempest_wheels/detail5-black.jpeg",
             "Solid Black":
               "/assets/mainpage-images/models-images/solid_black/tempest_wheels/detail5-black.jpeg",
@@ -917,11 +917,11 @@ export const mainPageList: Vehicle[] = [
           interiorIcon:
             "/assets/mainpage-images/interior-icons/interior_white.avif",
           interiorImages: {
-            "Slealth Grey":
+            "Stealth Grey":
               "/assets/mainpage-images/models-images/slealth_grey/tempest_wheels/detail5-white.jpeg",
-            "Pear White":
+            "Pearl White":
               "/assets/mainpage-images/models-images/pear_white/tempest_wheels/detail5-white.jpeg",
-            "Deep Blue":
+            "Deep Blue Metallic":
               "/assets/mainpage-images/models-images/deep_blue/tempest_wheels/detail5-white.jpeg",
             "Solid Black":
               "/assets/mainpage-images/models-images/solid_black/tempest_wheels/detail5-white.jpeg",
@@ -937,11 +937,11 @@ export const mainPageList: Vehicle[] = [
           interiorIcon:
             "/assets/mainpage-images/interior-icons/interior_cream.avif",
           interiorImages: {
-            "Slealth Grey":
+            "Stealth Grey":
               "/assets/mainpage-images/models-images/slealth_grey/tempest_wheels/detail5-cream.jpeg",
-            "Pear White":
+            "Pearl White":
               "/assets/mainpage-images/models-images/pear_white/tempest_wheels/detail5-cream.jpeg",
-            "Deep Blue":
+            "Deep Blue Metallic":
               "/assets/mainpage-images/models-images/deep_blue/tempest_wheels/detail5-cream.jpeg",
             "Solid Black":
               "/assets/mainpage-images/models-images/solid_black/tempest_wheels/detail5-cream.jpeg",

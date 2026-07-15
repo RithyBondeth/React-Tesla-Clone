@@ -23,7 +23,7 @@ export default function HomePage() {
 
       <main id="main-content">
         <HeroCarousel onThemeChange={setUsesLightNavigation} />
-        <VehicleLineup vehicles={mainPageList.slice(0, 2)} />
+        <VehicleLineup vehicles={mainPageList} />
         <SelfDrivingSpotlight />
         <EnergyEcosystem />
       </main>

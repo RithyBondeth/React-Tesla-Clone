@@ -221,6 +221,7 @@ export default function Navbar({
                   }
                   onFocus={() => openDesktopMenu(menu.name)}
                   onMouseEnter={() => openDesktopMenu(menu.name)}
+                  key={menu.name}
                   type="button"
                 >
                   {menu.name}

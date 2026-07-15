@@ -26,9 +26,12 @@ export default function ModelCarOrderPage({
   const [optionIndex, setOptionIndex] = useState(0);
   const [wheelIndex, setWheelIndex] = useState(0);
   const [interiorChoiceIndex, setInteriorChoiceIndex] = useState(0);
+  const [seatingLayoutIndex, setSeatingLayoutIndex] = useState(0);
+  const [steeringControlIndex, setSteeringControlIndex] = useState(0);
   const [interiorPreviewIndex, setInteriorPreviewIndex] = useState<
     number | null
   >(null);
+  const [showsSteeringPreview, setShowsSteeringPreview] = useState(false);
   const [showsAutopilot, setShowsAutopilot] = useState(false);
 
   const selectedColor = orderData.colors[colorIndex];
@@ -44,8 +47,6 @@ export default function ModelCarOrderPage({
       ? exteriorImages.length
       : exteriorImages.length - slideClickIndex.back,
   );
-
-  const showExterior = interiorPreviewIndex === null && !showsAutopilot;
 
   const changeExteriorImage = (direction: number) => {
     setImageIndex(
@@ -65,6 +66,7 @@ export default function ModelCarOrderPage({
   const selectExteriorOption = () => {
     setImageIndex(0);
     setInteriorPreviewIndex(null);
+    setShowsSteeringPreview(false);
     setShowsAutopilot(false);
   };
 
@@ -77,6 +79,14 @@ export default function ModelCarOrderPage({
         Object.values(orderData.interiors[interiorPreviewIndex].interiorImages)[
           colorIndex
         ]);
+
+  const steeringPreviewImage =
+    showsSteeringPreview && orderData.steeringControls[steeringControlIndex]
+      ? orderData.steeringControls[steeringControlIndex].steeringImage
+      : null;
+
+  const showExterior =
+    interiorPreviewIndex === null && !showsSteeringPreview && !showsAutopilot;
 
   return (
     <>
@@ -121,6 +131,13 @@ export default function ModelCarOrderPage({
           <div
             className="relative h-[54svh] w-full bg-cover bg-center bg-no-repeat lg:h-screen lg:w-2/3"
             style={{ backgroundImage: `url(${interiorPreviewImage})` }}
+          />
+        )}
+
+        {steeringPreviewImage && (
+          <div
+            className="relative h-[54svh] w-full bg-cover bg-center bg-no-repeat lg:h-screen lg:w-2/3"
+            style={{ backgroundImage: `url(${steeringPreviewImage})` }}
           />
         )}
 
@@ -300,6 +317,7 @@ export default function ModelCarOrderPage({
                   onClick={() => {
                     setInteriorChoiceIndex(index);
                     setInteriorPreviewIndex(index);
+                    setShowsSteeringPreview(false);
                     setShowsAutopilot(false);
                   }}
                   style={{ backgroundImage: `url(${interior.interiorIcon})` }}
@@ -316,6 +334,60 @@ export default function ModelCarOrderPage({
               </span>
             </div>
           </section>
+
+          {orderData.seatingLayouts.length > 1 && (
+            <section className="flex flex-col items-center justify-center px-5 py-5">
+              <h2 className="text-3xl font-bold">Seating Layout</h2>
+              <div className="mt-4 grid w-full grid-cols-3 gap-2">
+                {orderData.seatingLayouts.map((seats, index) => (
+                  <button
+                    aria-pressed={seatingLayoutIndex === index}
+                    className={`rounded-md border px-3 py-3 text-sm duration-300 ${
+                      seatingLayoutIndex === index
+                        ? "border-2 border-blue-500 font-bold text-black"
+                        : "border-gray-500 text-gray-500"
+                    }`}
+                    key={seats}
+                    onClick={() => setSeatingLayoutIndex(index)}
+                    type="button"
+                  >
+                    {seats} Seats
+                  </button>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {orderData.steeringControls.length > 0 && (
+            <section className="flex flex-col items-center justify-center py-5">
+              <h2 className="text-3xl font-bold">Steering Control</h2>
+              <div className="mb-2 mt-4 flex items-center justify-center">
+                {orderData.steeringControls.map((control, index) => (
+                  <button
+                    aria-label={`Select ${control.steeringName}`}
+                    aria-pressed={steeringControlIndex === index}
+                    className={`mx-1 h-14 w-14 cursor-pointer rounded-full border-2 bg-cover bg-center bg-no-repeat ${
+                      steeringControlIndex === index
+                        ? "border-blue-500"
+                        : "border-transparent"
+                    }`}
+                    key={control.steeringName}
+                    onClick={() => {
+                      setSteeringControlIndex(index);
+                      setShowsSteeringPreview(true);
+                      setInteriorPreviewIndex(null);
+                      setShowsAutopilot(false);
+                    }}
+                    style={{ backgroundImage: `url(${control.steeringIcon})` }}
+                    type="button"
+                  />
+                ))}
+              </div>
+              <p className="text-sm font-bold">
+                {orderData.steeringControls[steeringControlIndex].steeringName}
+              </p>
+            </section>
+          )}
 
           <section className="flex flex-col items-center justify-center py-5">
             <div className="text-center">
@@ -353,6 +425,7 @@ export default function ModelCarOrderPage({
               onClick={() => {
                 setShowsAutopilot(true);
                 setInteriorPreviewIndex(null);
+                setShowsSteeringPreview(false);
                 setVideoIndex(0);
               }}
               type="button"

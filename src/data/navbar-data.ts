@@ -7,38 +7,38 @@ export const menuList: NavigationMenu[] = [
       products: [
         {
           productActions: [
-            { label: "Learn", link: "/#compare" },
+            { label: "Learn", link: "/model-s" },
             { label: "Order", link: "/order_now_models" },
           ],
           productImage: "/assets/navbar-images/vehicles-images/model-s.avif",
-          productLink: "/#compare",
+          productLink: "/model-s",
           productName: "Model S",
         },
         {
           productActions: [
-            { label: "Learn", link: "/#compare" },
+            { label: "Learn", link: "/model-3" },
             { label: "Order", link: "/order_now_model3" },
           ],
           productImage: "/assets/navbar-images/vehicles-images/model-3.avif",
-          productLink: "/#compare",
+          productLink: "/model-3",
           productName: "Model 3",
         },
         {
           productActions: [
-            { label: "Learn", link: "/#compare" },
+            { label: "Learn", link: "/model-y" },
             { label: "Order", link: "/order_now_modely" },
           ],
           productImage: "/assets/navbar-images/vehicles-images/model-y.avif",
-          productLink: "/#compare",
+          productLink: "/model-y",
           productName: "Model Y",
         },
         {
           productActions: [
-            { label: "Learn", link: "/#compare" },
+            { label: "Learn", link: "/model-x" },
             { label: "Order", link: "/order_now_modelx" },
           ],
           productImage: "/assets/navbar-images/vehicles-images/model-x.avif",
-          productLink: "/#compare",
+          productLink: "/model-x",
           productName: "Model X",
         },
         {
@@ -52,19 +52,11 @@ export const menuList: NavigationMenu[] = [
         },
         {
           productActions: [
-            {
-              external: true,
-              label: "New",
-              link: "https://www.tesla.com/inventory/new",
-            },
-            {
-              external: true,
-              label: "Pre-Owned",
-              link: "https://www.tesla.com/inventory/used",
-            },
+            { label: "New", link: "/inventory/new" },
+            { label: "Pre-Owned", link: "/inventory/used" },
           ],
           productImage: "/assets/navbar-images/vehicles-images/inventory.avif",
-          productLink: "https://www.tesla.com/inventory/new",
+          productLink: "/inventory/new",
           productName: "Inventory",
         },
         {
@@ -90,11 +82,7 @@ export const menuList: NavigationMenu[] = [
           listName: "Trade-in",
         },
         { listLink: "/fsd#safety", listName: "Vehicle Safety Report" },
-        {
-          external: true,
-          listLink: "https://www.tesla.com/pre-owned",
-          listName: "Pre-Owned",
-        },
+        { listLink: "/inventory/used", listName: "Pre-Owned" },
         {
           external: true,
           listLink: "https://www.tesla.com/trips",

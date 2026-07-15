@@ -12,6 +12,10 @@ const FsdPage = lazy(() => import("./fsd/page"));
 const MegapackPage = lazy(() => import("./megapack/page"));
 const PowerwallPage = lazy(() => import("./powerwall/page"));
 const ModelCarDemoDrivePage = lazy(() => import("./vehicles/demo-drive/page"));
+const InventoryPage = lazy(() => import("./vehicles/inventory/page"));
+const InventoryVehicleDetailPage = lazy(
+  () => import("./vehicles/inventory/detail-page"),
+);
 const ModelCarOrderPage = lazy(() => import("./vehicles/order/page"));
 
 function RouteFallback() {
@@ -47,10 +51,28 @@ export default function TeslaApp() {
             element={
               <ModelCarOrderPage
                 slideClickIndex={{ back: 2, forward: 1 }}
+                vehicle={mainPageList[0]}
+              />
+            }
+            path="/model-3"
+          />
+          <Route
+            element={
+              <ModelCarOrderPage
+                slideClickIndex={{ back: 2, forward: 1 }}
                 vehicle={mainPageList[1]}
               />
             }
             path="/order_now_modely"
+          />
+          <Route
+            element={
+              <ModelCarOrderPage
+                slideClickIndex={{ back: 2, forward: 1 }}
+                vehicle={mainPageList[1]}
+              />
+            }
+            path="/model-y"
           />
           <Route
             element={
@@ -65,12 +87,36 @@ export default function TeslaApp() {
             element={
               <ModelCarOrderPage
                 slideClickIndex={{ back: 3, forward: 2 }}
+                vehicle={mainPageList[2]}
+              />
+            }
+            path="/model-x"
+          />
+          <Route
+            element={
+              <ModelCarOrderPage
+                slideClickIndex={{ back: 3, forward: 2 }}
                 vehicle={mainPageList[3]}
               />
             }
             path="/order_now_models"
           />
+          <Route
+            element={
+              <ModelCarOrderPage
+                slideClickIndex={{ back: 3, forward: 2 }}
+                vehicle={mainPageList[3]}
+              />
+            }
+            path="/model-s"
+          />
           <Route element={<ModelCarDemoDrivePage />} path="/demo_drive" />
+          <Route element={<InventoryPage />} path="/inventory" />
+          <Route element={<InventoryPage />} path="/inventory/:condition" />
+          <Route
+            element={<InventoryVehicleDetailPage />}
+            path="/inventory/vehicle/:vehicleId"
+          />
           <Route
             element={<CybertruckOrderPage cybertruck={cybertruckData} />}
             path="/order_now_cybertruck"
