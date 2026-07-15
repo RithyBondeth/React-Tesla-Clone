@@ -8,6 +8,15 @@ export const menuList: NavigationMenu[] = [
         {
           productActions: [
             { label: "Learn", link: "/#compare" },
+            { label: "Order", link: "/order_now_models" },
+          ],
+          productImage: "/assets/navbar-images/vehicles-images/model-s.avif",
+          productLink: "/#compare",
+          productName: "Model S",
+        },
+        {
+          productActions: [
+            { label: "Learn", link: "/#compare" },
             { label: "Order", link: "/order_now_model3" },
           ],
           productImage: "/assets/navbar-images/vehicles-images/model-3.avif",
@@ -25,6 +34,15 @@ export const menuList: NavigationMenu[] = [
         },
         {
           productActions: [
+            { label: "Learn", link: "/#compare" },
+            { label: "Order", link: "/order_now_modelx" },
+          ],
+          productImage: "/assets/navbar-images/vehicles-images/model-x.avif",
+          productLink: "/#compare",
+          productName: "Model X",
+        },
+        {
+          productActions: [
             { label: "Learn", link: "/learn_more_cybertruck" },
             { label: "Order", link: "/order_now_cybertruck" },
           ],
@@ -32,15 +50,40 @@ export const menuList: NavigationMenu[] = [
           productLink: "/learn_more_cybertruck",
           productName: "Cybertruck",
         },
+        {
+          productActions: [
+            {
+              external: true,
+              label: "New",
+              link: "https://www.tesla.com/inventory/new",
+            },
+            {
+              external: true,
+              label: "Pre-Owned",
+              link: "https://www.tesla.com/inventory/used",
+            },
+          ],
+          productImage: "/assets/navbar-images/vehicles-images/inventory.avif",
+          productLink: "https://www.tesla.com/inventory/new",
+          productName: "Inventory",
+        },
+        {
+          productActions: [
+            { label: "Learn", link: "/fsd" },
+            { label: "Experience", link: "/demo_drive" },
+          ],
+          productImage: "/assets/navbar-images/vehicles-images/fsd.avif",
+          productLink: "/fsd",
+          productName: "Full Self-Driving (Supervised)",
+        },
       ],
       links: [
-        { listLink: "/fsd", listName: "Full Self-Driving" },
         {
           external: true,
-          listLink: "https://www.tesla.com/inventory/new/m3",
-          listName: "Inventory",
+          listLink: "https://www.tesla.com/current-offers",
+          listName: "Current Offers",
         },
-        { listLink: "/demo_drive", listName: "Test Drive" },
+        { listLink: "/demo_drive", listName: "Demo Drive" },
         {
           external: true,
           listLink: "https://www.tesla.com/tradein",
@@ -49,13 +92,53 @@ export const menuList: NavigationMenu[] = [
         { listLink: "/fsd#safety", listName: "Vehicle Safety Report" },
         {
           external: true,
+          listLink: "https://www.tesla.com/pre-owned",
+          listName: "Pre-Owned",
+        },
+        {
+          external: true,
+          listLink: "https://www.tesla.com/trips",
+          listName: "Trip Planner",
+        },
+        {
+          external: true,
+          listLink: "https://www.tesla.com/features",
+          listName: "Features",
+        },
+        {
+          external: true,
+          listLink: "https://www.tesla.com/choose",
+          listName: "Help Me Choose",
+        },
+        {
+          external: true,
+          listLink: "https://www.tesla.com/compare",
+          listName: "Compare",
+        },
+        {
+          external: true,
+          listLink: "https://www.tesla.com/safety",
+          listName: "Safety",
+        },
+        {
+          external: true,
+          listLink: "https://www.tesla.com/fleet",
+          listName: "Fleet",
+        },
+        {
+          external: true,
+          listLink: "https://www.tesla.com/semi",
+          listName: "Semi",
+        },
+        {
+          external: true,
           listLink: "https://www.tesla.com/roadster",
           listName: "Roadster",
         },
         {
           external: true,
-          listLink: "https://www.tesla.com/we-robot",
-          listName: "We, Robot",
+          listLink: "https://www.tesla.com/robotaxi",
+          listName: "Robotaxi",
         },
       ],
     },
