@@ -2170,6 +2170,878 @@ input[type="checkbox"].rounded-full:checked::before {
     var(--dot-color);
 }
 
+/* Find Us network page */
+.tesla-findus-page {
+  height: 100svh;
+  overflow: hidden;
+  background: #e7e6e3;
+}
+
+.tesla-findus-page > header {
+  background: #fff;
+}
+
+.tesla-findus-main {
+  position: relative;
+  height: 100svh;
+  overflow: hidden;
+  padding-top: 56px;
+}
+
+.tesla-findus-map {
+  position: absolute;
+  inset: 56px 0 0;
+  z-index: 0;
+  background: #deddda;
+  font-family: "Universal Sans Tesla", Arial, sans-serif;
+}
+
+.tesla-findus-map .leaflet-tile-pane {
+  filter: grayscale(0.68) saturate(0.45) contrast(0.88) brightness(1.08);
+}
+
+.tesla-findus-map .leaflet-control-attribution {
+  color: #5c5e62;
+  font-size: 9px;
+}
+
+.tesla-findus-map .leaflet-control-attribution a {
+  color: inherit;
+}
+
+.tesla-findus-map .leaflet-tooltip {
+  padding: 7px 9px;
+  border: 0;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 14%);
+  color: #171a20;
+  font-family: "Universal Sans Tesla", Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.tesla-findus-controls {
+  position: absolute;
+  z-index: 20;
+  top: 86px;
+  left: 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.tesla-findus-search-wrap {
+  position: relative;
+  width: 300px;
+}
+
+.tesla-findus-search-wrap > input {
+  width: 100%;
+  height: 50px;
+  border: 0;
+  border-radius: 5px;
+  outline: 0;
+  padding: 0 18px 0 42px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+  color: #171a20;
+  font:
+    500 14px/20px "Universal Sans Tesla",
+    Arial,
+    sans-serif;
+}
+
+.tesla-findus-search-wrap > input::placeholder {
+  color: #8e9196;
+}
+
+.tesla-findus-search-wrap > input:focus {
+  box-shadow:
+    0 0 0 2px #3e6ae1,
+    0 3px 10px rgb(0 0 0 / 12%);
+}
+
+.tesla-findus-search-icon {
+  position: absolute;
+  z-index: 1;
+  top: 16px;
+  left: 16px;
+  width: 15px;
+  height: 15px;
+  border: 1.5px solid #5c5e62;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.tesla-findus-search-icon::after {
+  position: absolute;
+  right: -4px;
+  bottom: -3px;
+  width: 6px;
+  border-top: 1.5px solid #5c5e62;
+  content: "";
+  transform: rotate(45deg);
+  transform-origin: left center;
+}
+
+.tesla-findus-results {
+  position: absolute;
+  top: 58px;
+  right: 0;
+  left: 0;
+  overflow: hidden;
+  margin: 0;
+  padding: 6px;
+  border-radius: 5px;
+  background: #fff;
+  box-shadow: 0 3px 14px rgb(0 0 0 / 14%);
+  list-style: none;
+}
+
+.tesla-findus-results button {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 2px;
+  border: 0;
+  border-radius: 4px;
+  padding: 9px 10px;
+  background: transparent;
+  color: #171a20;
+  cursor: pointer;
+  text-align: left;
+}
+
+.tesla-findus-results button:hover,
+.tesla-findus-results button:focus-visible {
+  background: #f4f4f4;
+}
+
+.tesla-findus-results span {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.tesla-findus-results small {
+  color: #5c5e62;
+  font-size: 11px;
+}
+
+.tesla-findus-filter-button {
+  display: grid;
+  width: 50px;
+  height: 50px;
+  place-items: center;
+  border: 0;
+  border-radius: 5px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+  color: #171a20;
+  cursor: pointer;
+}
+
+.tesla-findus-filter-button:hover,
+.tesla-findus-filter-button:focus-visible {
+  background: #f4f4f4;
+}
+
+.tesla-findus-filter-icon {
+  display: grid;
+  width: 20px;
+  gap: 4px;
+}
+
+.tesla-findus-filter-icon i {
+  position: relative;
+  display: block;
+  border-top: 1.5px solid currentColor;
+}
+
+.tesla-findus-filter-icon i::after {
+  position: absolute;
+  top: -3.5px;
+  width: 5px;
+  height: 5px;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  background: #fff;
+  content: "";
+}
+
+.tesla-findus-filter-icon i:nth-child(1)::after,
+.tesla-findus-filter-icon i:nth-child(3)::after {
+  left: 4px;
+}
+
+.tesla-findus-filter-icon i:nth-child(2)::after {
+  right: 4px;
+}
+
+.tesla-findus-filter-panel {
+  position: absolute;
+  top: 58px;
+  left: 316px;
+  width: 294px;
+  padding: 20px;
+  border-radius: 5px;
+  background: #fff;
+  box-shadow: 0 3px 14px rgb(0 0 0 / 14%);
+}
+
+.tesla-findus-filter-panel > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.tesla-findus-filter-panel h2 {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.tesla-findus-filter-panel > div > button {
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: #5c5e62;
+  cursor: pointer;
+  font-size: 24px;
+  line-height: 26px;
+}
+
+.tesla-findus-filter-panel label {
+  display: flex;
+  min-height: 40px;
+  align-items: center;
+  gap: 10px;
+  color: #171a20;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.tesla-findus-filter-panel label > span {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.tesla-findus-filter-panel input {
+  width: 17px;
+  height: 17px;
+  accent-color: #171a20;
+}
+
+/* Charging learn-more page */
+.tesla-charging-page {
+  overflow: hidden;
+  background: #fff;
+  color: #171a20;
+}
+
+.tesla-charging-content-width {
+  width: min(calc(100% - 48px), 960px);
+  margin-inline: auto;
+}
+
+.tesla-charging-hero {
+  position: relative;
+  height: 720px;
+  overflow: hidden;
+  background: #111;
+  color: #fff;
+}
+
+.tesla-charging-hero-poster,
+.tesla-charging-hero-poster img,
+.tesla-charging-hero video,
+.tesla-charging-hero-scrim {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.tesla-charging-hero-poster img,
+.tesla-charging-hero video {
+  object-fit: cover;
+  object-position: center;
+}
+
+.tesla-charging-hero-scrim {
+  background: linear-gradient(
+    to bottom,
+    rgb(0 0 0 / 38%) 0,
+    rgb(0 0 0 / 8%) 43%,
+    rgb(0 0 0 / 20%) 100%
+  );
+}
+
+.tesla-charging-hero-copy {
+  position: relative;
+  z-index: 2;
+  padding-top: 112px;
+  text-align: center;
+}
+
+.tesla-charging-hero-copy h1 {
+  font-family:
+    "Universal Sans Tesla Display", "Universal Sans Tesla", sans-serif;
+  font-size: 40px;
+  font-weight: 500;
+  line-height: 48px;
+  letter-spacing: -0.02em;
+}
+
+.tesla-charging-hero-copy p {
+  margin-top: 4px;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.tesla-charging-video-control {
+  position: absolute;
+  z-index: 3;
+  bottom: 32px;
+  left: 32px;
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 0;
+  border-radius: 4px;
+  background: rgb(0 0 0 / 48%);
+  color: #fff;
+  cursor: pointer;
+}
+
+.tesla-charging-pause-icon {
+  display: flex;
+  gap: 5px;
+}
+
+.tesla-charging-pause-icon i {
+  width: 3px;
+  height: 16px;
+  border-radius: 1px;
+  background: currentColor;
+}
+
+.tesla-charging-play-icon {
+  width: 0;
+  height: 0;
+  margin-left: 2px;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-left: 12px solid currentColor;
+}
+
+.tesla-charging-button {
+  display: inline-grid;
+  width: 202px;
+  height: 40px;
+  place-items: center;
+  border: 2px solid #171a20;
+  border-radius: 3px;
+  background: #fff;
+  color: #171a20;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 18px;
+  text-align: center;
+}
+
+.tesla-charging-button:hover {
+  background: #171a20;
+  color: #fff;
+}
+
+.tesla-charging-button--soft {
+  border-color: #f4f4f4;
+  background: #f4f4f4;
+}
+
+.tesla-charging-intro {
+  width: min(calc(100% - 48px), 960px);
+  margin-inline: auto;
+  padding: 80px 0 96px;
+}
+
+.tesla-charging-section-heading {
+  max-width: 680px;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.tesla-charging-section-heading h2,
+.tesla-charging-feature-copy h2,
+.tesla-charging-route-heading h2,
+.tesla-charging-savings-copy h2,
+.tesla-charging-battery h2,
+.tesla-charging-final-copy h2 {
+  font-family:
+    "Universal Sans Tesla Display", "Universal Sans Tesla", sans-serif;
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 36px;
+  letter-spacing: -0.02em;
+}
+
+.tesla-charging-section-heading p {
+  margin-top: 24px;
+  color: #5c5e62;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.tesla-charging-section-heading .tesla-charging-button {
+  margin-top: 24px;
+}
+
+.tesla-charging-moment-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 64px;
+  gap: 24px;
+  scroll-margin-top: 72px;
+}
+
+.tesla-charging-moment picture,
+.tesla-charging-moment img {
+  display: block;
+  width: 100%;
+}
+
+.tesla-charging-moment img {
+  aspect-ratio: 1.994 / 1;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+.tesla-charging-moment h3 {
+  margin-top: 28px;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.tesla-charging-moment p,
+.tesla-charging-feature-copy > p,
+.tesla-charging-route-heading p,
+.tesla-charging-savings-copy p,
+.tesla-charging-battery p,
+.tesla-charging-final-copy p {
+  color: #5c5e62;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.tesla-charging-moment p {
+  margin-top: 12px;
+}
+
+.tesla-charging-moment p a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.tesla-charging-feature {
+  padding-bottom: 120px;
+}
+
+.tesla-charging-feature picture,
+.tesla-charging-feature-image {
+  display: block;
+  width: 100%;
+}
+
+.tesla-charging-feature-image {
+  aspect-ratio: 1.6 / 1;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+.tesla-charging-feature-copy {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 40px;
+  gap: 12px 12%;
+}
+
+.tesla-charging-feature-copy .tesla-charging-button {
+  margin-top: 24px;
+}
+
+.tesla-charging-feature-copy--network {
+  margin-top: 0;
+  margin-bottom: 40px;
+}
+
+.tesla-charging-feature-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.tesla-charging-feature-image--freedom {
+  aspect-ratio: 16 / 9;
+}
+
+.tesla-charging-route {
+  padding-bottom: 120px;
+  scroll-margin-top: 72px;
+}
+
+.tesla-charging-route-heading {
+  margin-bottom: 56px;
+}
+
+.tesla-charging-route-heading p {
+  margin-top: 12px;
+}
+
+.tesla-charging-route picture,
+.tesla-charging-route-image {
+  display: block;
+  width: 100%;
+}
+
+.tesla-charging-route-image {
+  aspect-ratio: 2.33 / 1;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+.tesla-charging-route-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 32px;
+  gap: 24px;
+}
+
+.tesla-charging-route-tabs button {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 12px;
+  border: 0;
+  border-top: 3px solid #d0d1d2;
+  padding: 14px 0 0;
+  background: transparent;
+  color: #a2a3a5;
+  cursor: pointer;
+  text-align: left;
+}
+
+.tesla-charging-route-tabs button.is-active {
+  border-color: #171a20;
+  color: #171a20;
+}
+
+.tesla-charging-route-tabs strong {
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.tesla-charging-route-tabs span {
+  color: inherit;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.tesla-charging-savings {
+  padding-bottom: 120px;
+}
+
+.tesla-charging-savings > picture,
+.tesla-charging-savings-image {
+  display: block;
+  width: 100%;
+}
+
+.tesla-charging-savings-image {
+  aspect-ratio: 2.33 / 1;
+  object-fit: cover;
+}
+
+.tesla-charging-savings-copy {
+  padding-top: 64px;
+}
+
+.tesla-charging-savings-copy p {
+  max-width: 720px;
+  margin-top: 12px;
+}
+
+.tesla-charging-savings-copy .tesla-charging-button {
+  margin-top: 32px;
+}
+
+.tesla-charging-battery {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding-bottom: 120px;
+  gap: 12%;
+}
+
+.tesla-charging-battery p {
+  margin-top: 12px;
+}
+
+.tesla-charging-battery picture,
+.tesla-charging-battery-image {
+  display: block;
+  width: 100%;
+}
+
+.tesla-charging-battery-image {
+  aspect-ratio: 1.336 / 1;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+.tesla-charging-final {
+  position: relative;
+  height: 720px;
+  overflow: hidden;
+  background: #000;
+  color: #fff;
+}
+
+.tesla-charging-final picture,
+.tesla-charging-final-image,
+.tesla-charging-final-scrim {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.tesla-charging-final-image {
+  object-fit: cover;
+}
+
+.tesla-charging-final-scrim {
+  background: rgb(0 0 0 / 48%);
+}
+
+.tesla-charging-final-copy {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  width: min(calc(100% - 48px), 650px);
+  text-align: center;
+  transform: translate(-50%, -50%);
+}
+
+.tesla-charging-final-copy p {
+  margin-top: 12px;
+  color: rgb(255 255 255 / 78%);
+}
+
+.tesla-charging-final-copy .tesla-charging-button {
+  margin-top: 32px;
+  border-color: #fff;
+  background: transparent;
+  color: #fff;
+}
+
+.tesla-charging-final-copy .tesla-charging-button:hover {
+  background: #fff;
+  color: #171a20;
+}
+
+.tesla-charging-final > small {
+  position: absolute;
+  z-index: 1;
+  bottom: 40px;
+  left: 50%;
+  color: rgb(255 255 255 / 68%);
+  font-size: 11px;
+  transform: translateX(-50%);
+}
+
+@media (max-width: 599px) {
+  .tesla-findus-controls {
+    top: 72px;
+    right: 16px;
+    left: 16px;
+    gap: 8px;
+  }
+
+  .tesla-findus-search-wrap {
+    width: auto;
+    flex: 1;
+  }
+
+  .tesla-findus-filter-panel {
+    top: 58px;
+    right: 0;
+    left: 0;
+    width: auto;
+  }
+
+  .tesla-charging-content-width,
+  .tesla-charging-intro {
+    width: calc(100% - 48px);
+  }
+
+  .tesla-charging-hero {
+    height: 100svh;
+    min-height: 640px;
+  }
+
+  .tesla-charging-hero-copy {
+    padding-top: 104px;
+  }
+
+  .tesla-charging-video-control {
+    bottom: 20px;
+    left: 20px;
+  }
+
+  .tesla-charging-intro {
+    padding: 64px 0 80px;
+  }
+
+  .tesla-charging-section-heading {
+    text-align: left;
+  }
+
+  .tesla-charging-section-heading h2,
+  .tesla-charging-feature-copy h2,
+  .tesla-charging-route-heading h2,
+  .tesla-charging-savings-copy h2,
+  .tesla-charging-battery h2,
+  .tesla-charging-final-copy h2 {
+    font-size: 28px;
+    line-height: 36px;
+  }
+
+  .tesla-charging-section-heading .tesla-charging-button,
+  .tesla-charging-button {
+    width: 100%;
+  }
+
+  .tesla-charging-moment-grid {
+    width: calc(100vw - 24px);
+    grid-auto-columns: calc(100vw - 48px);
+    grid-auto-flow: column;
+    grid-template-columns: none;
+    overflow-x: auto;
+    margin-top: 48px;
+    padding-right: 24px;
+    gap: 12px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .tesla-charging-moment {
+    scroll-snap-align: start;
+  }
+
+  .tesla-charging-moment-grid::-webkit-scrollbar,
+  .tesla-charging-route-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tesla-charging-moment h3 {
+    margin-top: 20px;
+  }
+
+  .tesla-charging-feature,
+  .tesla-charging-route,
+  .tesla-charging-savings,
+  .tesla-charging-battery {
+    padding-bottom: 88px;
+  }
+
+  .tesla-charging-feature-image {
+    aspect-ratio: 0.844 / 1;
+  }
+
+  .tesla-charging-feature-copy {
+    display: block;
+    margin-top: 28px;
+  }
+
+  .tesla-charging-feature-copy > p {
+    margin-top: 28px;
+  }
+
+  .tesla-charging-feature-copy--network {
+    margin-top: 0;
+    margin-bottom: 28px;
+  }
+
+  .tesla-charging-feature-actions {
+    flex-direction: column;
+  }
+
+  .tesla-charging-feature-image--freedom {
+    aspect-ratio: 0.462 / 1;
+  }
+
+  .tesla-charging-route-heading {
+    margin-bottom: 32px;
+  }
+
+  .tesla-charging-route-image {
+    aspect-ratio: 1 / 1;
+  }
+
+  .tesla-charging-route-tabs {
+    width: calc(100vw - 24px);
+    grid-auto-columns: calc(100vw - 64px);
+    grid-auto-flow: column;
+    grid-template-columns: none;
+    overflow-x: auto;
+    padding-right: 24px;
+    gap: 16px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .tesla-charging-route-tabs button {
+    scroll-snap-align: start;
+  }
+
+  .tesla-charging-savings-image {
+    aspect-ratio: 1 / 1;
+  }
+
+  .tesla-charging-savings-copy {
+    padding-top: 40px;
+  }
+
+  .tesla-charging-battery {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 32px;
+  }
+
+  .tesla-charging-battery-image {
+    aspect-ratio: 1 / 1;
+  }
+
+  .tesla-charging-final {
+    height: 760px;
+  }
+
+  .tesla-charging-final > small {
+    width: calc(100% - 48px);
+    text-align: center;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

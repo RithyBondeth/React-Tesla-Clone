@@ -418,3 +418,43 @@ describe("vehicle routes", () => {
     ).toBeInTheDocument();
   });
 });
+
+describe("charging routes", () => {
+  test("renders the charging learn-more page", async () => {
+    window.history.pushState({}, "", "/charging");
+
+    render(<TeslaApp />);
+
+    expect(
+      await screen.findByRole("heading", { level: 1, name: "Charging" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Plug In, Charge and Go" }),
+    ).toBeInTheDocument();
+    expect(document.title).toBe("Charging | Tesla Clone");
+  });
+
+  test("renders the searchable charging network", async () => {
+    window.history.pushState({}, "", "/findus");
+
+    render(<TeslaApp />);
+
+    const locationSearch = await screen.findByRole("searchbox", {
+      name: "Enter Location",
+    });
+    expect(
+      screen.getByRole("region", {
+        name: "Interactive Tesla location map",
+      }),
+    ).toBeInTheDocument();
+
+    fireEvent.change(locationSearch, { target: { value: "San Francisco" } });
+    expect(
+      screen.getByRole("button", { name: /San Francisco Supercharger/ }),
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Filter locations" }));
+    expect(screen.getByLabelText("Superchargers")).toBeChecked();
+    expect(document.title).toBe("Find Us | Tesla Clone");
+  });
+});

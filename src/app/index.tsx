@@ -7,7 +7,9 @@ import NotFoundPage from "./not-found/page";
 
 const CybertruckLearnPage = lazy(() => import("./cybertruck/learn/page"));
 const CybertruckOrderPage = lazy(() => import("./cybertruck/order/page"));
+const ChargingPage = lazy(() => import("./charging/page"));
 const EnergyPage = lazy(() => import("./energy/page"));
+const FindUsPage = lazy(() => import("./findus/page"));
 const FsdPage = lazy(() => import("./fsd/page"));
 const MegapackPage = lazy(() => import("./megapack/page"));
 const PowerwallPage = lazy(() => import("./powerwall/page"));
@@ -23,6 +25,18 @@ const DEFAULT_DESCRIPTION =
 const SOCIAL_IMAGE_PATH = "/assets/tesla-official/social-preview.jpg";
 
 const pageMetadata = [
+  {
+    description:
+      "Find Tesla Superchargers, Destination Chargers, service centers and stores near you.",
+    paths: ["/findus"],
+    title: "Find Us | Tesla Clone",
+  },
+  {
+    description:
+      "Learn how to charge a Tesla at home, on the road and across the Supercharger network.",
+    paths: ["/charging"],
+    title: "Charging | Tesla Clone",
+  },
   {
     description:
       "Browse new and pre-owned electric vehicles by model, trim, price, range and configuration.",
@@ -245,6 +259,8 @@ export default function TeslaApp() {
             path="/learn_more_cybertruck"
           />
           <Route element={<EnergyPage />} path="/energy" />
+          <Route element={<FindUsPage />} path="/findus" />
+          <Route element={<ChargingPage />} path="/charging" />
           <Route element={<FsdPage />} path="/fsd" />
           <Route element={<FsdPage />} path="/self-driving" />
           <Route element={<PowerwallPage />} path="/powerwall" />

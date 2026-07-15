@@ -135,9 +135,9 @@ const CHAT_PROMPTS = [
   '"Where can I drive the Model 3?"',
 ];
 
-type ChargingSite = [name: string, latitude: number, longitude: number];
+export type ChargingSite = [name: string, latitude: number, longitude: number];
 
-const SUPERCHARGER_SITES: ChargingSite[] = [
+export const SUPERCHARGER_SITES: ChargingSite[] = [
   ["Seattle", 47.61, -122.33],
   ["Tacoma", 47.25, -122.44],
   ["Portland", 45.52, -122.68],
@@ -219,7 +219,7 @@ const SUPERCHARGER_SITES: ChargingSite[] = [
   ["Vancouver", 49.28, -123.12],
 ];
 
-const DESTINATION_CHARGER_SITES: ChargingSite[] = [
+export const DESTINATION_CHARGER_SITES: ChargingSite[] = [
   ["Olympic Peninsula", 47.81, -123.42],
   ["Willamette Valley", 44.94, -123.03],
   ["Napa Valley", 38.3, -122.29],
@@ -904,13 +904,10 @@ function ChargingMap() {
           </dl>
 
           <div className="tesla-home-charging-actions">
-            <TeslaButton
-              className="tesla-home-button--dark"
-              to="https://www.tesla.com/findus"
-            >
+            <TeslaButton className="tesla-home-button--dark" to="/findus">
               View Network
             </TeslaButton>
-            <TeslaButton className="tesla-home-button--white" to="/energy">
+            <TeslaButton className="tesla-home-button--white" to="/charging">
               Learn More
             </TeslaButton>
           </div>
