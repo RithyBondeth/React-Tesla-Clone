@@ -336,7 +336,7 @@ export default function ChargingPage() {
               Schedule a demo drive and learn how to charge at home or on the
               road.
             </p>
-            <ChargingLink to="/demo_drive">Demo Drive</ChargingLink>
+            <ChargingLink to="/drive">Demo Drive</ChargingLink>
           </div>
           <small>
             <sup>1</sup> Subject to a mileage cap.

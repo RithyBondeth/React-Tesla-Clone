@@ -55,7 +55,7 @@ export default function SelfDrivingSpotlight() {
               </Link>
               <Link
                 className="rounded bg-[#171a20]/85 px-7 py-3 text-sm font-semibold text-white backdrop-blur-md transition hover:bg-black"
-                to="/demo_drive"
+                to="/drive"
               >
                 Demo FSD
               </Link>

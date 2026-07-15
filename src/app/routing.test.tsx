@@ -458,3 +458,95 @@ describe("charging routes", () => {
     expect(document.title).toBe("Find Us | Tesla Clone");
   });
 });
+
+describe("drive routes", () => {
+  test("renders the complete scheduling form at the current Drive URL", async () => {
+    window.history.pushState({}, "", "/drive");
+
+    render(<TeslaApp />);
+
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "Schedule a Drive",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Select a Model" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Select Location and Time" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("form", { name: "Schedule a drive" }),
+    ).toBeInTheDocument();
+    expect(document.title).toBe("Schedule a Drive | Tesla Clone");
+  });
+
+  test("selects a vehicle, appointment and confirms the local demo", async () => {
+    window.history.pushState({}, "", "/drive");
+
+    render(<TeslaApp />);
+
+    fireEvent.click(
+      await screen.findByRole("radio", { name: /^Model 3 Sports sedan/ }),
+    );
+    expect(
+      screen.getByAltText("Model 3 driving on the road"),
+    ).toBeInTheDocument();
+
+    const addressInput = screen.getByRole("combobox", { name: "Search" });
+    fireEvent.focus(addressInput);
+    fireEvent.change(addressInput, { target: { value: "90210" } });
+    fireEvent.click(
+      screen.getByRole("button", { name: "Beverly Hills, CA 90210" }),
+    );
+
+    expect(
+      screen.getByRole("radio", { name: /Tesla West Hollywood/ }),
+    ).toBeChecked();
+    const datePicker = screen.getByRole("group", { name: "Select a date" });
+    fireEvent.click(within(datePicker).getAllByRole("button")[0]);
+    const timePicker = screen.getByRole("group", {
+      name: "Available times",
+    });
+    fireEvent.click(
+      within(timePicker).getByRole("button", { name: "10:30 AM" }),
+    );
+
+    fireEvent.change(screen.getByLabelText("First Name"), {
+      target: { value: "Alex" },
+    });
+    fireEvent.change(screen.getByLabelText("Last Name"), {
+      target: { value: "Driver" },
+    });
+    fireEvent.change(screen.getByLabelText("Email Address"), {
+      target: { value: "alex@example.com" },
+    });
+    fireEvent.change(screen.getByRole("textbox", { name: "Phone Number" }), {
+      target: { value: "2015550123" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Submit" }));
+
+    expect(
+      screen.getByRole("dialog", { name: "Your Drive Is Scheduled" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/No appointment or personal information was sent/),
+    ).toBeInTheDocument();
+  });
+
+  test("keeps the existing demo-drive URL working", async () => {
+    window.history.pushState({}, "", "/demo_drive");
+
+    render(<TeslaApp />);
+
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "Schedule a Drive",
+      }),
+    ).toBeInTheDocument();
+    expect(document.title).toBe("Schedule a Drive | Tesla Clone");
+  });
+});

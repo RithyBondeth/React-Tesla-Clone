@@ -62,7 +62,7 @@ export const menuList: NavigationMenu[] = [
         {
           productActions: [
             { label: "Learn", link: "/fsd" },
-            { label: "Experience", link: "/demo_drive" },
+            { label: "Experience", link: "/drive" },
           ],
           productImage: "/assets/navbar-images/vehicles-images/fsd.avif",
           productLink: "/fsd",
@@ -75,7 +75,7 @@ export const menuList: NavigationMenu[] = [
           listLink: "https://www.tesla.com/current-offers",
           listName: "Current Offers",
         },
-        { listLink: "/demo_drive", listName: "Demo Drive" },
+        { listLink: "/drive", listName: "Demo Drive" },
         {
           external: true,
           listLink: "https://www.tesla.com/tradein",
@@ -229,7 +229,7 @@ export const menuList: NavigationMenu[] = [
     items: {
       products: [],
       links: [
-        { listLink: "/demo_drive", listName: "Test Drive" },
+        { listLink: "/drive", listName: "Test Drive" },
         {
           external: true,
           listLink: "https://www.tesla.com/events",

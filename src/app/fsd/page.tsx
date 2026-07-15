@@ -245,7 +245,7 @@ export default function FsdPage() {
           </header>
           <Link
             className="fsd-primary-button fsd-hero-cta absolute z-10"
-            to="/demo_drive"
+            to="/drive"
           >
             Demo FSD (Supervised)
           </Link>
@@ -520,10 +520,7 @@ export default function FsdPage() {
               </a>
               .
             </p>
-            <Link
-              className="fsd-primary-button fsd-experience-cta"
-              to="/demo_drive"
-            >
+            <Link className="fsd-primary-button fsd-experience-cta" to="/drive">
               Demo FSD (Supervised)
             </Link>
           </div>

@@ -97,7 +97,7 @@ export default function OwnershipExperience() {
           </div>
           <Link
             className="w-full rounded bg-[#171a20] px-8 py-3 text-center text-sm font-semibold text-white transition hover:bg-black sm:w-auto"
-            to="/demo_drive"
+            to="/drive"
           >
             Schedule Demo Drive
           </Link>

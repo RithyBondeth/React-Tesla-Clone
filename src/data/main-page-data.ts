@@ -33,7 +33,7 @@ export const mainPageList: Vehicle[] = [
       },
       {
         label: "Demo Drive",
-        link: "/demo_drive",
+        link: "/drive",
       },
     ],
     orderData: {
@@ -260,7 +260,7 @@ export const mainPageList: Vehicle[] = [
       },
       {
         label: "Demo Drive",
-        link: "/demo_drive",
+        link: "/drive",
       },
     ],
     orderData: {
@@ -418,7 +418,7 @@ export const mainPageList: Vehicle[] = [
       },
       {
         label: "Demo Drive",
-        link: "/demo_drive",
+        link: "/drive",
       },
     ],
     orderData: {
@@ -709,7 +709,7 @@ export const mainPageList: Vehicle[] = [
       },
       {
         label: "Demo Drive",
-        link: "/demo_drive",
+        link: "/drive",
       },
     ],
     orderData: {

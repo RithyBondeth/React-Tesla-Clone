@@ -164,7 +164,7 @@ export default function InventoryVehicleDetailPage() {
               {vehicle.demoDriveAvailable && (
                 <Link
                   className="mt-3 flex w-full justify-center rounded bg-[#f4f4f4] px-5 py-3 text-sm font-semibold transition hover:bg-[#e8e8e8]"
-                  to="/demo_drive"
+                  to="/drive"
                 >
                   Request a Demo Drive
                 </Link>

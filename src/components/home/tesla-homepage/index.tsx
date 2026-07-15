@@ -517,7 +517,7 @@ function FullSelfDrivingCard() {
           </dl>
 
           <div className="tesla-home-fsd-actions">
-            <TeslaButton className="tesla-home-button--dark" to="/demo_drive">
+            <TeslaButton className="tesla-home-button--dark" to="/drive">
               Schedule Demo
             </TeslaButton>
             <TeslaButton className="tesla-home-button--white" to="/fsd">
@@ -994,7 +994,7 @@ function StickyActions() {
           ↑
         </span>
       </button>
-      <Link className="tesla-home-drive-button" to="/demo_drive">
+      <Link className="tesla-home-drive-button" to="/drive">
         <SteeringWheelIcon />
         Schedule a Drive Today
       </Link>

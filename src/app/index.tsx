@@ -87,8 +87,8 @@ const pageMetadata = [
   },
   {
     description: "Schedule a demo drive and experience a Tesla vehicle.",
-    paths: ["/demo_drive"],
-    title: "Schedule a Demo Drive | Tesla Clone",
+    paths: ["/drive", "/demo_drive"],
+    title: "Schedule a Drive | Tesla Clone",
   },
 ];
 
@@ -243,6 +243,7 @@ export default function TeslaApp() {
             }
             path="/model-s"
           />
+          <Route element={<ModelCarDemoDrivePage />} path="/drive" />
           <Route element={<ModelCarDemoDrivePage />} path="/demo_drive" />
           <Route element={<InventoryPage />} path="/inventory" />
           <Route element={<InventoryPage />} path="/inventory/:condition" />
