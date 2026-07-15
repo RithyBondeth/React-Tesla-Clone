@@ -2,6 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Universal Sans Tesla";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./fonts/universal-sans-text-regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Universal Sans Tesla";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./fonts/universal-sans-text-medium.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Universal Sans Tesla Display";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./fonts/universal-sans-display-medium.woff2") format("woff2");
+}
+
 *,
 *::before,
 *::after {
@@ -23,6 +47,17 @@ body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.fsd-page {
+  font-family:
+    "Universal Sans Tesla", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.fsd-display {
+  font-family:
+    "Universal Sans Tesla Display", "Universal Sans Tesla", "Helvetica Neue",
+    Helvetica, Arial, sans-serif;
 }
 
 img {

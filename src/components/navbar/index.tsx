@@ -179,11 +179,11 @@ export default function Navbar({
       >
         <nav
           aria-label="Primary navigation"
-          className="grid h-full grid-cols-[1fr_auto] items-center px-3 sm:px-5 min-[1200px]:grid-cols-[1fr_auto_1fr] min-[1200px]:px-8"
+          className="grid h-full grid-cols-[1fr_auto] items-center px-3 sm:px-5 min-[1200px]:grid-cols-[1fr_auto_1fr] min-[1200px]:px-16"
         >
           <Link
             aria-label="Tesla home"
-            className="flex h-8 w-[120px] items-center justify-self-start rounded-sm focus-visible:outline-offset-4"
+            className="flex h-8 w-[132px] items-center justify-self-start rounded-sm focus-visible:outline-offset-4"
             onClick={closeMenus}
             onFocus={closeDesktopMenu}
             onMouseEnter={closeDesktopMenu}
@@ -191,13 +191,13 @@ export default function Navbar({
           >
             <img
               alt="Tesla"
-              className={`h-auto w-[120px] transition duration-300 ${
+              className={`h-auto w-[132px] transition duration-300 ${
                 usesLightForeground ? "invert" : ""
               }`}
               decoding="async"
-              height="16"
-              src="/assets/tesla-wordmark.png"
-              width="120"
+              height="14"
+              src="/assets/tesla-official/branding/tesla-wordmark-black-transparent.png"
+              width="132"
             />
           </Link>
 

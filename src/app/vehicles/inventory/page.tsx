@@ -10,18 +10,17 @@ import {
   type InventoryVehicle,
 } from "../../../data/inventory-data";
 
-const MODEL_OPTIONS: InventoryModel[] = [
+const uniqueOptions = (values: string[]) =>
+  Array.from(new Set(values)).sort((first, second) =>
+    first.localeCompare(second),
+  );
+
+const MODEL_ORDER: InventoryModel[] = [
   "Model S",
   "Model 3",
   "Model X",
   "Model Y",
-];
-const TRIM_OPTIONS = ["All-Wheel Drive", "Long Range", "Performance", "Plaid"];
-const PAINT_OPTIONS = [
-  "Stealth Grey",
-  "Pearl White",
-  "Deep Blue Metallic",
-  "Ultra Red",
+  "Cybertruck",
 ];
 const CONDITION_OPTIONS: InventoryHistory[] = [
   "No Reported Accidents/Damage",
@@ -31,30 +30,6 @@ const MAX_PRICE = 100000;
 const MAX_MILEAGE = 60000;
 const MIN_YEAR = 2020;
 const MAX_YEAR = Math.max(...inventoryVehicles.map((vehicle) => vehicle.year));
-
-const uniqueOptions = (values: string[]) =>
-  Array.from(new Set(values)).sort((first, second) =>
-    first.localeCompare(second),
-  );
-
-const WHEEL_OPTIONS = uniqueOptions(
-  inventoryVehicles.map((vehicle) => vehicle.wheels),
-);
-const INTERIOR_OPTIONS = uniqueOptions(
-  inventoryVehicles.map((vehicle) => vehicle.interior),
-);
-const SELF_DRIVING_OPTIONS = uniqueOptions(
-  inventoryVehicles.map((vehicle) => vehicle.selfDriving),
-);
-const STEERING_CONTROL_OPTIONS = uniqueOptions(
-  inventoryVehicles.map((vehicle) => vehicle.steeringControl),
-);
-const SEAT_LAYOUT_OPTIONS = uniqueOptions(
-  inventoryVehicles.map((vehicle) => vehicle.seatLayout),
-);
-const ADDITIONAL_OPTIONS = uniqueOptions(
-  inventoryVehicles.flatMap((vehicle) => vehicle.additionalOptions),
-);
 
 const SAVINGS_BY_VEHICLE: Partial<Record<string, number>> = {
   "m3-lr-awd-grey": 1460,
@@ -223,6 +198,37 @@ function FilterPanel({
   setPaymentType,
   setRequiresDemoDrive,
 }: FilterPanelProps) {
+  const availableVehicles = inventoryVehicles.filter(
+    (vehicle) => vehicle.condition === condition,
+  );
+  const modelOptions = MODEL_ORDER.filter((model) =>
+    availableVehicles.some((vehicle) => vehicle.model === model),
+  );
+  const trimOptions = uniqueOptions(
+    availableVehicles.map((vehicle) => vehicle.trim),
+  );
+  const paintOptions = uniqueOptions(
+    availableVehicles.map((vehicle) => vehicle.paint),
+  );
+  const wheelOptions = uniqueOptions(
+    availableVehicles.map((vehicle) => vehicle.wheels),
+  );
+  const interiorOptions = uniqueOptions(
+    availableVehicles.map((vehicle) => vehicle.interior),
+  );
+  const selfDrivingOptions = uniqueOptions(
+    availableVehicles.map((vehicle) => vehicle.selfDriving),
+  );
+  const steeringControlOptions = uniqueOptions(
+    availableVehicles.map((vehicle) => vehicle.steeringControl),
+  );
+  const seatLayoutOptions = uniqueOptions(
+    availableVehicles.map((vehicle) => vehicle.seatLayout),
+  );
+  const additionalOptions = uniqueOptions(
+    availableVehicles.flatMap((vehicle) => vehicle.additionalOptions),
+  );
+
   return (
     <div className="pb-8">
       <div className="mb-5 flex items-center justify-between">
@@ -263,7 +269,7 @@ function FilterPanel({
 
       <div className="py-6">
         <p className="mb-2 text-[15px] font-semibold text-[#171a20]">Model</p>
-        {MODEL_OPTIONS.map((model) => (
+        {modelOptions.map((model) => (
           <FilterOption
             checked={selectedModels.includes(model)}
             id={`${idPrefix}-model-${optionId(model)}`}
@@ -273,18 +279,10 @@ function FilterPanel({
             round
           />
         ))}
-        <FilterOption
-          checked={false}
-          disabled
-          id={`${idPrefix}-model-cybertruck`}
-          label="Cybertruck"
-          onChange={() => undefined}
-          round
-        />
       </div>
 
       <FilterSection defaultOpen title="Trim">
-        {TRIM_OPTIONS.map((trim) => (
+        {trimOptions.map((trim) => (
           <FilterOption
             checked={selectedTrims.includes(trim)}
             id={`${idPrefix}-trim-${optionId(trim)}`}
@@ -387,7 +385,7 @@ function FilterPanel({
       )}
 
       <FilterSection title="Paint">
-        {PAINT_OPTIONS.map((paint) => (
+        {paintOptions.map((paint) => (
           <FilterOption
             checked={selectedPaints.includes(paint)}
             id={`${idPrefix}-paint-${optionId(paint)}`}
@@ -399,7 +397,7 @@ function FilterPanel({
       </FilterSection>
 
       <FilterSection title="Wheels">
-        {WHEEL_OPTIONS.map((wheel) => (
+        {wheelOptions.map((wheel) => (
           <FilterOption
             checked={selectedWheels.includes(wheel)}
             id={`${idPrefix}-wheel-${optionId(wheel)}`}
@@ -411,7 +409,7 @@ function FilterPanel({
       </FilterSection>
 
       <FilterSection title="Interior">
-        {INTERIOR_OPTIONS.map((interior) => (
+        {interiorOptions.map((interior) => (
           <FilterOption
             checked={selectedInteriors.includes(interior)}
             id={`${idPrefix}-interior-${optionId(interior)}`}
@@ -423,7 +421,7 @@ function FilterPanel({
       </FilterSection>
 
       <FilterSection title="Steering Control">
-        {STEERING_CONTROL_OPTIONS.map((steeringControl) => (
+        {steeringControlOptions.map((steeringControl) => (
           <FilterOption
             checked={selectedSteeringControls.includes(steeringControl)}
             id={`${idPrefix}-steering-${optionId(steeringControl)}`}
@@ -435,7 +433,7 @@ function FilterPanel({
       </FilterSection>
 
       <FilterSection title="Self-Driving">
-        {SELF_DRIVING_OPTIONS.map((selfDriving) => (
+        {selfDrivingOptions.map((selfDriving) => (
           <FilterOption
             checked={selectedSelfDrivingOptions.includes(selfDriving)}
             id={`${idPrefix}-self-driving-${optionId(selfDriving)}`}
@@ -447,7 +445,7 @@ function FilterPanel({
       </FilterSection>
 
       <FilterSection title="Seat Layout">
-        {SEAT_LAYOUT_OPTIONS.map((seatLayout) => (
+        {seatLayoutOptions.map((seatLayout) => (
           <FilterOption
             checked={selectedSeatLayouts.includes(seatLayout)}
             id={`${idPrefix}-seat-${optionId(seatLayout)}`}
@@ -459,7 +457,7 @@ function FilterPanel({
       </FilterSection>
 
       <FilterSection title="Additional Options">
-        {ADDITIONAL_OPTIONS.map((option) => (
+        {additionalOptions.map((option) => (
           <FilterOption
             checked={selectedAdditionalOptions.includes(option)}
             id={`${idPrefix}-additional-${optionId(option)}`}
@@ -502,9 +500,117 @@ function FilterPanel({
 const paintColor: Record<string, string> = {
   "Deep Blue Metallic": "#233b60",
   "Pearl White": "#f4f4f4",
+  "Solid Black": "#171a20",
+  "Stainless Steel": "#9b9da1",
   "Stealth Grey": "#4b4f55",
   "Ultra Red": "#8f1017",
 };
+
+function PaintSwatch({
+  color,
+  large = false,
+}: {
+  color: string;
+  large?: boolean;
+}) {
+  return (
+    <span
+      aria-hidden="true"
+      className={`shrink-0 rounded-full border border-black/15 ${
+        large ? "h-6 w-6" : "h-3 w-3"
+      }`}
+      style={{
+        backgroundColor: color,
+        backgroundImage:
+          "linear-gradient(180deg, rgba(255,255,255,.58) 0%, rgba(255,255,255,.22) 23%, rgba(0,0,0,.22) 30%, transparent 45%), radial-gradient(circle at 50% 80%, rgba(0,0,0,.28), transparent 62%)",
+        boxShadow: "inset 0 -2px 4px rgba(0,0,0,.2)",
+      }}
+    />
+  );
+}
+
+function WheelIcon({ large = false }: { large?: boolean }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={`relative grid shrink-0 place-items-center rounded-full border-[#090a0c] bg-[#15171a] ${
+        large ? "h-6 w-6 border-[3px]" : "h-3 w-3 border-2"
+      }`}
+      style={{
+        backgroundImage:
+          "repeating-conic-gradient(from 4deg, #4a4d52 0deg 8deg, #111317 8deg 23deg, #2b2e33 23deg 30deg)",
+        boxShadow: "inset 0 0 3px rgba(255,255,255,.18)",
+      }}
+    >
+      <span
+        className={`rounded-full bg-[#08090b] ring-1 ring-[#5b5e63] ${
+          large ? "h-1.5 w-1.5" : "h-[3px] w-[3px]"
+        }`}
+      />
+    </span>
+  );
+}
+
+function InteriorSwatch({
+  interior,
+  large = false,
+}: {
+  interior: string;
+  large?: boolean;
+}) {
+  const color = interior.includes("White")
+    ? "#f2f0eb"
+    : interior.includes("Cream")
+      ? "#e5d9c8"
+      : "#17191c";
+
+  return (
+    <span
+      aria-hidden="true"
+      className={`shrink-0 rounded-full border border-black/15 ${
+        large ? "h-6 w-6" : "h-3 w-3"
+      }`}
+      style={{
+        backgroundColor: color,
+        backgroundImage:
+          "radial-gradient(circle at 34% 24%, rgba(255,255,255,.62), transparent 34%), linear-gradient(145deg, transparent 36%, rgba(0,0,0,.34))",
+        boxShadow: "inset 0 -2px 4px rgba(0,0,0,.18)",
+      }}
+    />
+  );
+}
+
+function SeatIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      className="h-6 w-6 shrink-0"
+      fill="currentColor"
+      focusable="false"
+      viewBox="0 0 24 24"
+    >
+      <path d="M14.718 17.383c2.401-.375 3.276.034 3.276 1.33 0 1.612-.733 2.287-2.466 2.287h-4.991q-1.613 0-2.628-1.025a.5.5 0 0 1 .201-.828l.29-.093q4.163-1.335 6.318-1.67ZM5.346 3c1.183 0 1.17.599 1.15 1.245l-.003.125-.001.126v2.957c0 .984 2.08 3.841 2.78 4.945q2.013 3.174-1.615 5.906l-.139.103a.5.5 0 0 1-.771-.256Q3.994 9.286 3.994 7.656C3.994 5.966 4.439 3 5.346 3" />
+    </svg>
+  );
+}
+
+function SelfDrivingIcon({ large = false }: { large?: boolean }) {
+  return (
+    <svg
+      aria-hidden="true"
+      className={`shrink-0 ${large ? "h-6 w-6" : "h-3 w-3"}`}
+      fill="currentColor"
+      focusable="false"
+      viewBox="0 0 24 24"
+    >
+      <path
+        clipRule="evenodd"
+        d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10M4.487 8.887c-.15.372.212.723.596.608a24.35 24.35 0 0 1 13.862 0c.385.115.748-.236.596-.608C18.328 5.903 15.415 3.8 12.014 3.8S5.701 5.903 4.487 8.887m-.479 4.618a.475.475 0 0 1 .478-.555h1.171a4.444 4.444 0 0 1 4.444 4.444v1.92c0 .324-.303.563-.61.463a8.18 8.18 0 0 1-5.483-6.272m15.507-.555c.3 0 .533.261.478.555a8.18 8.18 0 0 1-5.454 6.262c-.307.102-.612-.137-.612-.461v-1.912a4.444 4.444 0 0 1 4.445-4.444z"
+        fillRule="evenodd"
+      />
+    </svg>
+  );
+}
 
 function InventoryCard({
   paymentType,
@@ -521,26 +627,47 @@ function InventoryCard({
   const wheelSize = vehicle.wheels.match(/\d+"/)?.[0] ?? "Wheels";
   const seatCount = vehicle.seatLayout.match(/\d+/)?.[0] ?? vehicle.seatLayout;
   const exteriorImageScale =
-    vehicle.id === "my-lr-awd-red"
-      ? 1.56
-      : vehicle.model === "Model X"
-        ? 1.62
-        : 1.68;
+    vehicle.model === "Cybertruck"
+      ? 1.12
+      : vehicle.id === "my-lr-awd-red"
+        ? 1.56
+        : vehicle.model === "Model X"
+          ? 1.62
+          : 1.68;
+  const selfDrivingLabel = vehicle.selfDriving.includes("Trial")
+    ? "1 mo FSD"
+    : vehicle.selfDriving === "Basic Autopilot"
+      ? "Autopilot"
+      : vehicle.selfDriving === "Enhanced Autopilot"
+        ? "EAP"
+        : "FSD";
+  const fullSelfDrivingLabel = vehicle.selfDriving.includes("Trial")
+    ? "1 mo Full Self-Driving (Supervised) Trial"
+    : vehicle.selfDriving;
+  const interiorLabel = vehicle.interior.replace(" Premium", "");
+  const seatWord =
+    seatCount === "5" ? "Five" : seatCount === "6" ? "Six" : "Seven";
+  const configurationCopy = vehicle.drive.includes(vehicle.trim)
+    ? vehicle.drive
+    : `${vehicle.trim} ${vehicle.drive}`;
   const paymentCopy =
     paymentType === "cash"
       ? `$${vehicle.price.toLocaleString()}`
       : paymentType === "finance"
-        ? `Est. finance $${estimatedFinancePayment.toLocaleString()}/mo • $${vehicle.price.toLocaleString()}`
-        : `Est. lease $${estimatedLeasePayment.toLocaleString()}/mo • $${vehicle.price.toLocaleString()}`;
+        ? `Est $${estimatedFinancePayment.toLocaleString()} /mo financing • $${vehicle.price.toLocaleString()}`
+        : `Est $${estimatedLeasePayment.toLocaleString()} /mo lease • $${vehicle.price.toLocaleString()}`;
 
   return (
-    <article className="group min-w-0 overflow-hidden rounded-[7px] border border-black/15 bg-white transition-shadow duration-200 hover:shadow-[0_8px_24px_rgba(0,0,0,0.09)]">
+    <article
+      aria-label={`${vehicle.model} ${configurationCopy}`}
+      className="group min-w-0 overflow-hidden rounded-[7px] border border-black/15 bg-white transition-shadow duration-200 hover:shadow-[0_8px_24px_rgba(0,0,0,0.09)]"
+    >
       <Link
         aria-label={`View image details for ${vehicle.year} ${vehicle.model} ${vehicle.trim}`}
         className="block h-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#3e6ae1]"
         to={`/inventory/vehicle/${vehicle.id}`}
       >
-        <div className="relative aspect-video overflow-hidden bg-white">
+        <div className="group/image relative aspect-video overflow-hidden bg-white">
           {savings && (
             <span className="absolute left-3 top-3 z-10 rounded-[3px] bg-[#f4f4f4]/95 px-2.5 py-1.5 text-[11px] font-medium text-[#5c5e62]">
               Reduced by ${savings.toLocaleString()}
@@ -548,7 +675,7 @@ function InventoryCard({
           )}
           <img
             alt={`${vehicle.paint} ${vehicle.model} ${vehicle.trim}`}
-            className="absolute inset-0 h-full w-full object-cover object-center opacity-100 transition-opacity duration-300 ease-out group-hover:opacity-0 group-focus-within:opacity-0"
+            className="absolute inset-0 h-full w-full object-cover object-center opacity-100 transition-opacity duration-300 ease-out group-hover/image:opacity-0"
             decoding="async"
             height="647"
             loading="lazy"
@@ -558,7 +685,7 @@ function InventoryCard({
           />
           <img
             alt={`${vehicle.year} ${vehicle.model} ${vehicle.interior}`}
-            className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100 group-focus-within:opacity-100"
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center opacity-0 transition-opacity duration-300 ease-out group-hover/image:opacity-100"
             decoding="async"
             height="647"
             loading="lazy"
@@ -567,14 +694,11 @@ function InventoryCard({
           />
         </div>
 
-        <div className="px-5 pb-5 pt-4">
-          <h2 className="text-[17px] font-semibold leading-6 tracking-[-0.02em] text-[#171a20]">
-            {vehicle.model}
+        <div className="px-6 pb-6 pt-5">
+          <h2 className="text-[18px] font-semibold leading-6 tracking-[-0.025em] text-[#171a20]">
+            {configurationCopy}
           </h2>
-          <p className="mt-0.5 text-[13px] font-medium leading-5 text-[#393c41]">
-            {vehicle.trim} {vehicle.drive}
-          </p>
-          <p className="mt-1 text-[13px] font-semibold leading-5 text-[#171a20]">
+          <p className="mt-1.5 text-[13px] font-semibold leading-5 text-[#171a20]">
             {paymentCopy}
           </p>
           <p className="mt-1.5 text-[13px] leading-5 text-[#5c5e62]">
@@ -589,45 +713,59 @@ function InventoryCard({
             {vehicle.range} mi Range (EPA est.)
           </p>
 
-          <div className="mt-4 flex flex-wrap gap-x-3 gap-y-2 text-[11px] leading-4 text-[#393c41]">
-            <span className="inline-flex items-center gap-1.5">
-              <span
-                aria-hidden="true"
-                className="h-3 w-3 rounded-full border border-black/20"
-                style={{ backgroundColor: paintColor[vehicle.paint] ?? "#333" }}
-              />
-              Paint
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <span
-                aria-hidden="true"
-                className="h-3 w-3 rounded-full bg-[#202226]"
-              />
-              {wheelSize} Wheels
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <span
-                aria-hidden="true"
-                className={`h-3 w-3 rounded-full border border-black/20 ${
-                  vehicle.interior.includes("White")
-                    ? "bg-white"
-                    : vehicle.interior.includes("Cream")
-                      ? "bg-[#e5d9c8]"
-                      : "bg-[#202226]"
-                }`}
-              />
-              Interior
-            </span>
-            <span>{seatCount} Seats</span>
-            <span className="inline-flex items-center gap-1.5 text-[#3457b1]">
-              <span
-                aria-hidden="true"
-                className="grid h-3 w-3 place-items-center rounded-full border border-current text-[7px] font-semibold"
-              >
-                T
+          <div className="group/specs relative mt-3">
+            <div className="invisible absolute bottom-[calc(100%+8px)] left-0 right-0 z-30 translate-y-1 rounded-[4px] bg-white px-4 py-5 opacity-0 shadow-[0_7px_25px_rgba(0,0,0,0.16)] transition duration-200 group-hover/specs:visible group-hover/specs:translate-y-0 group-hover/specs:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
+              <div className="space-y-4 text-[14px] font-semibold leading-5 text-[#3d3f43]">
+                <div className="grid grid-cols-[24px_1fr] items-center gap-3">
+                  <PaintSwatch
+                    color={paintColor[vehicle.paint] ?? "#333"}
+                    large
+                  />
+                  <span>{vehicle.paint}</span>
+                </div>
+                <div className="grid grid-cols-[24px_1fr] items-center gap-3">
+                  <WheelIcon large />
+                  <span>{vehicle.wheels}</span>
+                </div>
+                <div className="grid grid-cols-[24px_1fr] items-center gap-3">
+                  <InteriorSwatch interior={vehicle.interior} large />
+                  <span>{interiorLabel}</span>
+                </div>
+                <div className="grid grid-cols-[24px_1fr] items-center gap-3">
+                  <SeatIcon />
+                  <span>{seatWord} Seat Interior</span>
+                </div>
+              </div>
+
+              <div className="my-5 border-t border-[#d0d1d2]" />
+
+              <div className="grid grid-cols-[24px_1fr] items-start gap-3 text-[14px] font-semibold leading-5 text-[#3d3f43]">
+                <span className="mt-0.5 text-[#3e6ae1]">
+                  <SelfDrivingIcon large />
+                </span>
+                <span>{fullSelfDrivingLabel}</span>
+              </div>
+            </div>
+
+            <div className="inline-flex max-w-full flex-wrap items-center gap-x-3 gap-y-2 rounded-[4px] px-2 py-2 text-[11px] leading-4 text-[#5c5e62] transition-colors group-hover/specs:bg-[#f4f4f4]">
+              <span className="inline-flex items-center gap-1.5">
+                <PaintSwatch color={paintColor[vehicle.paint] ?? "#333"} />
+                Paint
               </span>
-              {vehicle.selfDriving.includes("Trial") ? "1 mo FSD" : "FSD"}
-            </span>
+              <span className="inline-flex items-center gap-1.5">
+                <WheelIcon />
+                {wheelSize} Wheels
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <InteriorSwatch interior={vehicle.interior} />
+                Interior
+              </span>
+              <span>{seatCount} Seats</span>
+              <span className="inline-flex items-center gap-1.5 text-[#3e6ae1]">
+                <SelfDrivingIcon />
+                {selfDrivingLabel}
+              </span>
+            </div>
           </div>
 
           <span className="sr-only">Available in {vehicle.location}</span>
@@ -667,7 +805,7 @@ export default function InventoryPage() {
   const [selectedConditionHistories, setSelectedConditionHistories] = useState<
     InventoryHistory[]
   >([]);
-  const [paymentType, setPaymentType] = useState<PaymentType>("cash");
+  const [paymentType, setPaymentType] = useState<PaymentType>("finance");
   const [maxPrice, setMaxPrice] = useState(MAX_PRICE);
   const [maxMileage, setMaxMileage] = useState(MAX_MILEAGE);
   const [minYear, setMinYear] = useState(MIN_YEAR);
@@ -696,6 +834,78 @@ export default function InventoryPage() {
       document.removeEventListener("keydown", closeOnEscape);
     };
   }, [isMobileFiltersOpen]);
+
+  useEffect(() => {
+    const availableVehicles = inventoryVehicles.filter(
+      (vehicle) => vehicle.condition === condition,
+    );
+    const retainAvailable = <T,>(
+      values: T[],
+      isAvailable: (value: T) => boolean,
+    ) => {
+      const nextValues = values.filter(isAvailable);
+      return nextValues.length === values.length ? values : nextValues;
+    };
+
+    setSelectedModels((values) =>
+      retainAvailable(values, (model) =>
+        availableVehicles.some((vehicle) => vehicle.model === model),
+      ),
+    );
+    setSelectedTrims((values) =>
+      retainAvailable(values, (trim) =>
+        availableVehicles.some((vehicle) => vehicle.trim === trim),
+      ),
+    );
+    setSelectedPaints((values) =>
+      retainAvailable(values, (paint) =>
+        availableVehicles.some((vehicle) => vehicle.paint === paint),
+      ),
+    );
+    setSelectedWheels((values) =>
+      retainAvailable(values, (wheel) =>
+        availableVehicles.some((vehicle) => vehicle.wheels === wheel),
+      ),
+    );
+    setSelectedInteriors((values) =>
+      retainAvailable(values, (interior) =>
+        availableVehicles.some((vehicle) => vehicle.interior === interior),
+      ),
+    );
+    setSelectedSelfDrivingOptions((values) =>
+      retainAvailable(values, (selfDriving) =>
+        availableVehicles.some(
+          (vehicle) => vehicle.selfDriving === selfDriving,
+        ),
+      ),
+    );
+    setSelectedSteeringControls((values) =>
+      retainAvailable(values, (steeringControl) =>
+        availableVehicles.some(
+          (vehicle) => vehicle.steeringControl === steeringControl,
+        ),
+      ),
+    );
+    setSelectedSeatLayouts((values) =>
+      retainAvailable(values, (seatLayout) =>
+        availableVehicles.some((vehicle) => vehicle.seatLayout === seatLayout),
+      ),
+    );
+    setSelectedAdditionalOptions((values) =>
+      retainAvailable(values, (option) =>
+        availableVehicles.some((vehicle) =>
+          vehicle.additionalOptions.includes(option),
+        ),
+      ),
+    );
+    setSelectedConditionHistories((values) =>
+      retainAvailable(values, (history) =>
+        availableVehicles.some(
+          (vehicle) => vehicle.conditionHistory === history,
+        ),
+      ),
+    );
+  }, [condition]);
 
   const toggleValue = <T,>(
     value: T,
@@ -823,7 +1033,7 @@ export default function InventoryPage() {
     setMaxPrice(MAX_PRICE);
     setMaxMileage(MAX_MILEAGE);
     setMinYear(MIN_YEAR);
-    setPaymentType("cash");
+    setPaymentType("finance");
     setRequiresDemoDrive(false);
   };
 
@@ -911,7 +1121,7 @@ export default function InventoryPage() {
       <Navbar hasAnnouncement />
 
       <main className="pt-[104px]" id="top">
-        <header className="mx-auto max-w-[1536px] px-5 pb-7 pt-11 sm:px-8 lg:px-12 lg:pb-6 lg:pt-10">
+        <header className="mx-auto max-w-[1536px] px-5 pb-7 pt-11 sm:px-8 lg:px-8 lg:pb-6 lg:pt-12">
           <h1 className="text-[38px] font-medium leading-none tracking-[-0.045em] sm:text-[42px]">
             Inventory
           </h1>
@@ -997,7 +1207,7 @@ export default function InventoryPage() {
         </div>
 
         <div className="mx-auto grid max-w-[1536px] lg:grid-cols-[296px_minmax(0,1fr)]">
-          <aside className="hidden px-12 lg:block">
+          <aside className="hidden px-8 lg:block">
             <div className="sticky top-[112px] max-h-[calc(100vh-128px)] overflow-y-auto pr-2">
               <FilterPanel {...sharedFilterProps} idPrefix="desktop" />
             </div>
@@ -1034,7 +1244,7 @@ export default function InventoryPage() {
             </select>
 
             {filteredVehicles.length > 0 ? (
-              <div className="grid max-w-[1120px] gap-5 sm:grid-cols-2 min-[1380px]:grid-cols-3">
+              <div className="grid max-w-[1240px] gap-5 sm:grid-cols-2 min-[1380px]:grid-cols-3">
                 {filteredVehicles.map((vehicle) => (
                   <InventoryCard
                     key={vehicle.id}

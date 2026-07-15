@@ -1,309 +1,538 @@
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
-import SiteFooter from "../../components/home/site-footer";
-import ResponsiveVideo from "../../components/media/responsive-video";
 import Navbar from "../../components/navbar";
+
+type FsdVideoProps = {
+  className?: string;
+  desktopPoster: string;
+  desktopSrc: string;
+  eager?: boolean;
+  label: string;
+  mediaClassName?: string;
+  mobilePoster: string;
+  mobileSrc: string;
+};
 
 const DRIVE_FEATURES = [
   {
     description:
-      "Activate Actually Smart Summon in the Tesla app and your vehicle can navigate through parking lots and tight spaces to find you.",
-    eyebrow: "Actually Smart Summon",
+      "Activate it in the Tesla app and your vehicle will navigate through parking lots and tight spaces to reach you.",
+    eyebrow: "Actually Smart Summon²",
     title: "Drives to You",
   },
   {
     description:
-      "Exterior cameras provide 360-degree visibility while FSD (Supervised) navigates routes, steers, changes lanes and avoids surrounding road users.",
+      "On-board cameras watch surrounding lanes, road users and blind spots while your Tesla navigates and changes lanes under your supervision.",
     eyebrow: "FSD (Supervised)",
-    title: "Drives for You",
+    title: "Drives for You³",
   },
   {
     description:
-      "Autopark detects available spaces and automatically maneuvers into perpendicular and parallel parking spots under your supervision.",
+      "Your Tesla will detect available perpendicular and parallel parking spaces and automatically maneuver into the selected spot.",
     eyebrow: "Autopark",
     title: "Parks for You",
   },
 ];
 
+const FOOTNOTES = [
+  "Price reflects the monthly subscription and is subject to terms and conditions. Price and feature availability may change.",
+  "Feature availability depends on regulatory approval and other factors, which may take longer in some jurisdictions.",
+  "Currently enabled features require active driver supervision and do not make the vehicle autonomous.",
+  "The mileage counter advances at an estimated average Tesla fleet rate and may not include every mile or free trial.",
+  "Compared with the estimated U.S. average.",
+  "Includes current supported markets across North America, Europe and Asia Pacific.",
+];
+
+const FOOTER_LINKS = [
+  { label: "Privacy & Legal", url: "https://www.tesla.com/legal" },
+  { label: "Vehicle Recalls", url: "https://www.tesla.com/vin-recall-search" },
+  { label: "Contact", url: "https://www.tesla.com/contact" },
+  { label: "News", url: "https://www.tesla.com/blog" },
+  { label: "Get Updates", url: "https://www.tesla.com/updates" },
+  { label: "Locations", url: "https://www.tesla.com/findus" },
+];
+
+function FsdAmbientVideo({
+  className = "",
+  desktopPoster,
+  desktopSrc,
+  eager = false,
+  label,
+  mediaClassName = "object-cover object-center",
+  mobilePoster,
+  mobileSrc,
+}: FsdVideoProps) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [hasLoaded, setHasLoaded] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isUserPaused, setIsUserPaused] = useState(false);
+  const [shouldLoad, setShouldLoad] = useState(eager);
+  const [isVisible, setIsVisible] = useState(eager);
+
+  useEffect(() => {
+    const video = videoRef.current;
+
+    if (!video || eager || !("IntersectionObserver" in window)) {
+      setShouldLoad(true);
+      setIsVisible(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+        if (entry.isIntersecting) setShouldLoad(true);
+      },
+      { rootMargin: "320px 0px", threshold: 0.05 },
+    );
+
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, [eager]);
+
+  useEffect(() => {
+    if (shouldLoad) {
+      videoRef.current?.load();
+    }
+  }, [shouldLoad]);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    if (!video || !shouldLoad) return;
+
+    if (isVisible && !isUserPaused && !reducedMotion) {
+      void video
+        .play()
+        .then(() => setIsPlaying(true))
+        .catch(() => setIsPlaying(false));
+    } else {
+      video.pause();
+    }
+  }, [isUserPaused, isVisible, shouldLoad]);
+
+  const togglePlayback = () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (isPlaying) {
+      setIsUserPaused(true);
+      video.pause();
+      return;
+    }
+
+    setShouldLoad(true);
+    setIsUserPaused(false);
+    void video
+      .play()
+      .then(() => setIsPlaying(true))
+      .catch(() => setIsPlaying(false));
+  };
+
+  return (
+    <div className={`relative overflow-hidden bg-[#171a20] ${className}`}>
+      <picture>
+        <source media="(max-width: 767px)" srcSet={mobilePoster} />
+        <img
+          alt=""
+          className={`absolute inset-0 h-full w-full ${mediaClassName}`}
+          decoding="async"
+          height="1080"
+          loading={eager ? "eager" : "lazy"}
+          src={desktopPoster}
+          width="1920"
+        />
+      </picture>
+      <video
+        aria-label={label}
+        autoPlay={eager}
+        className={`absolute inset-0 h-full w-full transition-opacity duration-500 ${mediaClassName} ${
+          hasLoaded ? "opacity-100" : "opacity-0"
+        }`}
+        loop
+        muted
+        onLoadedData={() => setHasLoaded(true)}
+        onPause={() => setIsPlaying(false)}
+        onPlay={() => setIsPlaying(true)}
+        playsInline
+        preload={shouldLoad ? "auto" : "none"}
+        ref={videoRef}
+      >
+        {shouldLoad && (
+          <>
+            <source media="(max-width: 767px)" src={mobileSrc} />
+            <source src={desktopSrc} />
+          </>
+        )}
+      </video>
+      <button
+        aria-label={isPlaying ? "Pause video" : "Play video"}
+        className="absolute bottom-5 left-5 z-20 grid h-8 w-8 place-items-center rounded bg-black/20 text-white transition hover:bg-black/40 sm:bottom-7 sm:left-8"
+        onClick={togglePlayback}
+        type="button"
+      >
+        {isPlaying ? (
+          <span aria-hidden="true" className="flex gap-1">
+            <span className="h-3.5 w-0.5 rounded bg-current" />
+            <span className="h-3.5 w-0.5 rounded bg-current" />
+          </span>
+        ) : (
+          <span
+            aria-hidden="true"
+            className="ml-0.5 block h-0 w-0 border-y-[6px] border-l-[9px] border-y-transparent border-l-current"
+          />
+        )}
+      </button>
+    </div>
+  );
+}
+
+function LiveMileage() {
+  const [miles, setMiles] = useState(11_946_084_885);
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setMiles((currentMiles) => currentMiles + 36);
+    }, 1000);
+
+    return () => window.clearInterval(interval);
+  }, []);
+
+  return <>{miles.toLocaleString("en-US")}</>;
+}
+
 export default function FsdPage() {
   return (
-    <div className="bg-white text-[#171a20]">
+    <div className="fsd-page bg-white text-[#171a20]">
       <Navbar isBlurred isWhiteText />
 
       <main>
-        <section className="relative min-h-[100svh] overflow-hidden bg-[#202326] text-white">
-          <picture>
-            <source
-              media="(max-width: 767px)"
-              srcSet="/assets/tesla-official/fsd-hero-mobile.avif"
-            />
-            <img
-              alt="Interior view of a Tesla driving with Full Self-Driving supervised"
-              className="hero-media absolute inset-0 h-full w-full object-cover object-center"
-              decoding="async"
-              fetchPriority="high"
-              height="1200"
-              loading="eager"
-              src="/assets/tesla-official/fsd-hero-desktop.avif"
-              width="1920"
-            />
-          </picture>
-          <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/5 to-black/70" />
-          <div className="relative flex min-h-[100svh] flex-col items-center justify-between px-5 pb-12 pt-28 text-center sm:px-8 sm:pt-32">
-            <header className="hero-copy max-w-4xl">
-              <p className="text-sm font-semibold text-white/75">
-                Active driver supervision required
-              </p>
-              <h1 className="mt-3 text-5xl font-semibold tracking-[-0.05em] sm:text-7xl">
-                Full Self-Driving
+        <section className="relative h-[100svh] min-h-[620px] overflow-hidden bg-black text-white">
+          <FsdAmbientVideo
+            className="!absolute inset-0 h-full w-full"
+            desktopPoster="/assets/tesla-official/fsd-hero-current-desktop-poster.jpg"
+            desktopSrc="/assets/tesla-official/fsd-hero-current-desktop.mp4"
+            eager
+            label="Interior view of a Tesla driving with Full Self-Driving supervised"
+            mobilePoster="/assets/tesla-official/fsd-hero-current-mobile-poster.jpg"
+            mobileSrc="/assets/tesla-official/fsd-hero-current-mobile.mp4"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-transparent to-black/45" />
+          <div className="relative z-10 flex h-full flex-col items-center justify-between px-6 pb-11 pt-[104px] text-center sm:pb-12 sm:pt-[108px]">
+            <header>
+              <h1 className="fsd-display text-[32px] font-medium leading-[1.1] tracking-[-0.025em] sm:text-[40px]">
+                Full Self-Driving (Supervised)
               </h1>
-              <p className="mt-2 text-2xl font-medium sm:text-3xl">
-                (Supervised)
+              <p className="mt-3 text-[14px] font-medium leading-5">
+                Available for $99/mo<sup className="ml-0.5 text-[9px]">1</sup>
               </p>
             </header>
-            <div className="grid w-full max-w-[552px] gap-3 sm:grid-cols-2">
-              <a
-                className="rounded bg-white px-7 py-3 text-sm font-semibold text-[#171a20] transition hover:bg-white/90"
-                href="https://www.tesla.com/updates?source=fsd"
-                rel="noreferrer"
-                target="_blank"
-              >
-                Stay Updated
-              </a>
-              <Link
-                className="rounded bg-[#171a20]/85 px-7 py-3 text-sm font-semibold text-white backdrop-blur-md transition hover:bg-black"
-                to="/demo_drive"
-              >
-                Demo FSD
-              </Link>
-            </div>
+            <Link
+              className="min-w-[220px] rounded bg-[#3e6ae1] px-7 py-3 text-[14px] font-medium leading-5 text-white transition hover:bg-[#3457b1]"
+              to="/demo_drive"
+            >
+              Demo FSD (Supervised)
+            </Link>
           </div>
         </section>
 
-        <section className="content-auto px-5 py-20 sm:px-8 sm:py-28 lg:px-10">
-          <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
-            <div>
-              <p className="text-sm font-semibold text-[#5c5e62]">
-                The Future of Transport
-              </p>
-              <h2 className="mt-2 text-4xl font-semibold tracking-[-0.045em] sm:text-6xl">
-                Trained on the Real World
-              </h2>
-            </div>
-            <div className="space-y-5 leading-7 text-[#5c5e62]">
-              <p>
-                Tesla uses billions of miles of anonymous real-world driving
-                data to train Full Self-Driving (Supervised) to handle the most
-                stressful parts of daily driving while helping make roads safer.
-              </p>
-              <p>
-                When enabled, your vehicle can drive you almost anywhere with
-                your active supervision and minimal intervention. Availability
-                depends on region, vehicle configuration and regulatory
-                approval.
-              </p>
-              <a
-                className="inline-flex rounded border-2 border-[#171a20] px-7 py-2.5 text-sm font-semibold text-[#171a20] transition hover:bg-[#171a20] hover:text-white"
-                href="https://www.tesla.com/fsd/safety"
-                rel="noreferrer"
-                target="_blank"
-              >
-                View Safety Report
-              </a>
-            </div>
+        <section className="px-6 py-20 text-center sm:py-24 lg:py-[104px]">
+          <div className="mx-auto max-w-[680px]">
+            <h2 className="fsd-display text-[28px] font-medium leading-tight tracking-[-0.02em]">
+              The Future of Transport
+            </h2>
+            <p className="mt-4 text-[14px] leading-5 text-[#393c41]">
+              Tesla trains Full Self-Driving (Supervised) with billions of miles
+              of anonymous, real-world data. It is designed to handle stressful
+              everyday driving tasks and take you almost anywhere with minimal
+              intervention while you remain actively attentive.
+            </p>
+            <a
+              className="mt-9 inline-flex min-w-[200px] justify-center rounded bg-[#171a20] px-7 py-3 text-[14px] font-medium leading-5 text-white transition hover:bg-[#393c41]"
+              href="https://www.tesla.com/fsd/safety"
+              rel="noreferrer"
+              target="_blank"
+            >
+              View Safety Report
+            </a>
+            <p className="mx-auto mt-10 max-w-[660px] text-[13px] leading-5 text-[#5c5e62]">
+              Full Self-Driving (Supervised) is currently available in select
+              markets across North America, Europe and Asia Pacific, with more
+              regions expected through future updates.<sup>2</sup>
+            </p>
           </div>
         </section>
 
-        <section className="content-auto bg-[#f4f4f4] px-5 py-20 sm:px-8 sm:py-28 lg:px-10">
-          <div className="mx-auto max-w-7xl">
-            <header className="grid gap-6 lg:grid-cols-2 lg:items-end">
-              <h2 className="text-4xl font-semibold tracking-[-0.045em] sm:text-6xl">
-                Designed for Every Drive
-              </h2>
-              <p className="max-w-xl leading-7 text-[#5c5e62] lg:justify-self-end">
-                Route navigation, steering, lane changes, parking and more are
-                completed under your active supervision—from quick errands to
-                daily commutes and road trips.
-              </p>
-            </header>
+        <section className="px-5 pb-20 pt-4 sm:px-8 sm:pb-28 lg:px-12">
+          <h2 className="fsd-display text-center text-[24px] font-medium leading-tight tracking-[-0.015em] sm:text-[28px]">
+            Watch the World&apos;s First Autonomous Car Delivery
+          </h2>
+          <div className="mx-auto mt-8 max-w-[1110px] overflow-hidden rounded-md bg-black">
+            <video
+              aria-label="The world's first autonomous car delivery"
+              className="aspect-video w-full bg-black object-cover"
+              controls
+              playsInline
+              poster="/assets/tesla-official/fsd-delivery-poster.png"
+              preload="metadata"
+              src="/assets/tesla-official/fsd-delivery.mp4"
+            />
+          </div>
+        </section>
 
-            <div className="mt-12 grid gap-4 lg:grid-cols-3">
-              {DRIVE_FEATURES.map((feature, index) => (
+        <section className="pt-4 sm:pt-10" id="designed-for-every-drive">
+          <header className="mx-auto max-w-[760px] px-6 text-center">
+            <h2 className="fsd-display text-[28px] font-medium leading-tight tracking-[-0.02em]">
+              Designed for Every Drive
+            </h2>
+            <p className="mt-4 text-[14px] leading-5 text-[#393c41]">
+              Full Self-Driving (Supervised) can navigate routes, steer, change
+              lanes and park for quick errands, commutes and road trips while
+              you remain actively attentive. Enabled features do not make the
+              vehicle autonomous.
+            </p>
+          </header>
+
+          <div className="relative mt-10 h-[300svh] min-h-[1900px] sm:mt-14">
+            <div className="sticky top-0 h-[100svh] min-h-[620px] overflow-hidden bg-[#eef0f1]">
+              <picture>
+                <source
+                  media="(max-width: 767px)"
+                  srcSet="/assets/tesla-official/fsd-every-drive-mobile.jpg"
+                />
+                <img
+                  alt="Tesla vehicle driving through a mountain road"
+                  className="h-full w-full object-cover object-center"
+                  decoding="async"
+                  height="1152"
+                  loading="lazy"
+                  src="/assets/tesla-official/fsd-every-drive-desktop.jpg"
+                  width="2048"
+                />
+              </picture>
+              <div className="absolute inset-0 bg-gradient-to-b from-white/5 via-transparent to-white/90 md:bg-gradient-to-r md:from-transparent md:via-white/5 md:to-white/95" />
+            </div>
+            <div className="absolute inset-0 z-10">
+              {DRIVE_FEATURES.map((feature) => (
                 <article
-                  className="flex min-h-[360px] flex-col justify-between rounded-2xl bg-[#171a20] p-7 text-white sm:p-8"
+                  className="flex h-[100svh] min-h-[620px] items-end px-7 pb-16 md:items-center md:justify-end md:px-[9vw] md:pb-0"
                   key={feature.title}
                 >
-                  <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-[0.12em] text-white/45">
-                    <span>{feature.eyebrow}</span>
-                    <span>0{index + 1}</span>
-                  </div>
-                  <div>
-                    <h3 className="text-3xl font-semibold tracking-[-0.035em]">
+                  <div className="w-full max-w-[360px] rounded-sm bg-white/85 p-5 backdrop-blur-sm md:bg-transparent md:p-0 md:backdrop-blur-none">
+                    <p className="text-[14px] font-medium leading-5">
+                      {feature.eyebrow}
+                    </p>
+                    <h3 className="fsd-display mt-1 text-[28px] font-medium leading-tight tracking-[-0.02em]">
                       {feature.title}
                     </h3>
-                    <p className="mt-4 text-sm leading-6 text-white/60">
+                    <p className="mt-5 text-[14px] leading-5 text-[#393c41]">
                       {feature.description}
                     </p>
                   </div>
                 </article>
               ))}
             </div>
-            <p className="mt-5 text-xs leading-5 text-[#5c5e62]">
-              Currently enabled features require active driver supervision and
-              do not make the vehicle autonomous.
-            </p>
-          </div>
-        </section>
-
-        <section className="content-auto bg-white px-4 py-16 sm:px-6 sm:py-24 lg:px-12">
-          <div className="relative mx-auto aspect-[9/10] max-w-[1600px] overflow-hidden rounded-2xl bg-[#25282a] sm:aspect-[16/10]">
-            <ResponsiveVideo
-              className="absolute inset-0"
-              desktopPoster="/assets/tesla-official/fsd-scenarios-desktop-poster.jpg"
-              desktopSrc="/assets/tesla-official/fsd-scenarios-desktop.mp4"
-              label="Full Self-Driving responding to complex real-world driving scenarios"
-              mobilePoster="/assets/tesla-official/fsd-scenarios-mobile-poster.jpg"
-              mobileSrc="/assets/tesla-official/fsd-scenarios-mobile.mp4"
-            />
-          </div>
-          <div className="mx-auto mt-12 grid max-w-7xl gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
-            <h2 className="text-4xl font-semibold tracking-[-0.045em] sm:text-5xl">
-              Trained on Once-In-A-Lifetime Scenarios
-            </h2>
-            <p className="max-w-2xl leading-7 text-[#5c5e62] lg:justify-self-end">
-              Crashes are complex. FSD (Supervised) is trained on what amounts
-              to more than 100 years of anonymous real-world scenarios from a
-              fleet of over six million vehicles. The fleet collectively
-              experiences a lifetime of driving scenarios in about 10 minutes.
-            </p>
-          </div>
-        </section>
-
-        <section className="content-auto bg-[#f4f4f4] px-4 py-16 sm:px-6 sm:py-24 lg:px-12">
-          <div className="relative mx-auto aspect-[9/10] max-w-[1600px] overflow-hidden rounded-2xl bg-[#222629] sm:aspect-video">
-            <ResponsiveVideo
-              className="absolute inset-0"
-              desktopPoster="/assets/tesla-official/fsd-attentive-desktop-poster.jpg"
-              desktopSrc="/assets/tesla-official/fsd-attentive-desktop.mp4"
-              label="Tesla cameras maintaining a full view of surrounding traffic"
-              mobilePoster="/assets/tesla-official/fsd-attentive-mobile-poster.jpg"
-              mobileSrc="/assets/tesla-official/fsd-attentive-mobile.mp4"
-            />
-          </div>
-          <div className="mx-auto mt-12 grid max-w-7xl gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
-            <h2 className="text-4xl font-semibold tracking-[-0.045em] sm:text-5xl">
-              Always Attentive,
-              <br />
-              Never Distracted
-            </h2>
-            <p className="max-w-2xl leading-7 text-[#5c5e62] lg:justify-self-end">
-              Cameras do not blink, feel tired or become distracted. Exterior
-              cameras enable 360-degree visibility, while over-the-air updates
-              deliver the latest safety improvements to each compatible Tesla.
-            </p>
           </div>
         </section>
 
         <section
-          className="content-auto bg-[#171a20] px-5 py-20 text-white sm:px-8 sm:py-28 lg:px-10"
-          id="safety"
+          className="px-5 py-20 sm:px-8 sm:py-28 lg:px-12"
+          id="training-scenarios"
         >
-          <div className="mx-auto max-w-7xl">
-            <header className="max-w-3xl">
-              <p className="text-sm font-semibold text-white/50">
-                Fleet Intelligence
-              </p>
-              <h2 className="mt-2 text-4xl font-semibold tracking-[-0.045em] sm:text-6xl">
-                Learning With Every Mile
-              </h2>
-            </header>
-            <dl className="mt-14 grid overflow-hidden rounded-2xl border border-white/10 sm:grid-cols-3">
-              <div className="border-b border-white/10 p-7 sm:border-b-0 sm:border-r sm:p-9">
-                <dt className="text-4xl font-semibold tracking-[-0.04em] sm:text-5xl">
-                  11.9B+
-                </dt>
-                <dd className="mt-3 text-xs font-semibold uppercase tracking-[0.12em] text-white/45">
-                  Miles Driven
-                </dd>
-              </div>
-              <div className="border-b border-white/10 p-7 sm:border-b-0 sm:border-r sm:p-9">
-                <dt className="text-4xl font-semibold tracking-[-0.04em] sm:text-5xl">
-                  7x
-                </dt>
-                <dd className="mt-3 text-xs font-semibold uppercase tracking-[0.12em] text-white/45">
-                  Safer With FSD Engaged
-                </dd>
-              </div>
-              <div className="p-7 sm:p-9">
-                <dt className="text-4xl font-semibold tracking-[-0.04em] sm:text-5xl">
-                  12
-                </dt>
-                <dd className="mt-3 text-xs font-semibold uppercase tracking-[0.12em] text-white/45">
-                  Countries and Counting
-                </dd>
-              </div>
-            </dl>
+          <div className="mx-auto max-w-[1110px]">
+            <h2 className="fsd-display text-[28px] font-medium leading-tight tracking-[-0.02em]">
+              Trained on Once-In-A-Lifetime Scenarios
+            </h2>
+            <p className="mt-6 text-[14px] leading-5 text-[#393c41]">
+              Complex incidents are rare. FSD (Supervised) learns from more than
+              a century&apos;s worth of anonymous driving scenarios gathered by
+              a fleet of over six million vehicles, which collectively
+              encounters a lifetime of driving situations in about ten minutes.
+            </p>
+            <FsdAmbientVideo
+              className="mt-10 aspect-[16/10] w-full rounded-md sm:mt-12"
+              desktopPoster="/assets/tesla-official/fsd-scenarios-desktop-poster.jpg"
+              desktopSrc="/assets/tesla-official/fsd-scenarios-desktop.mp4"
+              label="Tesla responding to complex real-world driving scenarios"
+              mobilePoster="/assets/tesla-official/fsd-scenarios-mobile-poster.jpg"
+              mobileSrc="/assets/tesla-official/fsd-scenarios-mobile.mp4"
+            />
           </div>
         </section>
 
-        <section className="content-auto px-5 py-20 sm:px-8 sm:py-28 lg:px-10">
-          <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-24">
-            <h2 className="text-4xl font-semibold tracking-[-0.045em] sm:text-6xl">
-              The Future Is Autonomous
-            </h2>
+        <section className="px-5 pb-16 sm:px-8 sm:pb-24 lg:px-12 lg:pb-28">
+          <div className="mx-auto grid max-w-[1110px] gap-10 lg:grid-cols-[280px_1fr] lg:items-center lg:gap-28">
             <div>
-              <p className="leading-7 text-[#5c5e62]">
+              <h2 className="fsd-display text-[28px] font-medium leading-tight tracking-[-0.02em]">
+                Always Attentive,
+                <br />
+                Never Distracted
+              </h2>
+              <p className="mt-6 text-[14px] leading-5 text-[#393c41]">
+                Cameras do not blink, tire or become distracted. Exterior
+                cameras offer a complete view around the vehicle, and the same
+                software helps reduce the severity of accidents or prevent them.
+                Over-the-air updates continuously deliver safety improvements.{" "}
+                <a
+                  className="border-b border-[#171a20]"
+                  href="https://www.tesla.com/safety"
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  Learn More
+                </a>
+              </p>
+            </div>
+            <FsdAmbientVideo
+              className="aspect-video w-full rounded-md"
+              desktopPoster="/assets/tesla-official/fsd-attentive-desktop-poster.jpg"
+              desktopSrc="/assets/tesla-official/fsd-attentive-desktop.mp4"
+              label="Tesla exterior cameras observing surrounding traffic"
+              mobilePoster="/assets/tesla-official/fsd-attentive-mobile-poster.jpg"
+              mobileSrc="/assets/tesla-official/fsd-attentive-mobile.mp4"
+            />
+          </div>
+        </section>
+
+        <section className="px-5 py-16 sm:px-8 sm:py-24 lg:px-12">
+          <dl className="mx-auto grid max-w-[1110px] gap-10 sm:grid-cols-3 sm:gap-0">
+            <div className="sm:border-r sm:border-[#d0d1d2] sm:px-10 lg:px-14">
+              <dt className="fsd-display text-[38px] font-medium leading-none tracking-[-0.03em]">
+                <LiveMileage />
+              </dt>
+              <dd className="mt-3 text-[14px] leading-5 text-[#393c41]">
+                Miles Driven<sup>4</sup>
+              </dd>
+            </div>
+            <div className="sm:border-r sm:border-[#d0d1d2] sm:px-10 lg:px-14">
+              <dt className="fsd-display text-[38px] font-medium leading-none tracking-[-0.03em]">
+                7x <span className="text-[24px]">Safer</span>
+              </dt>
+              <dd className="mt-3 max-w-[230px] text-[14px] leading-5 text-[#393c41]">
+                Than a Human Driver When FSD (Supervised) Is Engaged<sup>5</sup>
+              </dd>
+            </div>
+            <div className="sm:px-10 lg:px-14">
+              <dt className="fsd-display text-[38px] font-medium leading-none tracking-[-0.03em]">
+                12 <span className="text-[24px]">Countries</span>
+              </dt>
+              <dd className="mt-3 text-[14px] leading-5 text-[#393c41]">
+                And Counting<sup>6</sup>
+              </dd>
+            </div>
+          </dl>
+        </section>
+
+        <section className="relative h-[100svh] min-h-[680px] overflow-hidden bg-black text-white">
+          <picture>
+            <source
+              media="(max-width: 767px)"
+              srcSet="/assets/tesla-official/fsd-autonomous-mobile.jpg"
+            />
+            <img
+              alt="Cybercab and Robovan driving through a city"
+              className="h-full w-full object-cover object-center"
+              decoding="async"
+              height="1152"
+              loading="lazy"
+              src="/assets/tesla-official/fsd-autonomous-desktop.jpg"
+              width="2048"
+            />
+          </picture>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-black/15" />
+          <div className="absolute inset-x-0 bottom-0 px-6 pb-16 sm:px-10 sm:pb-20 lg:px-[8vw] lg:pb-24">
+            <div className="max-w-[700px]">
+              <h2 className="fsd-display text-[30px] font-medium leading-tight tracking-[-0.02em] sm:text-[36px]">
+                The Future Is Autonomous
+              </h2>
+              <p className="mt-5 text-[14px] leading-5 text-white/90">
                 As the technology advances, Tesla moves closer to a fully
                 autonomous future. Full Self-Driving (Unsupervised) is intended
-                to unlock a fleet of robotaxis and make Cybercab possible.
+                to unlock a robotaxi fleet and make Cybercab a reality.{" "}
+                <a
+                  className="border-b border-white"
+                  href="https://x.com/Tesla_AI"
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  Find Out What&apos;s Coming Next
+                </a>
               </p>
-              <a
-                className="mt-7 inline-flex rounded border-2 border-[#171a20] px-7 py-2.5 text-sm font-semibold transition hover:bg-[#171a20] hover:text-white"
-                href="https://www.tesla.com/we-robot"
-                rel="noreferrer"
-                target="_blank"
-              >
-                Explore What&apos;s Next
-              </a>
             </div>
           </div>
         </section>
 
-        <section className="bg-[#f4f4f4] px-5 py-20 text-center sm:px-8 sm:py-24">
-          <div className="mx-auto max-w-3xl">
-            <h2 className="text-4xl font-semibold tracking-[-0.045em] sm:text-5xl">
-              Experience It for Yourself
-            </h2>
-            <p className="mx-auto mt-4 max-w-xl leading-7 text-[#5c5e62]">
-              Schedule a demo or get updates when Full Self-Driving (Supervised)
-              becomes available in your area.
-            </p>
-            <div className="mx-auto mt-8 grid max-w-[552px] gap-3 sm:grid-cols-2">
+        <section className="relative min-h-[100svh] overflow-hidden bg-black text-white">
+          <picture>
+            <source
+              media="(max-width: 767px)"
+              srcSet="/assets/tesla-official/fsd-eop-mobile.jpg"
+            />
+            <img
+              alt="View from inside a Tesla driving along the coast"
+              className="absolute inset-0 h-full w-full object-cover object-center"
+              decoding="async"
+              height="1152"
+              loading="lazy"
+              src="/assets/tesla-official/fsd-eop-desktop.jpg"
+              width="2048"
+            />
+          </picture>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/15 via-black/20 to-black" />
+          <div className="relative flex min-h-[100svh] flex-col justify-end px-6 pb-10 pt-28 text-center sm:px-8 sm:pb-12">
+            <div className="mx-auto max-w-[720px]">
+              <h2 className="fsd-display text-[28px] font-medium leading-tight tracking-[-0.02em]">
+                Experience It for Yourself
+              </h2>
+              <p className="mx-auto mt-4 max-w-[660px] text-[14px] leading-5 text-white/90">
+                Schedule a demo drive to try Full Self-Driving (Supervised) from
+                the driver&apos;s seat or{" "}
+                <a
+                  className="border-b border-white"
+                  href="https://www.tesla.com/support/fsd"
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  find additional information
+                </a>
+                .
+              </p>
               <Link
-                className="rounded bg-[#171a20] px-7 py-3 text-sm font-semibold text-white transition hover:bg-black"
+                className="mt-8 inline-flex min-w-[220px] justify-center rounded bg-[#3e6ae1] px-7 py-3 text-[14px] font-medium leading-5 text-white transition hover:bg-[#3457b1]"
                 to="/demo_drive"
               >
-                Demo FSD
+                Demo FSD (Supervised)
               </Link>
-              <a
-                className="rounded bg-white px-7 py-3 text-sm font-semibold text-[#171a20] transition hover:bg-[#ececec]"
-                href="https://www.tesla.com/updates?source=fsd"
-                rel="noreferrer"
-                target="_blank"
-              >
-                Stay Updated
-              </a>
             </div>
-            <p className="mt-8 text-xs leading-5 text-[#5c5e62]">
-              Full Self-Driving (Supervised) requires active driver supervision
-              and does not make the vehicle autonomous. Feature availability is
-              subject to vehicle configuration, market and regulatory approval.
-            </p>
+
+            <div className="mx-auto mt-16 max-w-[760px] space-y-4 text-[11px] leading-4 text-white/65">
+              {FOOTNOTES.map((footnote, index) => (
+                <p key={footnote}>
+                  <sup>{index + 1}</sup> {footnote}
+                </p>
+              ))}
+            </div>
+
+            <footer className="mx-auto mt-14 flex max-w-[900px] flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[11px] font-medium text-white/65">
+              <Link to="/">Tesla Clone © 2026</Link>
+              {FOOTER_LINKS.map((link) => (
+                <a
+                  href={link.url}
+                  key={link.label}
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </footer>
           </div>
         </section>
       </main>
-
-      <SiteFooter />
     </div>
   );
 }
