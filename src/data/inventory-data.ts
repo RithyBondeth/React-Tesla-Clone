@@ -66,10 +66,10 @@ export const inventoryVehicles: InventoryVehicle[] = [
     drive: "All-Wheel Drive",
     id: "my-lr-awd-red",
     image:
-      "/assets/mainpage-images/modely-images/ultra_red/gemini_wheels/detail1.jpeg",
+      "/assets/tesla-official/model-y-configurator/model-y-ultra-red-crossflow-front.avif",
     interior: "All Black Premium Interior",
     interiorImage:
-      "/assets/mainpage-images/modely-images/ultra_red/gemini_wheels/detail5-black.jpeg",
+      "/assets/tesla-official/model-y-configurator/model-y-ultra-red-interior-black.avif",
     location: "Los Angeles, CA",
     mileage: 7,
     model: "Model Y",

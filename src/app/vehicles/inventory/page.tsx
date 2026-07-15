@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, ReactNode, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 import Navbar from "../../../components/navbar";
@@ -23,10 +23,20 @@ const PAINT_OPTIONS = [
   "Deep Blue Metallic",
   "Ultra Red",
 ];
+const CONDITION_OPTIONS: InventoryHistory[] = [
+  "No Reported Accidents/Damage",
+  "Previously Repaired",
+];
+const MAX_PRICE = 100000;
+const MAX_MILEAGE = 60000;
+const MIN_YEAR = 2020;
+const MAX_YEAR = Math.max(...inventoryVehicles.map((vehicle) => vehicle.year));
+
 const uniqueOptions = (values: string[]) =>
   Array.from(new Set(values)).sort((first, second) =>
     first.localeCompare(second),
   );
+
 const WHEEL_OPTIONS = uniqueOptions(
   inventoryVehicles.map((vehicle) => vehicle.wheels),
 );
@@ -45,33 +55,28 @@ const SEAT_LAYOUT_OPTIONS = uniqueOptions(
 const ADDITIONAL_OPTIONS = uniqueOptions(
   inventoryVehicles.flatMap((vehicle) => vehicle.additionalOptions),
 );
-const CONDITION_OPTIONS: InventoryHistory[] = [
-  "No Reported Accidents/Damage",
-  "Previously Repaired",
-];
-const MAX_PRICE = 100000;
-const MAX_MILEAGE = 60000;
-const MIN_YEAR = 2020;
-const MAX_YEAR = Math.max(...inventoryVehicles.map((vehicle) => vehicle.year));
 
-type PaymentType = "cash" | "finance" | "lease";
+const SAVINGS_BY_VEHICLE: Partial<Record<string, number>> = {
+  "m3-lr-awd-grey": 1460,
+  "ms-awd-red": 1200,
+  "m3-used-blue": 2200,
+  "ms-used-grey": 4100,
+};
+
+type PaymentType = "cash" | "lease" | "finance";
 type SortOption = "distance" | "price-high" | "price-low" | "range";
 
 interface FilterPanelProps {
   condition: InventoryCondition;
   idPrefix: string;
-  locationError: string;
-  locationInput: string;
-  maxPrice: number;
   maxMileage: number;
+  maxPrice: number;
   minYear: number;
   onAdditionalOptionToggle: (option: string) => void;
   onClear: () => void;
-  onConditionHistoryToggle: (history: InventoryHistory) => void;
   onConditionChange: (condition: InventoryCondition) => void;
+  onConditionHistoryToggle: (history: InventoryHistory) => void;
   onInteriorToggle: (interior: string) => void;
-  onLocationInputChange: (value: string) => void;
-  onLocationSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onModelToggle: (model: InventoryModel) => void;
   onPaintToggle: (paint: string) => void;
   onSeatLayoutToggle: (seatLayout: string) => void;
@@ -83,11 +88,10 @@ interface FilterPanelProps {
   paymentType: PaymentType;
   requiresDemoDrive: boolean;
   resultCount: number;
-  searchDistance: number;
-  selectedModels: InventoryModel[];
   selectedAdditionalOptions: string[];
   selectedConditionHistories: InventoryHistory[];
   selectedInteriors: string[];
+  selectedModels: InventoryModel[];
   selectedPaints: string[];
   selectedSeatLayouts: string[];
   selectedSelfDrivingOptions: string[];
@@ -99,7 +103,6 @@ interface FilterPanelProps {
   setMinYear: (year: number) => void;
   setPaymentType: (paymentType: PaymentType) => void;
   setRequiresDemoDrive: (requiresDemoDrive: boolean) => void;
-  setSearchDistance: (distance: number) => void;
 }
 
 const optionId = (value: string) =>
@@ -108,29 +111,36 @@ const optionId = (value: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
 
-function CheckboxOption({
+function FilterOption({
   checked,
+  disabled = false,
   id,
   label,
   onChange,
+  round = false,
 }: {
   checked: boolean;
+  disabled?: boolean;
   id: string;
   label: string;
   onChange: () => void;
+  round?: boolean;
 }) {
   return (
     <label
-      className="flex cursor-pointer items-center gap-3 py-2 text-sm text-[#393c41]"
+      className={`flex items-center gap-3 py-[7px] text-sm ${
+        disabled
+          ? "cursor-not-allowed text-[#a2a3a5]"
+          : "cursor-pointer text-[#5c5e62] hover:text-[#171a20]"
+      }`}
       htmlFor={id}
     >
       <input
         checked={checked}
-        className={`h-5 w-5 rounded border text-xs ${
-          checked
-            ? "border-[#3e6ae1] bg-[#3e6ae1] text-white"
-            : "border-[#8e8e8e] bg-white"
+        className={`h-[18px] w-[18px] shrink-0 border border-[#8e8e8e] bg-white transition checked:border-[#3e6ae1] checked:bg-[#3e6ae1] ${
+          round ? "rounded-full" : "rounded-[2px]"
         }`}
+        disabled={disabled}
         id={id}
         onChange={onChange}
         type="checkbox"
@@ -140,45 +150,44 @@ function CheckboxOption({
   );
 }
 
-function ExpandableFilter({
+function FilterSection({
   children,
   defaultOpen = false,
   title,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   defaultOpen?: boolean;
   title: string;
 }) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <div className="border-t border-black/10 py-1">
+    <section className="border-t border-black/10 py-1">
       <button
         aria-expanded={isOpen}
-        className="flex w-full items-center justify-between py-4 text-left text-sm font-semibold text-[#171a20]"
+        className="flex w-full items-center justify-between py-4 text-left text-[15px] font-semibold text-[#171a20]"
         onClick={() => setIsOpen((open) => !open)}
         type="button"
       >
         <span>{title}</span>
         <span
           aria-hidden="true"
-          className={`text-lg font-light transition-transform ${
-            isOpen ? "rotate-45" : ""
+          className={`relative h-4 w-4 transition-transform duration-200 ${
+            isOpen ? "rotate-180" : ""
           }`}
         >
-          +
+          <span className="absolute left-[3px] top-[7px] h-px w-[6px] rotate-45 bg-current" />
+          <span className="absolute right-[3px] top-[7px] h-px w-[6px] -rotate-45 bg-current" />
         </span>
       </button>
       {isOpen && <div className="pb-4">{children}</div>}
-    </div>
+    </section>
   );
 }
 
 function FilterPanel({
   condition,
   idPrefix,
-  locationError,
-  locationInput,
   maxMileage,
   maxPrice,
   minYear,
@@ -187,8 +196,6 @@ function FilterPanel({
   onConditionChange,
   onConditionHistoryToggle,
   onInteriorToggle,
-  onLocationInputChange,
-  onLocationSubmit,
   onModelToggle,
   onPaintToggle,
   onSeatLayoutToggle,
@@ -200,7 +207,6 @@ function FilterPanel({
   paymentType,
   requiresDemoDrive,
   resultCount,
-  searchDistance,
   selectedAdditionalOptions,
   selectedConditionHistories,
   selectedInteriors,
@@ -216,14 +222,16 @@ function FilterPanel({
   setMinYear,
   setPaymentType,
   setRequiresDemoDrive,
-  setSearchDistance,
 }: FilterPanelProps) {
   return (
-    <div className="px-5 pb-8 pt-6 sm:px-7">
-      <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-xl font-semibold tracking-[-0.02em]">Filters</h2>
+    <div className="pb-8">
+      <div className="mb-5 flex items-center justify-between">
+        <h2 className="sr-only">Filters</h2>
+        <span className="text-xs font-medium uppercase tracking-[0.12em] text-[#5c5e62]">
+          Filters
+        </span>
         <button
-          className="text-xs font-medium text-[#5c5e62] underline decoration-[#9b9da1] underline-offset-4"
+          className="text-xs font-medium text-[#5c5e62] underline decoration-[#b7b7b7] underline-offset-4 hover:text-[#171a20]"
           onClick={onClear}
           type="button"
         >
@@ -231,14 +239,18 @@ function FilterPanel({
         </button>
       </div>
 
-      <div className="grid grid-cols-2 gap-1 rounded bg-[#e8e8e8] p-1">
+      <div
+        aria-label="Inventory condition"
+        className="grid grid-cols-2 rounded-[3px] bg-[#f4f4f4] p-[3px]"
+        role="group"
+      >
         {(["new", "used"] as InventoryCondition[]).map((option) => (
           <button
             aria-pressed={condition === option}
-            className={`rounded px-3 py-2.5 text-sm font-semibold transition ${
+            className={`rounded-[2px] px-3 py-2.5 text-sm transition ${
               condition === option
-                ? "bg-white text-[#171a20] shadow-sm"
-                : "text-[#5c5e62] hover:text-[#171a20]"
+                ? "bg-white font-semibold text-[#171a20] shadow-[0_1px_3px_rgba(0,0,0,0.14)]"
+                : "font-medium text-[#5c5e62] hover:text-[#171a20]"
             }`}
             key={option}
             onClick={() => onConditionChange(option)}
@@ -249,80 +261,31 @@ function FilterPanel({
         ))}
       </div>
 
-      {condition === "used" && (
-        <p className="mt-3 rounded bg-[#f4f4f4] px-3 py-2.5 text-xs leading-5 text-[#5c5e62]">
-          Inspected and refurbished by Tesla-trained technicians.
-        </p>
-      )}
-
-      <form className="mt-6" onSubmit={onLocationSubmit}>
-        <label
-          className="mb-2 block text-xs font-semibold text-[#5c5e62]"
-          htmlFor={`${idPrefix}-location`}
-        >
-          Search Area
-        </label>
-        <div className="flex gap-2">
-          <input
-            aria-describedby={
-              locationError ? `${idPrefix}-location-error` : undefined
-            }
-            aria-invalid={Boolean(locationError)}
-            className="min-w-0 flex-1 rounded border border-black/20 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-[#3e6ae1]"
-            id={`${idPrefix}-location`}
-            inputMode="numeric"
-            maxLength={5}
-            onChange={(event) => onLocationInputChange(event.target.value)}
-            placeholder="Enter ZIP code"
-            value={locationInput}
-          />
-          <button
-            aria-label="Update search area"
-            className="rounded bg-[#171a20] px-4 text-sm font-semibold text-white transition hover:bg-black"
-            type="submit"
-          >
-            Go
-          </button>
-        </div>
-        {locationError && (
-          <p
-            className="mt-2 text-xs text-[#b74134]"
-            id={`${idPrefix}-location-error`}
-            role="alert"
-          >
-            {locationError}
-          </p>
-        )}
-        <select
-          aria-label="Search radius"
-          className="mt-2 w-full rounded border border-black/20 bg-white px-3 py-2.5 text-sm"
-          onChange={(event) => setSearchDistance(Number(event.target.value))}
-          value={searchDistance}
-        >
-          {[25, 50, 100, 200].map((distance) => (
-            <option key={distance} value={distance}>
-              Within {distance} miles
-            </option>
-          ))}
-        </select>
-      </form>
-
-      <div className="mt-6 border-t border-black/10 pt-4">
-        <p className="mb-1 text-sm font-semibold">Model</p>
+      <div className="py-6">
+        <p className="mb-2 text-[15px] font-semibold text-[#171a20]">Model</p>
         {MODEL_OPTIONS.map((model) => (
-          <CheckboxOption
+          <FilterOption
             checked={selectedModels.includes(model)}
-            id={`${idPrefix}-${optionId(model)}`}
+            id={`${idPrefix}-model-${optionId(model)}`}
             key={model}
             label={model}
             onChange={() => onModelToggle(model)}
+            round
           />
         ))}
+        <FilterOption
+          checked={false}
+          disabled
+          id={`${idPrefix}-model-cybertruck`}
+          label="Cybertruck"
+          onChange={() => undefined}
+          round
+        />
       </div>
 
-      <ExpandableFilter defaultOpen title="Trim">
+      <FilterSection defaultOpen title="Trim">
         {TRIM_OPTIONS.map((trim) => (
-          <CheckboxOption
+          <FilterOption
             checked={selectedTrims.includes(trim)}
             id={`${idPrefix}-trim-${optionId(trim)}`}
             key={trim}
@@ -330,18 +293,24 @@ function FilterPanel({
             onChange={() => onTrimToggle(trim)}
           />
         ))}
-      </ExpandableFilter>
+        <FilterOption
+          checked={requiresDemoDrive}
+          id={`${idPrefix}-demo-drive`}
+          label="Available for Demo Drive"
+          onChange={() => setRequiresDemoDrive(!requiresDemoDrive)}
+        />
+      </FilterSection>
 
-      <div className="border-t border-black/10 py-5">
-        <p className="text-sm font-semibold">Payment</p>
-        <div className="mt-3 grid grid-cols-3 gap-1 rounded bg-[#e8e8e8] p-1">
-          {(["cash", "finance", "lease"] as PaymentType[]).map((option) => (
+      <section className="border-t border-black/10 py-5">
+        <p className="text-[15px] font-semibold text-[#171a20]">Payment</p>
+        <div className="mt-4 grid grid-cols-3 rounded-[3px] bg-[#f4f4f4] p-[3px]">
+          {(["cash", "lease", "finance"] as PaymentType[]).map((option) => (
             <button
               aria-pressed={paymentType === option}
-              className={`rounded px-2 py-2 text-xs font-semibold capitalize ${
+              className={`rounded-[2px] px-1 py-2 text-xs capitalize transition ${
                 paymentType === option
-                  ? "bg-white text-[#171a20] shadow-sm"
-                  : "text-[#5c5e62]"
+                  ? "bg-white font-semibold text-[#171a20] shadow-[0_1px_3px_rgba(0,0,0,0.14)]"
+                  : "font-medium text-[#5c5e62] hover:text-[#171a20]"
               }`}
               key={option}
               onClick={() => setPaymentType(option)}
@@ -352,15 +321,17 @@ function FilterPanel({
           ))}
         </div>
         <div className="mt-5 flex items-center justify-between text-sm">
-          <span>Price</span>
-          <span className="font-semibold">
+          <span className="text-[#5c5e62]">
+            {paymentType === "cash" ? "Vehicle price" : "Monthly payment"}
+          </span>
+          <span className="font-medium text-[#171a20]">
             Up to ${maxPrice.toLocaleString()}
             {maxPrice === MAX_PRICE ? "+" : ""}
           </span>
         </div>
         <input
           aria-label="Maximum vehicle price"
-          className="mt-3 w-full accent-[#3e6ae1]"
+          className="inventory-range mt-4 w-full"
           max={MAX_PRICE}
           min="25000"
           onChange={(event) => setMaxPrice(Number(event.target.value))}
@@ -368,20 +339,24 @@ function FilterPanel({
           type="range"
           value={maxPrice}
         />
-      </div>
+      </section>
 
       {condition === "used" && (
-        <div className="border-t border-black/10 py-5">
-          <p className="text-sm font-semibold">Mileage / Year</p>
+        <section className="border-t border-black/10 py-5">
+          <p className="text-[15px] font-semibold text-[#171a20]">
+            Mileage &amp; Year
+          </p>
           <div className="mt-4 flex items-center justify-between text-sm">
-            <label htmlFor={`${idPrefix}-mileage`}>Maximum mileage</label>
-            <span className="font-semibold">
+            <label className="text-[#5c5e62]" htmlFor={`${idPrefix}-mileage`}>
+              Maximum mileage
+            </label>
+            <span className="font-medium">
               {maxMileage.toLocaleString()} mi
               {maxMileage === MAX_MILEAGE ? "+" : ""}
             </span>
           </div>
           <input
-            className="mt-3 w-full accent-[#3e6ae1]"
+            className="inventory-range mt-4 w-full"
             id={`${idPrefix}-mileage`}
             max={MAX_MILEAGE}
             min="10000"
@@ -391,13 +366,15 @@ function FilterPanel({
             value={maxMileage}
           />
           <div className="mt-5 flex items-center justify-between text-sm">
-            <label htmlFor={`${idPrefix}-year`}>Model year</label>
-            <span className="font-semibold">
+            <label className="text-[#5c5e62]" htmlFor={`${idPrefix}-year`}>
+              Model year
+            </label>
+            <span className="font-medium">
               {minYear === MIN_YEAR ? "Any year" : `${minYear} or newer`}
             </span>
           </div>
           <input
-            className="mt-3 w-full accent-[#3e6ae1]"
+            className="inventory-range mt-4 w-full"
             id={`${idPrefix}-year`}
             max={MAX_YEAR}
             min={MIN_YEAR}
@@ -406,21 +383,12 @@ function FilterPanel({
             type="range"
             value={minYear}
           />
-        </div>
+        </section>
       )}
 
-      <div className="border-t border-black/10 py-4">
-        <CheckboxOption
-          checked={requiresDemoDrive}
-          id={`${idPrefix}-demo-drive`}
-          label="Available for Demo Drive"
-          onChange={() => setRequiresDemoDrive(!requiresDemoDrive)}
-        />
-      </div>
-
-      <ExpandableFilter title="Paint">
+      <FilterSection title="Paint">
         {PAINT_OPTIONS.map((paint) => (
-          <CheckboxOption
+          <FilterOption
             checked={selectedPaints.includes(paint)}
             id={`${idPrefix}-paint-${optionId(paint)}`}
             key={paint}
@@ -428,11 +396,11 @@ function FilterPanel({
             onChange={() => onPaintToggle(paint)}
           />
         ))}
-      </ExpandableFilter>
+      </FilterSection>
 
-      <ExpandableFilter title="Wheels">
+      <FilterSection title="Wheels">
         {WHEEL_OPTIONS.map((wheel) => (
-          <CheckboxOption
+          <FilterOption
             checked={selectedWheels.includes(wheel)}
             id={`${idPrefix}-wheel-${optionId(wheel)}`}
             key={wheel}
@@ -440,11 +408,11 @@ function FilterPanel({
             onChange={() => onWheelToggle(wheel)}
           />
         ))}
-      </ExpandableFilter>
+      </FilterSection>
 
-      <ExpandableFilter title="Interior">
+      <FilterSection title="Interior">
         {INTERIOR_OPTIONS.map((interior) => (
-          <CheckboxOption
+          <FilterOption
             checked={selectedInteriors.includes(interior)}
             id={`${idPrefix}-interior-${optionId(interior)}`}
             key={interior}
@@ -452,11 +420,11 @@ function FilterPanel({
             onChange={() => onInteriorToggle(interior)}
           />
         ))}
-      </ExpandableFilter>
+      </FilterSection>
 
-      <ExpandableFilter title="Steering Control">
+      <FilterSection title="Steering Control">
         {STEERING_CONTROL_OPTIONS.map((steeringControl) => (
-          <CheckboxOption
+          <FilterOption
             checked={selectedSteeringControls.includes(steeringControl)}
             id={`${idPrefix}-steering-${optionId(steeringControl)}`}
             key={steeringControl}
@@ -464,11 +432,11 @@ function FilterPanel({
             onChange={() => onSteeringControlToggle(steeringControl)}
           />
         ))}
-      </ExpandableFilter>
+      </FilterSection>
 
-      <ExpandableFilter title="Self-Driving">
+      <FilterSection title="Self-Driving">
         {SELF_DRIVING_OPTIONS.map((selfDriving) => (
-          <CheckboxOption
+          <FilterOption
             checked={selectedSelfDrivingOptions.includes(selfDriving)}
             id={`${idPrefix}-self-driving-${optionId(selfDriving)}`}
             key={selfDriving}
@@ -476,11 +444,11 @@ function FilterPanel({
             onChange={() => onSelfDrivingToggle(selfDriving)}
           />
         ))}
-      </ExpandableFilter>
+      </FilterSection>
 
-      <ExpandableFilter title="Seat Layout">
+      <FilterSection title="Seat Layout">
         {SEAT_LAYOUT_OPTIONS.map((seatLayout) => (
-          <CheckboxOption
+          <FilterOption
             checked={selectedSeatLayouts.includes(seatLayout)}
             id={`${idPrefix}-seat-${optionId(seatLayout)}`}
             key={seatLayout}
@@ -488,11 +456,11 @@ function FilterPanel({
             onChange={() => onSeatLayoutToggle(seatLayout)}
           />
         ))}
-      </ExpandableFilter>
+      </FilterSection>
 
-      <ExpandableFilter title="Additional Options">
+      <FilterSection title="Additional Options">
         {ADDITIONAL_OPTIONS.map((option) => (
-          <CheckboxOption
+          <FilterOption
             checked={selectedAdditionalOptions.includes(option)}
             id={`${idPrefix}-additional-${optionId(option)}`}
             key={option}
@@ -500,12 +468,12 @@ function FilterPanel({
             onChange={() => onAdditionalOptionToggle(option)}
           />
         ))}
-      </ExpandableFilter>
+      </FilterSection>
 
       {condition === "used" && (
-        <ExpandableFilter title="Condition">
+        <FilterSection title="Condition">
           {CONDITION_OPTIONS.map((history) => (
-            <CheckboxOption
+            <FilterOption
               checked={selectedConditionHistories.includes(history)}
               id={`${idPrefix}-condition-${optionId(history)}`}
               key={history}
@@ -513,21 +481,30 @@ function FilterPanel({
               onChange={() => onConditionHistoryToggle(history)}
             />
           ))}
-        </ExpandableFilter>
+        </FilterSection>
       )}
 
-      <div className="sticky bottom-0 -mx-5 mt-5 border-t border-black/10 bg-white px-5 pb-2 pt-4 sm:-mx-7 sm:px-7 lg:hidden">
-        <button
-          className="w-full rounded bg-[#3e6ae1] py-3 text-sm font-semibold text-white"
-          onClick={onShowResults}
-          type="button"
-        >
-          Show {resultCount} {resultCount === 1 ? "Vehicle" : "Vehicles"}
-        </button>
-      </div>
+      {onShowResults && (
+        <div className="sticky bottom-0 -mx-6 mt-5 border-t border-black/10 bg-white px-6 pb-2 pt-4 lg:hidden">
+          <button
+            className="w-full rounded-[3px] bg-[#3e6ae1] py-3 text-sm font-semibold text-white transition hover:bg-[#3457b1]"
+            onClick={onShowResults}
+            type="button"
+          >
+            Show {resultCount} {resultCount === 1 ? "Vehicle" : "Vehicles"}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
+
+const paintColor: Record<string, string> = {
+  "Deep Blue Metallic": "#233b60",
+  "Pearl White": "#f4f4f4",
+  "Stealth Grey": "#4b4f55",
+  "Ultra Red": "#8f1017",
+};
 
 function InventoryCard({
   paymentType,
@@ -540,142 +517,122 @@ function InventoryCard({
     ((vehicle.price - 4500) * 1.07) / 72,
   );
   const estimatedLeasePayment = Math.round(vehicle.price * 0.0095);
-  const paymentDisplay =
+  const savings = SAVINGS_BY_VEHICLE[vehicle.id];
+  const wheelSize = vehicle.wheels.match(/\d+"/)?.[0] ?? "Wheels";
+  const seatCount = vehicle.seatLayout.match(/\d+/)?.[0] ?? vehicle.seatLayout;
+  const exteriorImageScale =
+    vehicle.id === "my-lr-awd-red"
+      ? 1.56
+      : vehicle.model === "Model X"
+        ? 1.62
+        : 1.68;
+  const paymentCopy =
     paymentType === "cash"
-      ? {
-          label: "Cash price",
-          primary: `$${vehicle.price.toLocaleString()}`,
-        }
+      ? `$${vehicle.price.toLocaleString()}`
       : paymentType === "finance"
-        ? {
-            label: "Est. finance · $4,500 down",
-            primary: `$${estimatedFinancePayment.toLocaleString()}/mo`,
-          }
-        : {
-            label: "Est. lease · $4,500 due at signing",
-            primary: `$${estimatedLeasePayment.toLocaleString()}/mo`,
-          };
+        ? `Est. finance $${estimatedFinancePayment.toLocaleString()}/mo • $${vehicle.price.toLocaleString()}`
+        : `Est. lease $${estimatedLeasePayment.toLocaleString()}/mo • $${vehicle.price.toLocaleString()}`;
 
   return (
-    <article className="group overflow-hidden rounded-xl border border-black/[0.08] bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition duration-300 hover:-translate-y-1 hover:border-black/20 hover:shadow-[0_18px_44px_rgba(0,0,0,0.12)]">
+    <article className="group min-w-0 overflow-hidden rounded-[7px] border border-black/15 bg-white transition-shadow duration-200 hover:shadow-[0_8px_24px_rgba(0,0,0,0.09)]">
       <Link
         aria-label={`View image details for ${vehicle.year} ${vehicle.model} ${vehicle.trim}`}
-        className="relative block aspect-[16/9] overflow-hidden bg-white outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#3e6ae1]"
+        className="block h-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#3e6ae1]"
         to={`/inventory/vehicle/${vehicle.id}`}
       >
-        <img
-          alt={`${vehicle.year} ${vehicle.model} ${vehicle.trim}`}
-          className="absolute inset-0 h-full w-full scale-[1.38] object-cover object-center opacity-100 transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.2,0.8,0.2,1)] group-hover:scale-[1.42] group-hover:opacity-0 group-focus-within:scale-[1.42] group-focus-within:opacity-0"
-          decoding="async"
-          height="1080"
-          loading="lazy"
-          src={vehicle.image}
-          width="1920"
-        />
-        <img
-          alt={`${vehicle.year} ${vehicle.model} ${vehicle.interior}`}
-          className="absolute inset-0 h-full w-full scale-[1.04] object-cover object-center opacity-0 transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.2,0.8,0.2,1)] group-hover:scale-100 group-hover:opacity-100 group-focus-within:scale-100 group-focus-within:opacity-100"
-          decoding="async"
-          height="1080"
-          loading="lazy"
-          src={vehicle.interiorImage}
-          width="1920"
-        />
-        <span
-          aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-t from-black/15 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-        />
-        <div className="absolute left-4 top-4 z-10 flex flex-wrap gap-2">
-          <span className="rounded-full bg-white/90 px-3 py-1 text-[11px] font-semibold text-[#393c41] shadow-sm backdrop-blur-md">
-            {vehicle.condition === "new" ? "New Vehicle" : "Pre-Owned"}
-          </span>
-          {vehicle.demoDriveAvailable && (
-            <span className="rounded-full bg-[#171a20]/90 px-3 py-1 text-[11px] font-semibold text-white backdrop-blur-md">
-              Demo Drive
+        <div className="relative aspect-video overflow-hidden bg-white">
+          {savings && (
+            <span className="absolute left-3 top-3 z-10 rounded-[3px] bg-[#f4f4f4]/95 px-2.5 py-1.5 text-[11px] font-medium text-[#5c5e62]">
+              Reduced by ${savings.toLocaleString()}
             </span>
           )}
-        </div>
-        <span className="absolute bottom-4 right-4 z-10 translate-y-2 rounded-full bg-[#171a20]/90 px-4 py-2 text-xs font-semibold text-white opacity-0 shadow-lg backdrop-blur-md transition duration-300 group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100">
-          View Vehicle →
-        </span>
-        <span className="absolute bottom-4 left-4 z-10 translate-y-2 rounded-full bg-white/90 px-3 py-2 text-[11px] font-semibold text-[#171a20] opacity-0 shadow-md backdrop-blur-md transition duration-300 group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100">
-          Interior Preview
-        </span>
-      </Link>
-
-      <div className="p-5 sm:p-6">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-xs font-medium text-[#5c5e62]">{vehicle.year}</p>
-            <h2 className="mt-0.5 text-2xl font-semibold tracking-[-0.035em]">
-              {vehicle.model}
-            </h2>
-            <p className="mt-1 text-sm text-[#5c5e62]">
-              {vehicle.trim} {vehicle.drive}
-            </p>
-          </div>
-          <div className="text-right">
-            <p className="text-xl font-semibold">{paymentDisplay.primary}</p>
-            <p className="mt-1 text-xs text-[#5c5e62]">
-              {paymentDisplay.label}
-            </p>
-            {paymentType !== "cash" && (
-              <p className="mt-1 text-[11px] text-[#8e8e8e]">
-                ${vehicle.price.toLocaleString()} vehicle price
-              </p>
-            )}
-          </div>
+          <img
+            alt={`${vehicle.paint} ${vehicle.model} ${vehicle.trim}`}
+            className="absolute inset-0 h-full w-full object-cover object-center opacity-100 transition-opacity duration-300 ease-out group-hover:opacity-0 group-focus-within:opacity-0"
+            decoding="async"
+            height="647"
+            loading="lazy"
+            src={vehicle.image}
+            style={{ transform: `scale(${exteriorImageScale})` }}
+            width="1150"
+          />
+          <img
+            alt={`${vehicle.year} ${vehicle.model} ${vehicle.interior}`}
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100 group-focus-within:opacity-100"
+            decoding="async"
+            height="647"
+            loading="lazy"
+            src={vehicle.interiorImage}
+            width="1150"
+          />
         </div>
 
-        <dl className="mt-5 grid grid-cols-3 divide-x divide-black/10 rounded-lg bg-[#f4f4f4] py-3 text-center">
-          <div className="px-2">
-            <dt className="text-sm font-semibold">{vehicle.range} mi</dt>
-            <dd className="mt-0.5 text-[10px] uppercase tracking-wide text-[#5c5e62]">
-              Range
-            </dd>
-          </div>
-          <div className="px-2">
-            <dt className="truncate text-sm font-semibold">
-              {vehicle.condition === "used"
-                ? vehicle.mileage.toLocaleString()
-                : "Under 50"}
-            </dt>
-            <dd className="mt-0.5 text-[10px] uppercase tracking-wide text-[#5c5e62]">
-              Miles
-            </dd>
-          </div>
-          <div className="px-2">
-            <dt className="text-sm font-semibold">{vehicle.distance} mi</dt>
-            <dd className="mt-0.5 text-[10px] uppercase tracking-wide text-[#5c5e62]">
-              Away
-            </dd>
-          </div>
-        </dl>
-
-        <div className="mt-5 space-y-1 text-xs leading-5 text-[#5c5e62]">
-          <p>{vehicle.paint}</p>
-          <p>{vehicle.wheels}</p>
-          <p>{vehicle.interior}</p>
-          <p>
-            {vehicle.seatLayout} · {vehicle.steeringControl}
+        <div className="px-5 pb-5 pt-4">
+          <h2 className="text-[17px] font-semibold leading-6 tracking-[-0.02em] text-[#171a20]">
+            {vehicle.model}
+          </h2>
+          <p className="mt-0.5 text-[13px] font-medium leading-5 text-[#393c41]">
+            {vehicle.trim} {vehicle.drive}
           </p>
-          <p>{vehicle.selfDriving}</p>
-          <p>{vehicle.additionalOptions.join(" · ")}</p>
-        </div>
+          <p className="mt-1 text-[13px] font-semibold leading-5 text-[#171a20]">
+            {paymentCopy}
+          </p>
+          <p className="mt-1.5 text-[13px] leading-5 text-[#5c5e62]">
+            {vehicle.year}{" "}
+            {vehicle.condition === "new"
+              ? vehicle.demoDriveAvailable
+                ? `Demo Vehicle with ${vehicle.mileage.toLocaleString()} mi`
+                : "New Vehicle"
+              : `Pre-Owned Vehicle with ${vehicle.mileage.toLocaleString()} mi`}
+          </p>
+          <p className="text-[13px] leading-5 text-[#5c5e62]">
+            {vehicle.range} mi Range (EPA est.)
+          </p>
 
-        <div className="mt-5 flex items-center justify-between gap-4 border-t border-black/10 pt-4">
-          <div>
-            <p className="text-xs text-[#5c5e62]">Available in</p>
-            <p className="mt-0.5 text-sm font-medium">{vehicle.location}</p>
+          <div className="mt-4 flex flex-wrap gap-x-3 gap-y-2 text-[11px] leading-4 text-[#393c41]">
+            <span className="inline-flex items-center gap-1.5">
+              <span
+                aria-hidden="true"
+                className="h-3 w-3 rounded-full border border-black/20"
+                style={{ backgroundColor: paintColor[vehicle.paint] ?? "#333" }}
+              />
+              Paint
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <span
+                aria-hidden="true"
+                className="h-3 w-3 rounded-full bg-[#202226]"
+              />
+              {wheelSize} Wheels
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <span
+                aria-hidden="true"
+                className={`h-3 w-3 rounded-full border border-black/20 ${
+                  vehicle.interior.includes("White")
+                    ? "bg-white"
+                    : vehicle.interior.includes("Cream")
+                      ? "bg-[#e5d9c8]"
+                      : "bg-[#202226]"
+                }`}
+              />
+              Interior
+            </span>
+            <span>{seatCount} Seats</span>
+            <span className="inline-flex items-center gap-1.5 text-[#3457b1]">
+              <span
+                aria-hidden="true"
+                className="grid h-3 w-3 place-items-center rounded-full border border-current text-[7px] font-semibold"
+              >
+                T
+              </span>
+              {vehicle.selfDriving.includes("Trial") ? "1 mo FSD" : "FSD"}
+            </span>
           </div>
-          <Link
-            className="shrink-0 rounded bg-[#3e6ae1] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#3457b1]"
-            to={`/inventory/vehicle/${vehicle.id}`}
-          >
-            View Details
-          </Link>
+
+          <span className="sr-only">Available in {vehicle.location}</span>
         </div>
-      </div>
+      </Link>
     </article>
   );
 }
@@ -723,13 +680,20 @@ export default function InventoryPage() {
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsMobileFiltersOpen(false);
+      }
+    };
 
     if (isMobileFiltersOpen) {
       document.body.style.overflow = "hidden";
+      document.addEventListener("keydown", closeOnEscape);
     }
 
     return () => {
       document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", closeOnEscape);
     };
   }, [isMobileFiltersOpen]);
 
@@ -781,15 +745,12 @@ export default function InventoryPage() {
       if (sortOption === "price-low") {
         return firstVehicle.price - secondVehicle.price;
       }
-
       if (sortOption === "price-high") {
         return secondVehicle.price - firstVehicle.price;
       }
-
       if (sortOption === "range") {
         return secondVehicle.range - firstVehicle.range;
       }
-
       return firstVehicle.distance - secondVehicle.distance;
     });
   }, [
@@ -864,13 +825,10 @@ export default function InventoryPage() {
     setMinYear(MIN_YEAR);
     setPaymentType("cash");
     setRequiresDemoDrive(false);
-    setSearchDistance(50);
   };
 
   const sharedFilterProps = {
     condition,
-    locationError,
-    locationInput,
     maxMileage,
     maxPrice,
     minYear,
@@ -890,11 +848,6 @@ export default function InventoryPage() {
       ),
     onInteriorToggle: (interior: string) =>
       toggleValue(interior, selectedInteriors, setSelectedInteriors),
-    onLocationInputChange: (value: string) => {
-      setLocationInput(value);
-      setLocationError("");
-    },
-    onLocationSubmit: submitLocation,
     onModelToggle: (model: InventoryModel) =>
       toggleValue(model, selectedModels, setSelectedModels),
     onPaintToggle: (paint: string) =>
@@ -907,7 +860,6 @@ export default function InventoryPage() {
         selectedSelfDrivingOptions,
         setSelectedSelfDrivingOptions,
       ),
-    onShowResults: () => setIsMobileFiltersOpen(false),
     onSteeringControlToggle: (steeringControl: string) =>
       toggleValue(
         steeringControl,
@@ -921,7 +873,6 @@ export default function InventoryPage() {
     paymentType,
     requiresDemoDrive,
     resultCount: filteredVehicles.length,
-    searchDistance,
     selectedAdditionalOptions,
     selectedConditionHistories,
     selectedInteriors,
@@ -937,108 +888,153 @@ export default function InventoryPage() {
     setMinYear,
     setPaymentType,
     setRequiresDemoDrive,
-    setSearchDistance,
   };
 
-  return (
-    <div className="min-h-screen bg-[#f4f4f4] text-[#171a20]">
-      <div
-        aria-hidden="true"
-        className="fixed inset-x-0 top-0 z-40 h-14 bg-white"
-      />
-      <Navbar />
+  const filterSummary = [
+    condition === "new" ? "New" : "Pre-Owned",
+    selectedModels.length ? selectedModels.join(", ") : "All Models",
+  ].join(", ");
 
-      <main className="pt-14">
-        <div className="border-b border-black/10 bg-white px-5 py-6 sm:px-8 lg:px-10">
-          <div className="mx-auto flex max-w-[1600px] flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p className="text-sm font-semibold text-[#5c5e62]">
-                Vehicles Available Now
-              </p>
-              <h1 className="mt-1 text-4xl font-semibold tracking-[-0.045em] sm:text-5xl">
-                Inventory
-              </h1>
-            </div>
-            <div className="flex flex-wrap items-center gap-2 text-sm">
-              <button
-                className="rounded border border-black/20 bg-white px-4 py-2.5 font-medium transition hover:bg-[#f4f4f4] lg:hidden"
-                onClick={() => setIsMobileFiltersOpen(true)}
-                type="button"
-              >
-                Filters{activeFilterCount ? ` (${activeFilterCount})` : ""}
-              </button>
-              <span className="rounded bg-[#f4f4f4] px-4 py-2.5 text-[#5c5e62]">
-                ZIP {searchLocation} · {searchDistance} mi
-              </span>
-            </div>
-          </div>
-          <div
-            aria-label="Inventory condition"
-            className="mx-auto mt-6 grid w-full max-w-md grid-cols-2 gap-1 rounded bg-[#e8e8e8] p-1"
-            role="group"
+  return (
+    <div className="min-h-screen bg-white text-[#171a20]">
+      <aside className="fixed inset-x-0 top-0 z-[60] flex h-12 items-center justify-center bg-[linear-gradient(90deg,#f0e3bd_0%,#fffaf0_45%,#ead39a_100%)] px-3 text-center text-xs text-[#393c41] sm:text-sm">
+        <span className="font-medium">As Low as 0% APR Available</span>
+        <a
+          className="ml-4 rounded-[3px] bg-[#171a20] px-5 py-2 text-xs font-semibold text-white transition hover:bg-black"
+          href="https://www.tesla.com/inventory/new/my"
+          rel="noreferrer"
+          target="_blank"
+        >
+          Learn More
+        </a>
+      </aside>
+      <Navbar hasAnnouncement />
+
+      <main className="pt-[104px]" id="top">
+        <header className="mx-auto max-w-[1536px] px-5 pb-7 pt-11 sm:px-8 lg:px-12 lg:pb-6 lg:pt-10">
+          <h1 className="text-[38px] font-medium leading-none tracking-[-0.045em] sm:text-[42px]">
+            Inventory
+          </h1>
+          <form
+            className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-2 text-xs text-[#5c5e62]"
+            onSubmit={submitLocation}
           >
-            {(["new", "used"] as InventoryCondition[]).map((option) => (
-              <button
-                aria-pressed={condition === option}
-                className={`rounded px-5 py-3 text-sm font-semibold transition ${
-                  condition === option
-                    ? "bg-white text-[#171a20] shadow-sm"
-                    : "text-[#5c5e62] hover:text-[#171a20]"
-                }`}
-                key={option}
-                onClick={() => selectCondition(option)}
-                type="button"
+            <span>ZIP</span>
+            <label className="sr-only" htmlFor="inventory-location">
+              Search Area
+            </label>
+            <input
+              aria-describedby={
+                locationError ? "inventory-location-error" : undefined
+              }
+              aria-invalid={Boolean(locationError)}
+              className="w-[62px] border-b border-[#5c5e62] bg-transparent px-0 py-0.5 font-medium text-[#171a20] outline-none focus:border-[#3e6ae1]"
+              id="inventory-location"
+              inputMode="numeric"
+              maxLength={5}
+              onChange={(event) => {
+                setLocationInput(event.target.value);
+                setLocationError("");
+              }}
+              value={locationInput}
+            />
+            <button
+              aria-label="Update search area"
+              className="font-semibold text-[#171a20] underline decoration-[#b7b7b7] underline-offset-4"
+              type="submit"
+            >
+              Update
+            </button>
+            <span aria-hidden="true" className="text-[#b7b7b7]">
+              ·
+            </span>
+            <label className="sr-only" htmlFor="inventory-radius">
+              Search radius
+            </label>
+            <select
+              className="bg-transparent py-0.5 font-medium text-[#171a20] outline-none"
+              id="inventory-radius"
+              onChange={(event) =>
+                setSearchDistance(Number(event.target.value))
+              }
+              value={searchDistance}
+            >
+              {[25, 50, 100, 200].map((distance) => (
+                <option key={distance} value={distance}>
+                  Within {distance} miles
+                </option>
+              ))}
+            </select>
+            {locationError && (
+              <span
+                className="basis-full text-xs font-medium text-[#b74134]"
+                id="inventory-location-error"
+                role="alert"
               >
-                {option === "new" ? "New" : "Pre-Owned"}
-              </button>
-            ))}
-          </div>
+                {locationError}
+              </span>
+            )}
+          </form>
+        </header>
+
+        <div className="mx-auto max-w-[1536px] px-5 sm:px-8 lg:hidden">
+          <button
+            aria-label="Filters"
+            className="flex w-full items-center justify-between border-y border-black/10 py-4 text-left"
+            onClick={() => setIsMobileFiltersOpen(true)}
+            type="button"
+          >
+            <span className="font-semibold">
+              Filters{activeFilterCount ? ` (${activeFilterCount})` : ""}
+            </span>
+            <span className="flex items-center gap-2 text-sm text-[#5c5e62]">
+              {filterSummary}
+              <span aria-hidden="true" className="text-xl leading-none">
+                ›
+              </span>
+            </span>
+          </button>
         </div>
 
-        <div className="mx-auto grid max-w-[1600px] lg:grid-cols-[360px_minmax(0,1fr)] xl:grid-cols-[390px_minmax(0,1fr)]">
-          <aside className="hidden border-r border-black/10 bg-white lg:block">
-            <div className="sticky top-14 max-h-[calc(100vh-3.5rem)] overflow-y-auto">
+        <div className="mx-auto grid max-w-[1536px] lg:grid-cols-[296px_minmax(0,1fr)]">
+          <aside className="hidden px-12 lg:block">
+            <div className="sticky top-[112px] max-h-[calc(100vh-128px)] overflow-y-auto pr-2">
               <FilterPanel {...sharedFilterProps} idPrefix="desktop" />
             </div>
           </aside>
 
           <section
             aria-labelledby="inventory-results-heading"
-            className="min-w-0 px-4 py-7 sm:px-7 lg:px-8 lg:py-9 xl:px-10"
+            className="min-w-0 px-5 pb-8 pt-6 sm:px-8 lg:px-6 lg:pb-12 lg:pt-0 xl:px-7"
+            id="inventory-results"
           >
-            <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <h2
-                  className="text-2xl font-semibold tracking-[-0.03em]"
-                  id="inventory-results-heading"
-                >
-                  Results
-                </h2>
-                <p aria-live="polite" className="mt-1 text-sm text-[#5c5e62]">
-                  {filteredVehicles.length}{" "}
-                  {filteredVehicles.length === 1 ? "vehicle" : "vehicles"} near{" "}
-                  {searchLocation}
-                </p>
-              </div>
-              <label className="flex items-center gap-3 text-sm text-[#5c5e62]">
-                <span>Sort by</span>
-                <select
-                  className="rounded border border-black/20 bg-white px-3 py-2.5 font-medium text-[#171a20]"
-                  onChange={(event) =>
-                    setSortOption(event.target.value as SortOption)
-                  }
-                  value={sortOption}
-                >
-                  <option value="distance">Distance</option>
-                  <option value="price-low">Price: Low to High</option>
-                  <option value="price-high">Price: High to Low</option>
-                  <option value="range">Range</option>
-                </select>
-              </label>
-            </div>
+            <h2 className="sr-only" id="inventory-results-heading">
+              Results
+            </h2>
+            <p aria-live="polite" className="sr-only">
+              {filteredVehicles.length}{" "}
+              {filteredVehicles.length === 1 ? "vehicle" : "vehicles"} near{" "}
+              {searchLocation}
+            </p>
+            <label className="sr-only" htmlFor="inventory-sort">
+              Sort by
+            </label>
+            <select
+              className="sr-only"
+              id="inventory-sort"
+              onChange={(event) =>
+                setSortOption(event.target.value as SortOption)
+              }
+              value={sortOption}
+            >
+              <option value="distance">Distance</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+              <option value="range">Range</option>
+            </select>
 
             {filteredVehicles.length > 0 ? (
-              <div className="grid gap-5 xl:grid-cols-2">
+              <div className="grid max-w-[1120px] gap-5 sm:grid-cols-2 min-[1380px]:grid-cols-3">
                 {filteredVehicles.map((vehicle) => (
                   <InventoryCard
                     key={vehicle.id}
@@ -1048,16 +1044,16 @@ export default function InventoryPage() {
                 ))}
               </div>
             ) : (
-              <div className="flex min-h-[430px] flex-col items-center justify-center rounded-xl border border-dashed border-black/20 bg-white px-6 text-center">
-                <h2 className="text-2xl font-semibold">
+              <div className="flex min-h-[420px] flex-col items-center justify-center rounded-[7px] border border-black/15 bg-[#f8f8f8] px-6 text-center">
+                <h2 className="text-2xl font-semibold tracking-[-0.03em]">
                   No vehicles match your search
                 </h2>
                 <p className="mt-2 max-w-md text-sm leading-6 text-[#5c5e62]">
-                  Try expanding your search radius or clearing one of your
-                  filters.
+                  Try expanding your search radius or removing one of the
+                  selected filters.
                 </p>
                 <button
-                  className="mt-5 rounded bg-[#171a20] px-6 py-3 text-sm font-semibold text-white"
+                  className="mt-5 rounded-[3px] bg-[#171a20] px-7 py-3 text-sm font-semibold text-white"
                   onClick={clearFilters}
                   type="button"
                 >
@@ -1066,34 +1062,59 @@ export default function InventoryPage() {
               </div>
             )}
 
-            <div className="mt-10 rounded-xl bg-white px-6 py-8 text-center sm:px-10">
-              <h2 className="text-2xl font-semibold tracking-[-0.03em]">
-                Don&apos;t see the Tesla you&apos;re looking for?
+            <div className="mt-10 border-t border-black/10 py-10 text-center">
+              <h2 className="text-2xl font-semibold tracking-[-0.035em]">
+                Design Yours
               </h2>
-              <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-[#5c5e62]">
-                Build a custom vehicle with your preferred paint, wheels and
+              <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-[#5c5e62]">
+                Configure a Tesla with your preferred range, paint, wheels and
                 interior.
               </p>
               <Link
-                className="mt-5 inline-flex rounded border-2 border-[#171a20] px-6 py-2.5 text-sm font-semibold transition hover:bg-[#171a20] hover:text-white"
+                className="mt-5 inline-flex min-w-52 justify-center rounded-[3px] border-[3px] border-[#171a20] px-6 py-2.5 text-sm font-semibold transition hover:bg-[#171a20] hover:text-white"
                 to="/model-3"
               >
-                Build Your Custom Model 3
+                Custom Order
               </Link>
             </div>
 
-            <footer className="flex flex-wrap justify-center gap-x-5 gap-y-2 py-10 text-xs text-[#5c5e62]">
-              <span>Tesla Clone © 2026</span>
-              <a href="#top">Privacy &amp; Legal</a>
-              <a href="#top">Contact</a>
-              <a href="#top">Locations</a>
+            <footer className="flex flex-wrap justify-center gap-x-5 gap-y-2 pb-8 text-xs text-[#5c5e62]">
+              <span>Tesla © 2026</span>
+              <a
+                href="https://www.tesla.com/legal"
+                rel="noreferrer"
+                target="_blank"
+              >
+                Privacy &amp; Legal
+              </a>
+              <a
+                href="https://www.tesla.com/vin-recall-search"
+                rel="noreferrer"
+                target="_blank"
+              >
+                Vehicle Recalls
+              </a>
+              <a
+                href="https://www.tesla.com/contact"
+                rel="noreferrer"
+                target="_blank"
+              >
+                Contact
+              </a>
+              <a
+                href="https://www.tesla.com/findus/list"
+                rel="noreferrer"
+                target="_blank"
+              >
+                Locations
+              </a>
             </footer>
           </section>
         </div>
       </main>
 
       {isMobileFiltersOpen && (
-        <div className="fixed inset-0 z-[70] lg:hidden">
+        <div className="fixed inset-0 z-[80] lg:hidden">
           <button
             aria-label="Close filters"
             className="absolute inset-0 bg-black/35"
@@ -1106,18 +1127,25 @@ export default function InventoryPage() {
             className="absolute inset-y-0 right-0 w-full max-w-md overflow-y-auto bg-white shadow-2xl"
             role="dialog"
           >
-            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-black/10 bg-white px-5 py-4">
+            <div className="sticky top-0 z-20 flex items-center justify-between border-b border-black/10 bg-white px-6 py-4">
               <p className="text-lg font-semibold">Inventory Filters</p>
               <button
                 aria-label="Close inventory filters"
-                className="grid h-9 w-9 place-items-center rounded-full bg-[#f4f4f4] text-xl"
+                className="relative h-9 w-9 rounded-full bg-[#f4f4f4]"
                 onClick={() => setIsMobileFiltersOpen(false)}
                 type="button"
               >
-                ×
+                <span className="absolute left-1/2 top-1/2 h-px w-4 -translate-x-1/2 -translate-y-1/2 rotate-45 bg-current" />
+                <span className="absolute left-1/2 top-1/2 h-px w-4 -translate-x-1/2 -translate-y-1/2 -rotate-45 bg-current" />
               </button>
             </div>
-            <FilterPanel {...sharedFilterProps} idPrefix="mobile" />
+            <div className="px-6 pt-6">
+              <FilterPanel
+                {...sharedFilterProps}
+                idPrefix="mobile"
+                onShowResults={() => setIsMobileFiltersOpen(false)}
+              />
+            </div>
           </div>
         </div>
       )}
