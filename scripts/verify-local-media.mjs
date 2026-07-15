@@ -19,12 +19,17 @@ function collectSourceFiles(directory) {
 const sourceFiles = collectSourceFiles(sourceRoot);
 const remoteMedia = [];
 const referencedAssets = new Set();
+const approvedMapTiles = [/^https:\/\/\{s\}\.tile\.openstreetmap\.org\//i];
 
 for (const file of sourceFiles) {
   const source = fs.readFileSync(file, "utf8");
   const relativeFile = path.relative(projectRoot, file);
 
   for (const match of source.matchAll(/https?:\/\/[^\s"')]+/g)) {
+    if (approvedMapTiles.some((pattern) => pattern.test(match[0]))) {
+      continue;
+    }
+
     if (
       /(?:digitalassets\.tesla\.com|tesla-cdn\.thron\.com)/i.test(match[0]) ||
       /\.(?:avif|gif|jpe?g|mov|mp4|png|svg|webm|webp)(?:\?|$)/i.test(match[0])
@@ -55,5 +60,5 @@ if (remoteMedia.length || missingAssets.length) {
 }
 
 console.log(
-  `Verified ${referencedAssets.size} local media references with no remote media URLs.`,
+  `Verified ${referencedAssets.size} local media references with no unapproved remote media URLs.`,
 );

@@ -1,5 +1,7 @@
 import { type ReactNode, useEffect, useRef, useState } from "react";
+import L, { type Map as LeafletMap } from "leaflet";
 import { Link } from "react-router-dom";
+import "leaflet/dist/leaflet.css";
 
 const ASSET_ROOT = "/assets/tesla-official/homepage-current";
 
@@ -133,6 +135,119 @@ const CHAT_PROMPTS = [
   '"Where can I drive the Model 3?"',
 ];
 
+type ChargingSite = [name: string, latitude: number, longitude: number];
+
+const SUPERCHARGER_SITES: ChargingSite[] = [
+  ["Seattle", 47.61, -122.33],
+  ["Tacoma", 47.25, -122.44],
+  ["Portland", 45.52, -122.68],
+  ["Eugene", 44.05, -123.09],
+  ["Medford", 42.33, -122.88],
+  ["Sacramento", 38.58, -121.49],
+  ["San Francisco", 37.77, -122.42],
+  ["San Jose", 37.34, -121.89],
+  ["Monterey", 36.6, -121.89],
+  ["Fresno", 36.74, -119.79],
+  ["Bakersfield", 35.37, -119.02],
+  ["Los Angeles", 34.05, -118.24],
+  ["Palm Springs", 33.83, -116.55],
+  ["San Diego", 32.72, -117.16],
+  ["Las Vegas", 36.17, -115.14],
+  ["Reno", 39.53, -119.81],
+  ["Boise", 43.62, -116.2],
+  ["Salt Lake City", 40.76, -111.89],
+  ["Phoenix", 33.45, -112.07],
+  ["Tucson", 32.22, -110.97],
+  ["Flagstaff", 35.2, -111.65],
+  ["Albuquerque", 35.08, -106.65],
+  ["Santa Fe", 35.69, -105.94],
+  ["Denver", 39.74, -104.99],
+  ["Colorado Springs", 38.83, -104.82],
+  ["Cheyenne", 41.14, -104.82],
+  ["Billings", 45.78, -108.5],
+  ["Rapid City", 44.08, -103.23],
+  ["Fargo", 46.88, -96.79],
+  ["Omaha", 41.26, -95.94],
+  ["Kansas City", 39.1, -94.58],
+  ["Wichita", 37.69, -97.34],
+  ["Oklahoma City", 35.47, -97.52],
+  ["Tulsa", 36.15, -95.99],
+  ["Dallas", 32.78, -96.8],
+  ["Fort Worth", 32.76, -97.33],
+  ["Austin", 30.27, -97.74],
+  ["San Antonio", 29.42, -98.49],
+  ["Houston", 29.76, -95.37],
+  ["El Paso", 31.76, -106.49],
+  ["Minneapolis", 44.98, -93.27],
+  ["Des Moines", 41.59, -93.62],
+  ["St. Louis", 38.63, -90.2],
+  ["Little Rock", 34.75, -92.29],
+  ["New Orleans", 29.95, -90.07],
+  ["Milwaukee", 43.04, -87.91],
+  ["Chicago", 41.88, -87.63],
+  ["Indianapolis", 39.77, -86.16],
+  ["Detroit", 42.33, -83.05],
+  ["Cleveland", 41.5, -81.69],
+  ["Columbus", 39.96, -83.0],
+  ["Cincinnati", 39.1, -84.51],
+  ["Louisville", 38.25, -85.76],
+  ["Nashville", 36.16, -86.78],
+  ["Memphis", 35.15, -90.05],
+  ["Birmingham", 33.52, -86.81],
+  ["Atlanta", 33.75, -84.39],
+  ["Savannah", 32.08, -81.09],
+  ["Jacksonville", 30.33, -81.66],
+  ["Orlando", 28.54, -81.38],
+  ["Tampa", 27.95, -82.46],
+  ["Miami", 25.76, -80.19],
+  ["Charlotte", 35.23, -80.84],
+  ["Raleigh", 35.78, -78.64],
+  ["Richmond", 37.54, -77.44],
+  ["Washington, D.C.", 38.91, -77.04],
+  ["Baltimore", 39.29, -76.61],
+  ["Pittsburgh", 40.44, -80.0],
+  ["Philadelphia", 39.95, -75.17],
+  ["New York", 40.71, -74.01],
+  ["Hartford", 41.76, -72.67],
+  ["Boston", 42.36, -71.06],
+  ["Portland, Maine", 43.66, -70.26],
+  ["Buffalo", 42.89, -78.88],
+  ["Albany", 42.65, -73.76],
+  ["Burlington", 44.48, -73.21],
+  ["Toronto", 43.65, -79.38],
+  ["Montreal", 45.5, -73.57],
+  ["Vancouver", 49.28, -123.12],
+];
+
+const DESTINATION_CHARGER_SITES: ChargingSite[] = [
+  ["Olympic Peninsula", 47.81, -123.42],
+  ["Willamette Valley", 44.94, -123.03],
+  ["Napa Valley", 38.3, -122.29],
+  ["Lake Tahoe", 39.1, -120.03],
+  ["Santa Barbara", 34.42, -119.7],
+  ["Joshua Tree", 34.13, -116.32],
+  ["Scottsdale", 33.49, -111.93],
+  ["Santa Fe", 35.67, -105.96],
+  ["Aspen", 39.19, -106.82],
+  ["Jackson Hole", 43.48, -110.76],
+  ["Black Hills", 43.88, -103.46],
+  ["Hill Country", 30.1, -98.42],
+  ["Galveston", 29.3, -94.8],
+  ["Lake of the Ozarks", 38.2, -92.64],
+  ["Door County", 45.0, -87.1],
+  ["Traverse City", 44.76, -85.62],
+  ["Smoky Mountains", 35.61, -83.49],
+  ["Charleston", 32.78, -79.93],
+  ["Hilton Head", 32.22, -80.75],
+  ["Florida Keys", 24.56, -81.78],
+  ["Outer Banks", 35.56, -75.47],
+  ["Shenandoah", 38.3, -78.47],
+  ["Finger Lakes", 42.68, -76.84],
+  ["Cape Cod", 41.67, -70.3],
+  ["Bar Harbor", 44.39, -68.2],
+  ["Niagara-on-the-Lake", 43.25, -79.08],
+];
+
 function ChevronIcon({ direction }: { direction: "left" | "right" }) {
   return (
     <svg aria-hidden="true" viewBox="0 0 24 24">
@@ -203,6 +318,35 @@ function ChargeIcon({ type }: { type: "bolt" | "plug" }) {
         )}
       </svg>
     </span>
+  );
+}
+
+function LocateIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" fill="none" r="4" stroke="currentColor" />
+      <path
+        d="M12 2v3m0 14v3M2 12h3m14 0h3"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function FullscreenIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path
+        d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+    </svg>
   );
 }
 
@@ -567,16 +711,169 @@ function OffersGrid() {
 }
 
 function ChargingMap() {
+  const mapCanvasRef = useRef<HTMLDivElement>(null);
+  const mapFrameRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<LeafletMap | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [locationStatus, setLocationStatus] = useState("");
+
+  useEffect(() => {
+    if (!mapCanvasRef.current) return;
+
+    const mediaQuery = window.matchMedia("(max-width: 599px)");
+    const map = L.map(mapCanvasRef.current, {
+      center: [37.8, -96.5],
+      maxBounds: [
+        [7, -168],
+        [73, -48],
+      ],
+      minZoom: 3,
+      scrollWheelZoom: false,
+      zoom: mediaQuery.matches ? 3 : 5,
+      zoomControl: false,
+      zoomSnap: 0.25,
+    });
+    let locationMarker: L.CircleMarker | null = null;
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      maxZoom: 19,
+    }).addTo(map);
+
+    SUPERCHARGER_SITES.forEach(([name, latitude, longitude]) => {
+      L.circleMarker([latitude, longitude], {
+        color: "#fff",
+        fillColor: "#e82127",
+        fillOpacity: 0.9,
+        radius: 4,
+        weight: 1,
+      })
+        .bindTooltip(`${name} Supercharger area`, { direction: "top" })
+        .addTo(map);
+    });
+
+    DESTINATION_CHARGER_SITES.forEach(([name, latitude, longitude]) => {
+      L.circleMarker([latitude, longitude], {
+        color: "#fff",
+        fillColor: "#8e9196",
+        fillOpacity: 0.9,
+        radius: 4,
+        weight: 1,
+      })
+        .bindTooltip(`${name} destination charging area`, {
+          direction: "top",
+        })
+        .addTo(map);
+    });
+
+    const setHomeView = () => {
+      map.invalidateSize();
+      map.setView([37.8, -96.5], mediaQuery.matches ? 3 : 5, {
+        animate: false,
+      });
+    };
+
+    map.on("locationfound", (event) => {
+      locationMarker?.removeFrom(map);
+      locationMarker = L.circleMarker(event.latlng, {
+        color: "#fff",
+        fillColor: "#3e6ae1",
+        fillOpacity: 1,
+        radius: 7,
+        weight: 2,
+      })
+        .bindTooltip("Your location", { direction: "top" })
+        .addTo(map);
+      setLocationStatus("The map is centered on your current location.");
+    });
+    map.on("locationerror", () => {
+      setLocationStatus(
+        "We could not access your location. Check your browser permissions and try again.",
+      );
+    });
+
+    mapRef.current = map;
+    const homeViewFrame = window.requestAnimationFrame(setHomeView);
+    mediaQuery.addEventListener("change", setHomeView);
+
+    return () => {
+      window.cancelAnimationFrame(homeViewFrame);
+      mediaQuery.removeEventListener("change", setHomeView);
+      map.stopLocate();
+      map.remove();
+      mapRef.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(document.fullscreenElement === mapFrameRef.current);
+      window.requestAnimationFrame(() => mapRef.current?.invalidateSize());
+    };
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    return () =>
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+  }, []);
+
+  const findCurrentLocation = () => {
+    setLocationStatus("Finding your current location.");
+    mapRef.current?.locate({
+      enableHighAccuracy: true,
+      maxZoom: 12,
+      setView: true,
+    });
+  };
+
+  const toggleFullscreen = async () => {
+    try {
+      if (document.fullscreenElement === mapFrameRef.current) {
+        await document.exitFullscreen();
+      } else {
+        await mapFrameRef.current?.requestFullscreen();
+      }
+    } catch {
+      setLocationStatus("Fullscreen view is not available in this browser.");
+    }
+  };
+
   return (
     <section className="tesla-home-charging-section" id="charging">
       <div className="tesla-home-charging-inner">
-        <img
-          alt="Map of Tesla Superchargers and Destination Chargers across North America"
+        <div
+          aria-label="Interactive map of Tesla charging locations across North America"
           className="tesla-home-charging-map"
-          decoding="async"
-          loading="lazy"
-          src={`${ASSET_ROOT}/charging-map-desktop.jpg`}
-        />
+          ref={mapFrameRef}
+          role="region"
+        >
+          <div className="tesla-home-charging-map-canvas" ref={mapCanvasRef} />
+
+          <button
+            aria-label="Center the charging map on my location"
+            className="tesla-home-map-locate"
+            onClick={findCurrentLocation}
+            type="button"
+          >
+            <LocateIcon />
+            <span>Find Me</span>
+          </button>
+
+          <button
+            aria-label={
+              isFullscreen ? "Exit fullscreen map" : "View map fullscreen"
+            }
+            className="tesla-home-map-fullscreen"
+            onClick={toggleFullscreen}
+            type="button"
+          >
+            <FullscreenIcon />
+          </button>
+
+          <span aria-live="polite" className="sr-only">
+            {locationStatus}
+          </span>
+        </div>
 
         <div className="tesla-home-charging-copy">
           <div>
