@@ -1,48 +1,86 @@
+<div align="center">
+
 # React Tesla Clone
 
-A Tesla-inspired product site built with React, TypeScript, React Router, and
-Tailwind CSS.
+**A responsive clone of the Tesla website UI.**
 
-## Development
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
+
+</div>
+
+---
+
+## Overview
+
+React Tesla Clone is a Tesla-inspired product site built as a front-end practice project. It recreates Tesla's full-screen product sections, navigation, and vehicle pages, with all media served locally.
+
+> This is an educational UI clone and is not affiliated with Tesla, Inc.
+
+## Features
+
+- **Full-screen home page** with vehicle sections and calls to action.
+- **Vehicle and Cybertruck pages** using React Router.
+- **Responsive navbar** with a slide-out menu.
+- **Interactive map** built with Leaflet.
+- **Typed static data** for products and navigation.
+- **Media verification:** a build-time script confirms all local media exists.
+
+## Tech Stack
+
+| Area | Technology |
+| --- | --- |
+| UI | React 18, React Router 6 |
+| Language | TypeScript |
+| Styling | Tailwind CSS |
+| Maps | Leaflet |
+| Tooling | Create React App, ESLint, Prettier, Testing Library |
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js and npm
+
+### Installation
 
 ```bash
+git clone https://github.com/RithyBondeth/React-Tesla-Clone.git
+cd React-Tesla-Clone
 npm install
 npm start
 ```
 
-The development server uses port `3000` when it is available.
+Open [http://localhost:3000](http://localhost:3000).
 
-## Quality checks
+### Scripts
 
-```bash
-npm run typecheck
-npm run lint
-npm run format:check
-npm run build
-```
+| Command | Description |
+| --- | --- |
+| `npm start` | Start the development server |
+| `npm run build` | Verify media and create a production build |
+| `npm run typecheck` | Type-check with `tsc --noEmit` |
+| `npm run lint` | Run ESLint |
+| `npm run format` | Format with Prettier |
+| `npm test` | Run tests |
 
-Use `npm run format` to apply Prettier formatting.
-
-## Project structure
-
-The source layout follows the feature-oriented conventions used by
-`apsaratalent-web` while remaining compatible with Create React App:
+## Project Structure
 
 ```text
-src/
-├── app/                 # Route-level pages and router composition
-│   ├── cybertruck/
-│   ├── home/
-│   └── vehicles/
-├── components/          # Reusable components grouped by feature
-│   ├── home/
-│   └── navbar/
-├── data/                # Typed static product and navigation data
-├── utils/
-│   └── types/           # Shared TypeScript domain models
-├── index.css
-└── index.tsx            # Browser entry point
+React-Tesla-Clone/
+├── src/
+│   ├── app/            # Route pages: home, vehicles, cybertruck
+│   ├── components/     # Home sections and navbar
+│   ├── data/           # Typed product and navigation data
+│   └── utils/types/    # Shared TypeScript models
+└── public/assets/      # Local images and media
 ```
 
-Component folders use kebab-case names and expose an `index.tsx`; reusable
-component contracts live in adjacent `props.ts` files.
+## Author
+
+**Rithy Bondeth** — Full Stack Developer & AI Engineer
+
+[![Portfolio](https://img.shields.io/badge/Portfolio-0A0A0A?style=for-the-badge&logo=vercel&logoColor=white)](https://bondeth.dev)
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/RithyBondeth)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/rithy-bondeth-484073282/)
