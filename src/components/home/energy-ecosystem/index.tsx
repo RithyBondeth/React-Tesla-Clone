@@ -103,7 +103,7 @@ export default function EnergyEcosystem() {
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
               <Link
                 className="rounded bg-[#171a20] px-7 py-3 text-center text-sm font-semibold text-white"
-                to="/demo_drive"
+                to="/drive"
               >
                 Demo Drive
               </Link>

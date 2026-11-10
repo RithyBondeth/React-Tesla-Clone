@@ -7,21 +7,39 @@ export const menuList: NavigationMenu[] = [
       products: [
         {
           productActions: [
-            { label: "Learn", link: "/#compare" },
+            { label: "Learn", link: "/model-s" },
+            { label: "Order", link: "/order_now_models" },
+          ],
+          productImage: "/assets/navbar-images/vehicles-images/model-s.avif",
+          productLink: "/model-s",
+          productName: "Model S",
+        },
+        {
+          productActions: [
+            { label: "Learn", link: "/model-3" },
             { label: "Order", link: "/order_now_model3" },
           ],
           productImage: "/assets/navbar-images/vehicles-images/model-3.avif",
-          productLink: "/#compare",
+          productLink: "/model-3",
           productName: "Model 3",
         },
         {
           productActions: [
-            { label: "Learn", link: "/#compare" },
+            { label: "Learn", link: "/model-y" },
             { label: "Order", link: "/order_now_modely" },
           ],
           productImage: "/assets/navbar-images/vehicles-images/model-y.avif",
-          productLink: "/#compare",
+          productLink: "/model-y",
           productName: "Model Y",
+        },
+        {
+          productActions: [
+            { label: "Learn", link: "/model-x" },
+            { label: "Order", link: "/order_now_modelx" },
+          ],
+          productImage: "/assets/navbar-images/vehicles-images/model-x.avif",
+          productLink: "/model-x",
+          productName: "Model X",
         },
         {
           productActions: [
@@ -32,21 +50,74 @@ export const menuList: NavigationMenu[] = [
           productLink: "/learn_more_cybertruck",
           productName: "Cybertruck",
         },
+        {
+          productActions: [
+            { label: "New", link: "/inventory/new" },
+            { label: "Pre-Owned", link: "/inventory/used" },
+          ],
+          productImage: "/assets/navbar-images/vehicles-images/inventory.avif",
+          productLink: "/inventory/new",
+          productName: "Inventory",
+        },
+        {
+          productActions: [
+            { label: "Learn", link: "/fsd" },
+            { label: "Experience", link: "/drive" },
+          ],
+          productImage: "/assets/navbar-images/vehicles-images/fsd.avif",
+          productLink: "/fsd",
+          productName: "Full Self-Driving (Supervised)",
+        },
       ],
       links: [
-        { listLink: "/fsd", listName: "Full Self-Driving" },
         {
           external: true,
-          listLink: "https://www.tesla.com/inventory/new/m3",
-          listName: "Inventory",
+          listLink: "https://www.tesla.com/current-offers",
+          listName: "Current Offers",
         },
-        { listLink: "/demo_drive", listName: "Test Drive" },
+        { listLink: "/drive", listName: "Demo Drive" },
         {
           external: true,
           listLink: "https://www.tesla.com/tradein",
           listName: "Trade-in",
         },
         { listLink: "/fsd#safety", listName: "Vehicle Safety Report" },
+        { listLink: "/inventory/used", listName: "Pre-Owned" },
+        {
+          external: true,
+          listLink: "https://www.tesla.com/trips",
+          listName: "Trip Planner",
+        },
+        {
+          external: true,
+          listLink: "https://www.tesla.com/features",
+          listName: "Features",
+        },
+        {
+          external: true,
+          listLink: "https://www.tesla.com/choose",
+          listName: "Help Me Choose",
+        },
+        {
+          external: true,
+          listLink: "https://www.tesla.com/compare",
+          listName: "Compare",
+        },
+        {
+          external: true,
+          listLink: "https://www.tesla.com/safety",
+          listName: "Safety",
+        },
+        {
+          external: true,
+          listLink: "https://www.tesla.com/fleet",
+          listName: "Fleet",
+        },
+        {
+          external: true,
+          listLink: "https://www.tesla.com/semi",
+          listName: "Semi",
+        },
         {
           external: true,
           listLink: "https://www.tesla.com/roadster",
@@ -54,8 +125,8 @@ export const menuList: NavigationMenu[] = [
         },
         {
           external: true,
-          listLink: "https://www.tesla.com/we-robot",
-          listName: "We, Robot",
+          listLink: "https://www.tesla.com/robotaxi",
+          listName: "Robotaxi",
         },
       ],
     },
@@ -158,7 +229,7 @@ export const menuList: NavigationMenu[] = [
     items: {
       products: [],
       links: [
-        { listLink: "/demo_drive", listName: "Test Drive" },
+        { listLink: "/drive", listName: "Test Drive" },
         {
           external: true,
           listLink: "https://www.tesla.com/events",

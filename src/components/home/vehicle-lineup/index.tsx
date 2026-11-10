@@ -15,6 +15,13 @@ const CURRENT_CARD_IMAGES: Record<string, { desktop: string; mobile: string }> =
     },
   };
 
+const VEHICLE_LEARN_LINKS: Record<string, string> = {
+  "Model 3": "/model-3",
+  "Model S": "/model-s",
+  "Model X": "/model-x",
+  "Model Y": "/model-y",
+};
+
 export default function VehicleLineup({
   cybertruck,
   vehicles,
@@ -28,7 +35,8 @@ export default function VehicleLineup({
       mobileImage: CURRENT_CARD_IMAGES[vehicle.title]?.mobile ?? vehicle.poster,
       primaryLink: vehicle.buttons[0].link,
       secondaryLabel: "Learn More",
-      secondaryLink: vehicle.buttons[1].link,
+      secondaryLink:
+        VEHICLE_LEARN_LINKS[vehicle.title] ?? vehicle.buttons[1].link,
       subtitle: primaryOption.optionName,
       title: vehicle.title,
     };
