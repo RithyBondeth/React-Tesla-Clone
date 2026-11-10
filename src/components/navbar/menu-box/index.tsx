@@ -89,6 +89,7 @@ export default function MenuBox({
   }
 
   const isDiscoverMenu = menu.name === "Discover";
+  const isVehiclesMenu = menu.name === "Vehicles";
   const panelId = `nav-panel-${menu.name.toLowerCase()}`;
 
   return (
@@ -101,18 +102,34 @@ export default function MenuBox({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      <div className="mx-auto flex max-w-[1200px] items-start justify-center gap-10 px-8 pb-10 pt-7 min-[1320px]:gap-14">
+      <div
+        className={`mx-auto flex items-start justify-center px-8 pb-10 ${
+          isVehiclesMenu
+            ? "max-w-[1280px] gap-8 pt-16 min-[1360px]:gap-12"
+            : "max-w-[1200px] gap-10 pt-7 min-[1320px]:gap-14"
+        }`}
+      >
         {!isDiscoverMenu && menu.items.products.length > 0 && (
           <div
-            className={`grid gap-x-4 gap-y-7 ${
-              menu.items.products.length === 2 ? "grid-cols-2" : "grid-cols-3"
+            className={`grid gap-y-7 ${
+              isVehiclesMenu
+                ? "grid-cols-4 gap-x-3"
+                : menu.items.products.length === 2
+                  ? "grid-cols-2 gap-x-4"
+                  : "grid-cols-3 gap-x-4"
             }`}
           >
             {menu.items.products.map((product) => {
               const isExternalProduct = product.productLink.startsWith("http");
               const productContent = (
                 <>
-                  <div className="flex h-[126px] w-[220px] items-center justify-center overflow-hidden px-2">
+                  <div
+                    className={`flex h-[126px] items-center justify-center overflow-hidden px-2 ${
+                      isVehiclesMenu
+                        ? "w-[180px] min-[1360px]:w-[200px]"
+                        : "w-[220px]"
+                    }`}
+                  >
                     <img
                       alt={product.productName}
                       className="h-[118px] w-full object-contain transition-transform duration-300 group-hover:scale-[1.025]"
@@ -123,14 +140,25 @@ export default function MenuBox({
                       width="220"
                     />
                   </div>
-                  <p className="mt-1.5 text-center text-base font-medium text-[#171a20]">
+                  <p
+                    className={`mt-1.5 text-center text-base font-medium text-[#171a20] ${
+                      isVehiclesMenu ? "min-h-6 leading-5" : ""
+                    }`}
+                  >
                     {product.productName}
                   </p>
                 </>
               );
 
               return (
-                <article className="w-[220px]" key={product.productName}>
+                <article
+                  className={
+                    isVehiclesMenu
+                      ? "w-[180px] min-[1360px]:w-[200px]"
+                      : "w-[220px]"
+                  }
+                  key={product.productName}
+                >
                   {isExternalProduct ? (
                     <a
                       className="group block rounded-lg focus-visible:outline-offset-4"
@@ -192,7 +220,11 @@ export default function MenuBox({
           </div>
         ) : (
           menu.items.links.length > 0 && (
-            <div className="min-w-[230px] border-l border-black/10 py-1 pl-10">
+            <div
+              className={`min-w-[230px] border-l border-black/10 py-1 ${
+                isVehiclesMenu ? "pl-8 min-[1360px]:pl-10" : "pl-10"
+              }`}
+            >
               <ul className="space-y-2.5">
                 {menu.items.links.map((link) => (
                   <li key={link.listName}>
