@@ -3,6 +3,24 @@
 A Tesla-inspired product site built with React, TypeScript, React Router, and
 Tailwind CSS.
 
+<!-- product-images:start -->
+
+## Product preview
+
+<p align="center">
+  <img src="docs/product-images/hero.png" alt="Tesla Clone — A front-end practice build exploring Tesla-inspired product pages." width="100%">
+</p>
+
+<table>
+<tr>
+  <td width="33%"><img src="docs/product-images/feature-01.png" alt="One screen. One strong idea. — Full-screen vehicle sections anchor a Tesla-inspired UI practice project." width="100%"></td>
+  <td width="33%"><img src="docs/product-images/feature-02.png" alt="Explore the page patterns. — Move between home, vehicle, and Cybertruck pages with React Router." width="100%"></td>
+  <td width="33%"><img src="docs/product-images/feature-03.png" alt="Small details. A complete page. — Responsive navigation, typed product data, and local media support the build." width="100%"></td>
+</tr>
+</table>
+
+<!-- product-images:end -->
+
 ## Development
 
 ```bash
