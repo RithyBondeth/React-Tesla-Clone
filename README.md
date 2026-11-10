@@ -10,6 +10,24 @@
 
 </div>
 
+<!-- product-images:start -->
+
+## Product preview
+
+<p align="center">
+  <img src="docs/product-images/hero.png" alt="Tesla Clone — A front-end practice build exploring Tesla-inspired product pages." width="100%">
+</p>
+
+<table>
+<tr>
+  <td width="33%"><img src="docs/product-images/feature-01.png" alt="One screen. One strong idea. — Full-screen vehicle sections anchor a Tesla-inspired UI practice project." width="100%"></td>
+  <td width="33%"><img src="docs/product-images/feature-02.png" alt="Explore the page patterns. — Move between home, vehicle, and Cybertruck pages with React Router." width="100%"></td>
+  <td width="33%"><img src="docs/product-images/feature-03.png" alt="Small details. A complete page. — Responsive navigation, typed product data, and local media support the build." width="100%"></td>
+</tr>
+</table>
+
+<!-- product-images:end -->
+
 ---
 
 ## Overview
@@ -29,13 +47,13 @@ React Tesla Clone is a Tesla-inspired product site built as a front-end practice
 
 ## Tech Stack
 
-| Area | Technology |
-| --- | --- |
-| UI | React 18, React Router 6 |
-| Language | TypeScript |
-| Styling | Tailwind CSS |
-| Maps | Leaflet |
-| Tooling | Create React App, ESLint, Prettier, Testing Library |
+| Area     | Technology                                          |
+| -------- | --------------------------------------------------- |
+| UI       | React 18, React Router 6                            |
+| Language | TypeScript                                          |
+| Styling  | Tailwind CSS                                        |
+| Maps     | Leaflet                                             |
+| Tooling  | Create React App, ESLint, Prettier, Testing Library |
 
 ## Getting Started
 
@@ -56,14 +74,14 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ### Scripts
 
-| Command | Description |
-| --- | --- |
-| `npm start` | Start the development server |
-| `npm run build` | Verify media and create a production build |
-| `npm run typecheck` | Type-check with `tsc --noEmit` |
-| `npm run lint` | Run ESLint |
-| `npm run format` | Format with Prettier |
-| `npm test` | Run tests |
+| Command             | Description                                |
+| ------------------- | ------------------------------------------ |
+| `npm start`         | Start the development server               |
+| `npm run build`     | Verify media and create a production build |
+| `npm run typecheck` | Type-check with `tsc --noEmit`             |
+| `npm run lint`      | Run ESLint                                 |
+| `npm run format`    | Format with Prettier                       |
+| `npm test`          | Run tests                                  |
 
 ## Project Structure
 
